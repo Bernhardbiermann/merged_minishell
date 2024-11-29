@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/29 11:28:10 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:40:21 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*input;
+	//char	*input;
 	t_env	**my_envp;
 	char	**env_tab;
 	t_shell	*data;
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		printf("Failed to initialize shell struct.\n");
 		return (1);
 	}
-	while (1) // Prompt anzeigen und Eingabe lesen
+/* 	while (1) // Prompt anzeigen und Eingabe lesen
 	{
 		input = readline("minishell> ");
 		if (!input) // Falls Benutzer EOF eingibt (Strg+D)
@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 		printf("You entered: %s\n", input);
 		parser(input, my_envp);
 		free(input);
-	}
+	} */
 
 	/* TESTING EXECUTION PART */
 	/* create cmds (just for testing pipes, to be removed) */
