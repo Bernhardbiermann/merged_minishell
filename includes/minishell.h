@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/29 11:27:44 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/11/30 15:49:39 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 /* STRUCTURES */
 // PARSE_LEXER
-typedef enum s_tokenType
+typedef enum	s_tokenType
 {
 	T_ERROR = 0,
 	T_SPACE = 1,
@@ -47,16 +47,25 @@ typedef enum s_tokenType
 	T_HEREDOC = 8,
 	T_ENV = 9,
 	T_TEXT = 10
-}	TokenType;
+}			TokenType;
 
-typedef struct s_token
+typedef struct	s_token
 {
-	TokenType	type;
-	char		*value;
-	size_t		length;
+	TokenType		type;
+	char			*value;
+	size_t			length;
 	struct s_token	*next;
 	struct s_token	*prev;
-} Token;
+}			Token;
+
+typedef struct	s_redirect
+{
+	char				*redir_in;
+	char				*redir_out;
+	char				*append;
+	char				*heredoc;
+	struct s_redirect	*next;
+}			t_redirect;
 
 typedef struct s_env
 {
@@ -66,25 +75,43 @@ typedef struct s_env
 	int					size; // relevant??
 }			t_env;
 
+/* Former struct t_cmd (date of change 30.11.)
 typedef struct	s_cmd
 {
 	char	*path;
 	char	*cmd_name; // no necessary
 	char	**cmd;
+}			t_cmd;*/
+
+/*Former struct t_shell
+typedef struct	s_shell
+{
+	t_cmd		**cmds;
+	int			nb_cmds;
+	int			**pipes;
+	t_env		*env;
+	t_redirect	*redirect;
+	int			last_exit_status;
+}			t_shell;*/
+
+//30.11. New struct t_cmd;
+typedef struct	s_cmd
+{
+	char			*path; // 30.11. B: think it's not necessary, can store them in the **arg
+	char			*cmd; // 30.11. B: think it's not necessary, can store them in the **arg
+	char			**arg;
+	t_redirect		*redirect; // 30.11. B: need a 2-dimensional redirect, there can be more than one
 }			t_cmd;
 
 typedef struct	s_shell
 {
-	t_cmd	**cmds;
-	int		nb_cmds;
-	int		**pipes;
-	t_env	*env;
-	char	*infile;
-	char	*outfile;
-	int		heredoc; // is it gonna be an int?
-	int		last_exit_status;
+	t_cmd		*cmds;
+	int			nb_cmds;
+	int			**pipes;
+	t_env		*env;
+	int			last_exit_status;
+	char		*err_msg;
 }			t_shell;
-
 
 
 /* PROTOTYPES */
