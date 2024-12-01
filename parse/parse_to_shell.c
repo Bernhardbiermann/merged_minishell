@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_to_shell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/30 15:43:50 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/01 12:44:49 by bernhardbie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	fill_cmds(t_shell *data, Token **token_list)
+void	fill_shell(t_shell *data, Token **token_list)
 {
 	Token	*current;
 	Token	*next;
@@ -44,10 +44,8 @@ void	fill_cmds(t_shell *data, Token **token_list)
 	
 }
 
-void	parse_to_shell(t_shell*	data, Token **token_list)
+void	parse_to_shell(t_shell*	data, Token **token_list, t_env *my_envp)
 {
-	data->nb_cmds = count_cmds(token_list);
-	if (!(data->cmds = malloc(sizeof(t_cmd) * data->nb_cmds + 1))
-		exit (1);
+	initialize_shell(data, token_list, my_envp);
 	
 }

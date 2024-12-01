@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/30 15:49:39 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/01 12:46:26 by bernhardbie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 /* STRUCTURES */
 // PARSE_LEXER
-typedef enum	s_tokenType
+typedef enum s_t_TokenType
 {
 	T_ERROR = 0,
 	T_SPACE = 1,
@@ -47,32 +47,31 @@ typedef enum	s_tokenType
 	T_HEREDOC = 8,
 	T_ENV = 9,
 	T_TEXT = 10
-}			TokenType;
+}			t_TokenType;
 
-typedef struct	s_token
+typedef struct s_token
 {
-	TokenType		type;
+	t_TokenType		type;
 	char			*value;
 	size_t			length;
 	struct s_token	*next;
 	struct s_token	*prev;
 }			Token;
 
-typedef struct	s_redirect
+typedef struct s_redirect
 {
-	char				*redir_in;
-	char				*redir_out;
-	char				*append;
-	char				*heredoc;
-	struct s_redirect	*next;
+	char			*redir_in;
+	char			*redir_out;
+	char			*append;
+	char			*heredoc;
 }			t_redirect;
 
 typedef struct s_env
 {
-	char				*key;
-	char				*value;
-	struct s_env		*next;
-	int					size; // relevant??
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+	int				size; // relevant??
 }			t_env;
 
 /* Former struct t_cmd (date of change 30.11.)
@@ -95,24 +94,25 @@ typedef struct	s_shell
 }			t_shell;*/
 
 //30.11. New struct t_cmd;
-typedef struct	s_cmd
+typedef struct s_cmd
 {
 	char			*path; // 30.11. B: think it's not necessary, can store them in the **arg
 	char			*cmd; // 30.11. B: think it's not necessary, can store them in the **arg
+	int				arg_count;
 	char			**arg;
+	int				redirect_count;
 	t_redirect		*redirect; // 30.11. B: need a 2-dimensional redirect, there can be more than one
 }			t_cmd;
 
-typedef struct	s_shell
+typedef struct s_shell
 {
-	t_cmd		*cmds;
-	int			nb_cmds;
-	int			**pipes;
-	t_env		*env;
-	int			last_exit_status;
-	char		*err_msg;
+	t_cmd			*cmds;
+	int				nb_cmds;
+	int				**pipes;
+	t_env			*env;
+	int				last_exit_status;
+	char			*err_msg;
 }			t_shell;
-
 
 /* PROTOTYPES */
 /* BUILTINS */
@@ -125,7 +125,7 @@ int	is_builtin(t_shell *data, int i);
 void	exec_cmd(t_shell *data);
 void	exec_one_cmd(t_shell *data);
 void	exec_more_cmds(t_shell *data);
-int		wait_for_children(t_shell *data, pid_t *pids);
+int	wait_for_children(t_shell *data, pid_t *pids);
 
 /* __pipes.c */
 void	create_pipes(t_shell *data, int nb_pipes);
@@ -143,16 +143,16 @@ char	*find_valid_path(char *cmd, char **paths);
 
 /* PARSE */
 //LEXER
-Token	*new_token(char *input, TokenType type, size_t length);
+Token	*new_token(char *input, t_TokenType type, size_t length);
 Token	*concatenate_token(Token *new_token, Token **token_list);
 Token	*tokenize_input(char *input);
 
 //LEXER_TOKEN
-int		space_token(char *input, Token **token);
-int		quote_token(char *input, Token **token);
-int		operator_token(char *input, Token **token);
-int		env_token(char *input, Token **token);
-int		value_token(char *input, Token **token);
+int	space_token(char *input, Token **token);
+int	quote_token(char *input, Token **token);
+int	operator_token(char *input, Token **token);
+int	env_token(char *input, Token **token);
+int	value_token(char *input, Token **token);
 
 //LEXER_CHECK_ENV
 void	find_key_and_exchange_value_in_ENV(t_env *my_envp, Token *current);
@@ -174,7 +174,7 @@ char	*replace_substring(char *original, char *to_replace, char *replacement);
 void	replace_value(Token *current, char *old_key, char *value);
 
 //LEXER_PRINT
-char	*get_token_type_char(TokenType type);
+char	*get_token_type_char(t_TokenType type);
 void	print_token_list(Token *token_list, char* name);
 
 //REFINE_LEXER_TOKEN 1-2
@@ -197,6 +197,20 @@ Token	*des_tlist_create_syntaxelist(Token **token_list, char *value, int err);
 
 //PARSER
 void	parser(char *input, t_env **my_envp);
+
+//PARSER_ERROR_AND_FREE
+void	free_shell(t_shell *data);
+void	*safe_malloc_shell(size_t size, t_shell *data);
+
+//PARSER_INITIALIZE_SHELL
+int	count_cmds(Token **token_list);
+int	count_cmd_and_arg(Token **token_list, int cmd_nbr);
+int	count_redirect(Token **token_list, int cmd_nbr);
+void	initialize_shell(t_shell *data, Token *token_list, t_env *myenvp);
+
+//PARSE_TO_SHELL
+
+
 
 /* UTILS */
 /* __fill_env.c */
