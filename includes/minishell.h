@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/29 11:27:44 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:12:21 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ typedef struct s_env
 typedef struct	s_cmd
 {
 	char	*path;
-	char	*cmd_name; // no necessary
+	char	*cmd_name; // not necessary, contained in cmd[0] below
+	int		fd_in;    // if redirection in the pipe. NB: some people used a redirect struct
+	int		fd_out;	  // idem
 	char	**cmd;
 }			t_cmd;
 
@@ -77,10 +79,7 @@ typedef struct	s_shell
 {
 	t_cmd	**cmds;
 	int		nb_cmds;
-	int		**pipes;
 	t_env	*env;
-	char	*infile;
-	char	*outfile;
 	int		heredoc; // is it gonna be an int?
 	int		last_exit_status;
 }			t_shell;
@@ -95,22 +94,28 @@ int	is_builtin(t_shell *data, int i);
 
 /* EXECUTE */
 /* __execute.c */
-void	exec_cmd(t_shell *data);
+/* void	exec_cmd(t_shell *data);
 void	exec_one_cmd(t_shell *data);
 void	exec_more_cmds(t_shell *data);
-int		wait_for_children(t_shell *data, pid_t *pids);
+int		wait_for_children(t_shell *data, pid_t *pids); */
+
+/* __exec_cmds.c */
+void	execute(t_shell *data);
+void	exec_more_cmds(t_shell *data);
+void	child_process(t_shell *data, int i, int *fd);
+void	exec_cmd(t_shell *data, int i);
 
 /* __pipes.c */
 void	create_pipes(t_shell *data, int nb_pipes);
-void	close_pipes(t_shell *data, int nb_pipes);
+void	close_pipes(t_shell *data, int nb_pipes, int index_process);
 
 /* __child_process.c */
-void	child_process(t_shell *data, int i);
+/* void	child_process(t_shell *data, int i);
 void	redirect_stdin(t_shell *data, int **pipes, int i);
-void	redirect_stdout(t_shell *data, int **pipes, int i);
+void	redirect_stdout(t_shell *data, int **pipes, int i); */
 
 /* __find_cmd_path.c */
-void	check_cmd(t_shell *data, int i);
+void	find_cmd_path(t_shell *data, int i);
 char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths);
 

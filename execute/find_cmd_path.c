@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/28 14:49:38 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/02 15:53:28 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	we concatenate all the paths with the input command to see if one 
 	works (if it's executed by execve())
 	we free what needs freeing, and we return the cmd_and_args to main */
-void	check_cmd(t_shell *data, int i)
+void	find_cmd_path(t_shell *data, int i)
 {
 	char	**paths;
 	char	*cmd_path;

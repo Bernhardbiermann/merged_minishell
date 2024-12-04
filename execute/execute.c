@@ -6,30 +6,34 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 13:46:58 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/29 11:08:19 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/04 14:52:49 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!														 */
+/* The whole file was the old version of pipes, probably gonna be deleted in the end */
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!														 */
+
 /* check what i'm actually going to input to the function in the end */
-void	exec_cmd(t_shell *data)
+/* void	exec_cmd(t_shell *data)
 {
 	// if i only have one command and no pipe
 		exec_one_cmd(data);
 	// else
 		exec_more_cmds(data);
-}
+} */
 
-void	exec_one_cmd(t_shell *data)
+/* void	exec_one_cmd(t_shell *data)
 {
 	char **env_tab;
 
-/* 	if (is_builtin(data, 0) == 1)
+ 	if (is_builtin(data, 0) == 1)
 	{	
 		printf("builtin function");
 		//builtin_functions(data->cmds[0]->cmd_name);
-	} */
+	} 
 	if (1) // should be 'else', but I'm skipping the checkin of if the function in a builtin for now
 	{
 		check_cmd(data, 0); // access() just needs the command path in data->cmds_path?
@@ -40,16 +44,16 @@ void	exec_one_cmd(t_shell *data)
 		//free_all();  // TO IMPLEMENT
 		exit(EXIT_FAILURE);
 	}
-}
+} */
 
-void	exec_more_cmds(t_shell *data)
+/* void	exec_more_cmds(t_shell *data)
 {
 	int		i;
-	pid_t	*pids;  // existera normalement dnas le struct
+	//pid_t	*pids;  // existera normalement dnas le struct
 
 	if (!(data->pipes = malloc((data->nb_cmds - 1) * sizeof(int *))))
 		error_handle("Malloc pipes failed", 0);
-	if (!(pids = malloc(data->nb_cmds * sizeof(pid_t))))
+	if (!(data->pids = malloc(data->nb_cmds * sizeof(pid_t))))
 	{
 		free(data->pipes);
 		error_handle("Malloc pids failed", 0);
@@ -59,29 +63,30 @@ void	exec_more_cmds(t_shell *data)
 	while (i < data->nb_cmds)
 	{
 		printf("Parent process, preparing to fork child with i = %d\n", i);
-		pids[i] = fork();
-		if (pids[i] < 0) 	//  clean and exit
+		data->pids[i] = fork();
+		if (data->pids[i] < 0) 	//  clean and exit
 		{
 			perror("Fork failed\n");
-			close_pipes(data, data->nb_cmds - 1);
-			free(pids);
+			close_pipes(data, data->nb_cmds - 1, i + 1);
+			free(data->pids);
 			exit(EXIT_FAILURE);
 			//free_all
 			//exit
 		}
-		if (pids[i] == 0)
+		if (data->pids[i] == 0)
 		{
 			printf("Enter child process %d\n", i);
 			child_process(data, i);
-			exit(EXIT_SUCCESS);
 		}
 		i++;
 	}
-	wait_for_children(data, pids);
-	close_pipes(data, data->nb_cmds - 1);
-}
+	//wait_for_children(data, data->pids);
+	while (i-- >= 0)
+		wait(NULL);
+	close_pipes(data, data->nb_cmds - 1, i + 1);
+} */
 
-int	wait_for_children(t_shell *data, pid_t *pids)
+/*int	wait_for_children(t_shell *data, pid_t *pids)
 {
 	int	i;
 	int	status;
@@ -113,7 +118,7 @@ int	wait_for_children(t_shell *data, pid_t *pids)
 		i++;
 	}
 	return (last_exit_status);
-}
+} */
 
 /* CHECK the WIEXITED(status)/WEXITSTATUS(status) macros, 
 if it's common practice to use that or if status should be 

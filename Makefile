@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
+#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/11/29 10:08:16 by bbierman         ###   ########.fr        #
+#    Updated: 2024/12/04 11:05:04 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ SRC = main.c \
 	utils/frees.c\
 	utils/error_handle.c\
 	builtins/builtins.c \
-	execute/execute.c \
+	execute/exec_cmds.c \
 	execute/pipes.c \
 	execute/child_process.c \
 	execute/find_cmd_path.c

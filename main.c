@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/29 11:40:21 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/04 15:56:24 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,13 @@ int	main(int argc, char **argv, char **envp)
 	//print_env_tab(env_tab); 			// see also env.c and export.c in the builtins 
 
 	/* initialize shell struct */
-
 	data = init_shell_struct(*my_envp);	
 	if (!data)
 	{
 		printf("Failed to initialize shell struct.\n");
 		return (1);
 	}
-/* 	while (1) // Prompt anzeigen und Eingabe lesen
+/*  	while (1) // Prompt anzeigen und Eingabe lesen
 	{
 		input = readline("minishell> ");
 		if (!input) // Falls Benutzer EOF eingibt (Strg+D)
@@ -54,9 +53,9 @@ int	main(int argc, char **argv, char **envp)
 	} */
 
 	/* TESTING EXECUTION PART */
-	/* create cmds (just for testing pipes, to be removed) */
-	//create_cmds(data);
-	//print_cmds(data); 		// print cmds to see if properly created
+	/* create cmds (just for testing pipes, to be removed in the end) */
+	create_cmds(data);
+	print_cmds(data); 		// print cmds to see if properly created
 
 /*	TESTING PATHS FINDING PROCESS, ALL LOOKS TO WORK FINE
      char    **paths;
@@ -93,9 +92,8 @@ int	main(int argc, char **argv, char **envp)
         printf("find_valid_path() could not find the command.\n");
     }} */
 
-
 	/* execute */
-	//exec_more_cmds(data); // remove my_envp as it is part of the data->env ?
+	exec_more_cmds(data); // remove my_envp as it is part of the data->env ?
 
 	/* free the people */
 	free_env_list(my_envp, NULL, NULL);
@@ -105,6 +103,9 @@ int	main(int argc, char **argv, char **envp)
 	return (0);
 }
 
+/*  This function we will use each time we encounter an error, at least in the execution part 
+	to be appended to make sure we free everything
+*/
 void	free_shell_struct(t_shell *data)
 {
 	int	i;
@@ -129,6 +130,7 @@ void	free_shell_struct(t_shell *data)
 		i++;
 	}
 	free(data->cmds);
+	free_env_list(&data->env, NULL, NULL);
 	free(data);
 }
 
@@ -190,10 +192,7 @@ t_shell	*init_shell_struct(t_env *env)
 		data->cmds[i]->cmd = NULL;
 		i++;
 	}
-	data->pipes = NULL;
 	data->env = env;
-	data->infile = NULL;
-	data->outfile = NULL;
 	return (data);
 }
 
@@ -206,6 +205,8 @@ void	create_cmds(t_shell *data)
 	data->cmds[0]->cmd[0] = strdup("grep");
 	data->cmds[0]->cmd[1] = strdup("apple");
 	data->cmds[0]->cmd[2] = NULL;
+	data->cmds[0]->fd_in = open("test.txt", O_RDONLY);
+	data->cmds[0]->fd_out = -1;
 
 	// Command 2: sort
 	data->cmds[1]->path = strdup("/bin/sort");
@@ -213,6 +214,8 @@ void	create_cmds(t_shell *data)
 	data->cmds[1]->cmd = malloc(2 * sizeof(char *));
 	data->cmds[1]->cmd[0] = strdup("sort");
 	data->cmds[1]->cmd[1] = NULL;
+	data->cmds[1]->fd_in = -1;
+	data->cmds[1]->fd_out = -1;
 
 	// Command 3: uniq
 	data->cmds[2]->path = strdup("/bin/uniq");
@@ -220,4 +223,6 @@ void	create_cmds(t_shell *data)
 	data->cmds[2]->cmd = malloc(2 * sizeof(char *));
 	data->cmds[2]->cmd[0] = strdup("uniq");
 	data->cmds[2]->cmd[1] = NULL;
+	data->cmds[2]->fd_in = -1;
+	data->cmds[2]->fd_out = open("out_test", O_WRONLY | O_CREAT | O_TRUNC, 0644); // Output file	
 }
