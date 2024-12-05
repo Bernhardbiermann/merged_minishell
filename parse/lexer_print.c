@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:17:49 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/27 11:32:59 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/01 10:56:40 by bernhardbie      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*get_token_type_char(TokenType type)
+char	*get_token_type_char(t_TokenType type)
 {
 	switch (type)
 	{

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/04 15:56:24 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/05 15:33:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ int	main(int argc, char **argv, char **envp)
 	} */
 
 	/* TESTING EXECUTION PART */
-	/* create cmds (just for testing pipes, to be removed in the end) */
+	/* create cmds (just for testing pipes, to be removed in the end) 
+	Here I am testing for test.txt < grep 'apple' | sort | uniq > out_test 
+	*/
 	create_cmds(data);
 	print_cmds(data); 		// print cmds to see if properly created
 
@@ -117,7 +119,6 @@ void	free_shell_struct(t_shell *data)
 		if (data->cmds[i]->path)
 		{
 			free(data->cmds[i]->path);
-			free(data->cmds[i]->cmd_name);
 			if (data->cmds[i]->cmd)
 			{
 				j = 0;
@@ -144,7 +145,7 @@ void	print_cmds(t_shell *data)
 	{
 		printf("Command %d:\n", i + 1);
 		printf("  Path: %s\n", data->cmds[i]->path);
-		printf("  Cmd Name: %s\n", data->cmds[i]->cmd_name);
+		printf("  Cmd Name: %s\n", data->cmds[i]->cmd[0]);
 		if (data->cmds[i]->cmd)
 		{
 			j = 0;
@@ -188,7 +189,6 @@ t_shell	*init_shell_struct(t_env *env)
 			return (NULL);
 		}
 		data->cmds[i]->path = NULL;
-		data->cmds[i]->cmd_name = NULL;
 		data->cmds[i]->cmd = NULL;
 		i++;
 	}
@@ -200,29 +200,31 @@ void	create_cmds(t_shell *data)
 {
 	// Command 1: grep apple
 	data->cmds[0]->path = strdup("/bin/grep"); // Full path to executable
-	data->cmds[0]->cmd_name = strdup("grep");  // Command name
 	data->cmds[0]->cmd = malloc(3 * sizeof(char *));
 	data->cmds[0]->cmd[0] = strdup("grep");
 	data->cmds[0]->cmd[1] = strdup("apple");
 	data->cmds[0]->cmd[2] = NULL;
-	data->cmds[0]->fd_in = open("test.txt", O_RDONLY);
-	data->cmds[0]->fd_out = -1;
+	data->cmds[0]->redir = malloc(sizeof(t_redirect));
+    data->cmds[0]->redir->infile = strdup("test.txt");
+    data->cmds[0]->redir->trunc = NULL; // No output redirection
+	data->cmds[0]->redir->append = NULL; // No output redirection
 
 	// Command 2: sort
 	data->cmds[1]->path = strdup("/bin/sort");
-	data->cmds[1]->cmd_name = strdup("sort");
 	data->cmds[1]->cmd = malloc(2 * sizeof(char *));
 	data->cmds[1]->cmd[0] = strdup("sort");
 	data->cmds[1]->cmd[1] = NULL;
-	data->cmds[1]->fd_in = -1;
-	data->cmds[1]->fd_out = -1;
+	data->cmds[1]->redir = malloc(sizeof(t_redirect));
+    data->cmds[1]->redir->infile = NULL; // No input redirection
+	data->cmds[0]->redir->trunc = NULL; // No output redirection
+	data->cmds[0]->redir->append = NULL; // No output redirection
 
 	// Command 3: uniq
 	data->cmds[2]->path = strdup("/bin/uniq");
-	data->cmds[2]->cmd_name = strdup("uniq");
 	data->cmds[2]->cmd = malloc(2 * sizeof(char *));
 	data->cmds[2]->cmd[0] = strdup("uniq");
 	data->cmds[2]->cmd[1] = NULL;
-	data->cmds[2]->fd_in = -1;
-	data->cmds[2]->fd_out = open("out_test", O_WRONLY | O_CREAT | O_TRUNC, 0644); // Output file	
+    data->cmds[1]->redir->infile = NULL; // No input redirection
+	data->cmds[0]->redir->trunc = NULL; // No output redirection
+	data->cmds[0]->redir->append = NULL; // No output redirection
 }

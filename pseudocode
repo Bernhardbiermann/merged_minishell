@@ -34,14 +34,9 @@ BUT: does it work with the execve() function for instance?
 
 
 /******************  			TASKS  				********************/
-/*	* window/shell + prompt: function read_line + PROMPT defined as a macro
+/*	
 	* export outputs through the whole project to check what we're doing and check for errors
-	* what do we put in our struct?
-		array of arrays or linked list of the parse elements
-		pipes
-		envp or myenvp var
-		nb of commands (calculated at parsing level or after parsing)
-	* figure out signals and CTRL+C, CTRL+\ and CTRL+Z
+	* figure out signals and CTRL+C, CTRL+\ and CTRL+Z and error_status 
 	* figure out here_docs and double redirection << >>
 	* finish/ correct the implementations of builtins (specially in linked-list used)
 	* figure out what the working history of the shell is about

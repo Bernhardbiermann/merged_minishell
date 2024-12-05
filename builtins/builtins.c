@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:45:41 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/26 16:22:40 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/05 14:24:30 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 int	is_builtin(t_shell *data, int i)
 {
-	if (ft_strcmp(data->cmds[i]->cmd_name, "cd") == 0)
+	if (ft_strcmp(data->cmds[i]->cmd[0], "cd") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "echo") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "echo") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "env") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "env") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "exit") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "exit") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "export") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "export") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "pwd") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "pwd") == 0)
 		return (1);
-	else if (ft_strcmp(data->cmds[i]->cmd_name, "unset") == 0)
+	else if (ft_strcmp(data->cmds[i]->cmd[0], "unset") == 0)
 		return (1);
 	else
 		return (0);

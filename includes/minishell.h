@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/04 15:12:21 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/05 16:45:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 /* STRUCTURES */
 // PARSE_LEXER
-typedef enum s_tokenType
+typedef enum s_t_TokenType
 {
 	T_ERROR = 0,
 	T_SPACE = 1,
@@ -47,16 +47,16 @@ typedef enum s_tokenType
 	T_HEREDOC = 8,
 	T_ENV = 9,
 	T_TEXT = 10
-}	TokenType;
+}			t_TokenType;
 
 typedef struct s_token
 {
-	TokenType	type;
-	char		*value;
-	size_t		length;
+	t_TokenType		type;
+	char			*value;
+	size_t			length;
 	struct s_token	*next;
 	struct s_token	*prev;
-} Token;
+}			Token;
 
 typedef struct s_env
 {
@@ -66,22 +66,34 @@ typedef struct s_env
 	int					size; // relevant??
 }			t_env;
 
+/* 2.12: newly added struct */
+typedef struct s_redirect
+{
+	char			*infile;
+	char			*trunc;
+	char			*append;
+}			t_redirect;
+
+//5.12. New struct t_cmd;
 typedef struct	s_cmd
 {
-	char	*path;
-	char	*cmd_name; // not necessary, contained in cmd[0] below
-	int		fd_in;    // if redirection in the pipe. NB: some people used a redirect struct
-	int		fd_out;	  // idem
-	char	**cmd;
+	char		*path; // 30.11. B: think it's not necessary, can store them in the **arg
+	char		**cmd;
+	int			arg_count;
+	int			redirect_count;
+	t_redirect	*redir; // 30.11. B: need a 2-dimensional redirect, there can be more than one
+
 }			t_cmd;
 
 typedef struct	s_shell
 {
-	t_cmd	**cmds;
+	t_cmd	**cmds; // 5.12, A: in the end I left the **, because some functions only work with pointer and not t_cmd struct themselves. If you manage to make it work without the code exploding to your face, go for it ^^'
 	int		nb_cmds;
 	t_env	*env;
-	int		heredoc; // is it gonna be an int?
+	int		fd_hdoc;
+	char	**hdoc_delim;
 	int		last_exit_status;
+	char	*err_msg;
 }			t_shell;
 
 
@@ -93,7 +105,7 @@ typedef struct	s_shell
 int	is_builtin(t_shell *data, int i);
 
 /* EXECUTE */
-/* __execute.c */
+/* __execute.c */	// 5.12, A: this file is obsolete for now
 /* void	exec_cmd(t_shell *data);
 void	exec_one_cmd(t_shell *data);
 void	exec_more_cmds(t_shell *data);
@@ -102,14 +114,14 @@ int		wait_for_children(t_shell *data, pid_t *pids); */
 /* __exec_cmds.c */
 void	execute(t_shell *data);
 void	exec_more_cmds(t_shell *data);
-void	child_process(t_shell *data, int i, int *fd);
+void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
 void	exec_cmd(t_shell *data, int i);
 
-/* __pipes.c */
-void	create_pipes(t_shell *data, int nb_pipes);
-void	close_pipes(t_shell *data, int nb_pipes, int index_process);
+/* __pipes.c */  		 // 5.12, A: this file is obsolete for now
+/* void	create_pipes(t_shell *data, int nb_pipes);
+void	close_pipes(t_shell *data, int nb_pipes, int index_process); */
 
-/* __child_process.c */
+/* __child_process.c */ // 5.12, A: this file is obsolete for now
 /* void	child_process(t_shell *data, int i);
 void	redirect_stdin(t_shell *data, int **pipes, int i);
 void	redirect_stdout(t_shell *data, int **pipes, int i); */
@@ -121,7 +133,7 @@ char	*find_valid_path(char *cmd, char **paths);
 
 /* PARSE */
 //LEXER
-Token	*new_token(char *input, TokenType type, size_t length);
+Token	*new_token(char *input, t_TokenType type, size_t length);
 Token	*concatenate_token(Token *new_token, Token **token_list);
 Token	*tokenize_input(char *input);
 
@@ -152,7 +164,7 @@ char	*replace_substring(char *original, char *to_replace, char *replacement);
 void	replace_value(Token *current, char *old_key, char *value);
 
 //LEXER_PRINT
-char	*get_token_type_char(TokenType type);
+char	*get_token_type_char(t_TokenType type);
 void	print_token_list(Token *token_list, char* name);
 
 //REFINE_LEXER_TOKEN 1-2
@@ -175,6 +187,17 @@ Token	*des_tlist_create_syntaxelist(Token **token_list, char *value, int err);
 
 //PARSER
 void	parser(char *input, t_env **my_envp);
+
+//PARSER_ERROR_AND_FREE
+void	free_shell(t_shell *data);
+void	*safe_malloc_shell(size_t size, t_shell *data);
+
+//PARSER_INITIALIZE_SHELL
+int	count_cmds(Token **token_list);
+int	count_cmd_and_arg(Token **token_list, int cmd_nbr);
+int	count_redirect(Token **token_list, int cmd_nbr);
+void	initialize_shell(t_shell *data, Token *token_list, t_env *myenvp);
+
 
 /* UTILS */
 /* __fill_env.c */

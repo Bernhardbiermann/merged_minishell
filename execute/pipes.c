@@ -6,12 +6,12 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 12:25:33 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/02 10:14:07 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/05 14:41:23 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
+/* 
 void	create_pipes(t_shell *data, int nb_pipes)
 {
 	int	i;
@@ -51,3 +51,4 @@ void	close_pipes(t_shell *data, int nb_pipes, int index_process)
 	}
 	free(data->pipes);
 }
+ */
