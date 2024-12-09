@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:45:41 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/05 14:24:30 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/09 15:02:55 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	is_builtin(t_shell *data, int i)
+/*int	is_builtin(t_shell *data, int i)
 {
 	if (ft_strcmp(data->cmds[i]->cmd[0], "cd") == 0)
 		return (1);
@@ -30,7 +30,7 @@ int	is_builtin(t_shell *data, int i)
 		return (1);
 	else
 		return (0);
-}
+}*/
 
 /* void	builtin_functions(t_shell *data, int i) // probably what i'm gonna pass is actually a struct
 {

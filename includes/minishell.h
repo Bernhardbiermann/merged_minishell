@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/05 16:45:26 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/09 17:14:55 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ typedef struct s_redirect
 	char			*infile;
 	char			*trunc;
 	char			*append;
+	char			*here_delim;
+	int				fd_heredoc;
+	
 }			t_redirect;
 
 //5.12. New struct t_cmd;
@@ -82,16 +85,15 @@ typedef struct	s_cmd
 	int			arg_count;
 	int			redirect_count;
 	t_redirect	*redir; // 30.11. B: need a 2-dimensional redirect, there can be more than one
-
+	//t_cmd		*next;
 }			t_cmd;
 
 typedef struct	s_shell
 {
-	t_cmd	**cmds; // 5.12, A: in the end I left the **, because some functions only work with pointer and not t_cmd struct themselves. If you manage to make it work without the code exploding to your face, go for it ^^'
-	int		nb_cmds;
+	t_cmd	*cmds; // 5.12, A: in the end I left the **, because some functions only work with pointer and not t_cmd struct themselves. If you manage to make it work without the code exploding to your face, go for it ^^'
+	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
 	int		fd_hdoc;
-	char	**hdoc_delim;
 	int		last_exit_status;
 	char	*err_msg;
 }			t_shell;
@@ -186,18 +188,28 @@ void	check_for_terror(Token **token_list);
 Token	*des_tlist_create_syntaxelist(Token **token_list, char *value, int err);
 
 //PARSER
-void	parser(char *input, t_env **my_envp);
+void	parser(t_shell *data, char *input, t_env **my_envp);
 
 //PARSER_ERROR_AND_FREE
 void	free_shell(t_shell *data);
 void	*safe_malloc_shell(size_t size, t_shell *data);
 
-//PARSER_INITIALIZE_SHELL
-int	count_cmds(Token **token_list);
-int	count_cmd_and_arg(Token **token_list, int cmd_nbr);
-int	count_redirect(Token **token_list, int cmd_nbr);
+//PARSER_INITIALIZE_SHELL 1-2
+int		count_cmds(Token **token_list);
+int		count_cmd_and_arg(Token **token_list, int cmd_nbr);
+int		count_redirect(Token **token_list, int cmd_nbr);
 void	initialize_shell(t_shell *data, Token *token_list, t_env *myenvp);
+void	initialize_redir(t_redirect *current, int redirect_count);
+void	initialize_cmds(int cmd_c, t_shell *data);
 
+//PARSER_PARSE_TO_SHELL
+int		process_redir(t_shell *data, Token **current_token, int redir_c, int cmd_c);
+Token	*setup_cmds_in_shell(t_shell *data, Token *current, int cmd_c);
+void	fill_shell(t_shell *data, Token **token_list);
+void	parse_to_shell(t_shell*	data, Token **token_list, t_env *my_envp);
+
+//PARSER_PRINT
+void	print_shell_commands(t_shell *data);
 
 /* UTILS */
 /* __fill_env.c */

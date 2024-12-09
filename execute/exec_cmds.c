@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/05 16:49:29 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/09 15:03:44 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 /* 4.12: we first check if there is only one cmd, or if we have to create pipes in case of more cmds */
-void	execute(t_shell *data)
+/*void	execute(t_shell *data)
 {
 	if (data->nb_cmds <= 1 && is_builtin(data, 0) == 1) // if there is only one cmd and it is a builtin, we execute it. If it's not a builtin, we have to create a child process
 		exec_cmd(data, 0);
 	else
 		exec_more_cmds(data);
-}
+}*/
 
 /* This function iterates over the nb of cmds, and for each cmd:
 	pipes if it's not the last cmd
@@ -29,7 +29,7 @@ void	execute(t_shell *data)
 	At the moment: not working, I'm getting messages about dup2 that failed which I could not fix,
 	but the pipe logic worked at some point. Need to implement the redirection logic and then work from here.
 */
-void	exec_more_cmds(t_shell *data)
+/*void	exec_more_cmds(t_shell *data)
 {
 	int		i;
 	int		fd[2];
@@ -116,12 +116,12 @@ void	child_process(t_shell *data, int i, int *fd, int *prev_fd)
 	}
 	// before executing, we have to check if there is a redirection. I liked Fabbio's approach to redirection (see below)
 	exec_cmd(data, i);
-}
+}*/
 
 /* executes each command
 	if it's a builtin, executes it and then has to clean and exit
 	if it's not, check for a valid path, and execve() exits and cleans */
-void	exec_cmd(t_shell *data, int i)
+/*void	exec_cmd(t_shell *data, int i)
 {
 	char	**env_tab;
 
@@ -142,7 +142,7 @@ void	exec_cmd(t_shell *data, int i)
 			error_handle("execve failed", EXIT_FAILURE);
 		}
 	}
-}
+}*/
 
 /* four types of redirection, defined at parsing stage:
 - truncate  >  (overwrites whatever was in the output file)

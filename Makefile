@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
+#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/04 11:05:04 by aroux            ###   ########.fr        #
+#    Updated: 2024/12/09 17:15:12 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,11 @@ SRC = main.c \
 	parse/lexer.c \
 	parse/refine_lexer_token.c \
 	parse/refine_lexer_token2.c \
+	parse/parser_error_and_free.c \
+	parse/parser_initialize_shell.c \
+	parse/parser_initialize_shell2.c \
+	parse/parser_parse_to_shell.c \
+	parse/parser_print.c \
 	parse/parser.c \
 	utils/fill_env.c \
 	utils/print_env.c \

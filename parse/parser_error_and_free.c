@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_error_and_free.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2024/12/01 12:46:33 by bernhardbie      ###   ########.fr       */
+/*   Updated: 2024/12/09 17:45:40 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	free_shell(t_shell *data)
 	{
 		while (i < data->nb_cmds)
 		{
-			free(data->cmds[i].arg);
-			free(data->cmds[i].redirect);
+			free(data->cmds[i].cmd);
+			free(data->cmds[i].redir);
 			i++;
 		}
 		free(data->cmds);
@@ -33,7 +33,7 @@ void	*safe_malloc_shell(size_t size, t_shell *data)
 {
 	void	*ptr;
 
-	ptr = malloc(size);
+	ptr = calloc(1, size);
 	if (!ptr)
 	{
 		free_shell(data);
