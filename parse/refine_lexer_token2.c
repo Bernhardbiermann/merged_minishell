@@ -6,15 +6,15 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:54:25 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/28 09:01:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:34:24 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	check_empty_DQUOT(Token **token_list)
+void	check_empty_DQUOT(t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 
 	current = *token_list;
 	while (current)
@@ -36,9 +36,9 @@ void	check_empty_DQUOT(Token **token_list)
 	}
 }
 
-void	make_text_out_of_quot(Token **token_list)
+void	make_text_out_of_quot(t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 
 	current = *token_list;
 	while (current)

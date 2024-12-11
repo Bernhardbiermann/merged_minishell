@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:20:42 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/28 20:44:11 by bernhardbie      ###   ########.fr       */
+/*   Updated: 2024/12/11 12:30:58 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	space_token(char *input, Token **token)
+int	space_token(char *input, t_Token **token)
 {
 	int	i;
 
@@ -23,7 +23,7 @@ int	space_token(char *input, Token **token)
 	return (i);
 }
 
-int	quote_token(char *input, Token **token)
+int	quote_token(char *input, t_Token **token)
 {
 	int	i;
 
@@ -47,7 +47,7 @@ T_ERROR , 1);
 	}
 }
 
-int	operator_token(char *input, Token **token)
+int	operator_token(char *input, t_Token **token)
 {
 	if ((input[0] == '>' && input[1] == '>') || \
 	(input[0] == '<' && input[1] == '<'))
@@ -70,7 +70,7 @@ int	operator_token(char *input, Token **token)
 	}
 }
 
-int	env_token(char *input, Token **token)
+int	env_token(char *input, t_Token **token)
 {
 	int	i;
 
@@ -81,7 +81,7 @@ int	env_token(char *input, Token **token)
 	return (i);
 }
 
-int	value_token(char *input, Token **token)
+int	value_token(char *input, t_Token **token)
 {
 	int	i;
 

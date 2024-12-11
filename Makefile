@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/09 17:15:12 by bbierman         ###   ########.fr        #
+#    Updated: 2024/12/10 15:08:09 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,10 @@ INCLUDES = -Iincludes
 LIBFT_DIR = includes/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 SRC = main.c \
-	parse/grammer_check.c \
 	parse/lexer_check_ENV.c \
 	parse/lexer_error_and_free.c \
+	parse/lexer_grammer_check.c \
+	parse/lexer_grammer_check_2.c \
 	parse/lexer_helper_functions.c \
 	parse/lexer_helper_functions_2.c \
 	parse/lexer_print.c \

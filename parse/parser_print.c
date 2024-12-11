@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/09 17:36:27 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:54:53 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_shell_commands(t_shell *data)
 		printf("  Arguments: ");
 		for (int j = 0; data->cmds[i].cmd[j] != NULL; j++)
 		{
-			printf("%s ", data->cmds[i].cmd[j]);
+			printf("\n    %s", data->cmds[i].cmd[j]);
 		}
 		printf("\n");
 

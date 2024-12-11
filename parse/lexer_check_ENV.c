@@ -6,13 +6,13 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:41:11 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/29 11:03:40 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:26:31 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	find_key_and_exchange_value_in_ENV(t_env *my_envp, Token *current)
+void	find_key_and_exchange_value_in_ENV(t_env *my_envp, t_Token *current)
 {
 	t_env	*env_node;
 
@@ -34,7 +34,7 @@ void	find_key_and_exchange_value_in_ENV(t_env *my_envp, Token *current)
 }
 
 void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, \
-Token *current, char *start)
+t_Token *current, char *start)
 {
 	char	*key;
 	char	*old_key;
@@ -74,7 +74,7 @@ char	*compare_key_and_get_value(t_env *my_envp, char* key)
 	return (ft_strdup(""));
 }
 
-void	find_mask_and_exchange(Token *current, char *start)
+void	find_mask_and_exchange(t_Token *current, char *start)
 {
 	while (start)
 	{
@@ -84,9 +84,9 @@ void	find_mask_and_exchange(Token *current, char *start)
 	}
 }
 
-void	do_env_in_DQUOT_and_ENV(Token *token_list, t_env *my_envp)
+void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp)
 {
-	Token	*current;
+	t_Token	*current;
 	char	*start;
 	char	*next;
 

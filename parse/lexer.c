@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:17:15 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/01 10:58:58 by bernhardbie      ###   ########.fr       */
+/*   Updated: 2024/12/11 12:31:42 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-Token	*new_token(char *input, t_TokenType type, size_t length)
+t_Token	*new_token(char *input, t_TokenType type, size_t length)
 {
-	Token	*new_token;
+	t_Token	*new_token;
 
-	new_token = malloc(sizeof(Token));
+	new_token = malloc(sizeof(t_Token));
 	if (!new_token)
 		return (NULL);
 	new_token->value = input;
@@ -27,9 +27,9 @@ Token	*new_token(char *input, t_TokenType type, size_t length)
 	return (new_token);
 }
 
-Token	*concatenate_token(Token *new_token, Token **token_list)
+t_Token	*concatenate_token(t_Token *new_token, t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 
 	if (new_token)
 	{
@@ -47,10 +47,10 @@ Token	*concatenate_token(Token *new_token, Token **token_list)
 	return (*token_list);
 }
 
-Token	*tokenize_input(char *input)
+t_Token	*tokenize_input(char *input)
 {
-	Token	*token_list;
-	Token	*new_token;
+	t_Token	*token_list;
+	t_Token	*new_token;
 	int		i;
 
 	i = 0;

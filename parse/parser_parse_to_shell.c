@@ -6,15 +6,15 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/09 14:59:13 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:32:54 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	process_redir(t_shell *data, Token **current_token, int redir_c, int cmd_c)
+int	process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c)
 {
-	Token	*current;
+	t_Token	*current;
 	
 	current = *current_token;
 	if (current->type == T_INPUT)
@@ -32,7 +32,7 @@ int	process_redir(t_shell *data, Token **current_token, int redir_c, int cmd_c)
 	return (1);
 }
 
-Token	*setup_cmds_in_shell(t_shell *data, Token *current, int cmd_c)
+t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c)
 {
 	int		arg_c;
 	int		redir_c;
@@ -58,9 +58,9 @@ Token	*setup_cmds_in_shell(t_shell *data, Token *current, int cmd_c)
 	return (current);
 }
 
-void	fill_shell(t_shell *data, Token **token_list)
+void	fill_shell(t_shell *data, t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 	int		cmd_c;
 
 	current = *token_list;
@@ -80,7 +80,7 @@ void	fill_shell(t_shell *data, Token **token_list)
 	}
 }
 
-void	parse_to_shell(t_shell*	data, Token **token_list, t_env *my_envp)
+void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp)
 {
 	initialize_shell(data, *token_list, my_envp);
 	fill_shell(data, token_list);

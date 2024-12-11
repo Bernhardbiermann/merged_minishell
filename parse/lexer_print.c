@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:17:49 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/01 10:56:40 by bernhardbie      ###   ########.fr       */
+/*   Updated: 2024/12/11 12:30:34 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char	*get_token_type_char(t_TokenType type)
 	}
 }
 
-void	print_token_list(Token *token_list, char *name)
+void	print_token_list(t_Token *token_list, char *name)
 {
-	Token *current = token_list;
+	t_Token *current = token_list;
 	printf("Token List after doing: %s\n", name);
 	printf("-----------------------------------------------------\n");
 	printf("| %-10s | %-15s | %-6s | %-9s |\n", "Type", "Value", "Length", "Prev");

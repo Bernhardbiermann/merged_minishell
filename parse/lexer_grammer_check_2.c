@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_error_and_free.c                             :+:      :+:    :+:   */
+/*   lexer_grammer_check_2.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 11:39:21 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:26:58 by bbierman         ###   ########.fr       */
+/*   Created: 2024/12/10 14:55:58 by bbierman          #+#    #+#             */
+/*   Updated: 2024/12/11 12:27:18 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	free_token_list(t_Token *token_list)
+void	check_for_pipe_in_out_app_here_last(t_Token **token_list)
 {
-	t_Token	*temp;
+	t_Token	*current;
 
-	while (token_list)
+	current = *token_list;
+	while(current->next)
+		current = current->next;
+	if (current->type == T_APPEND || current->type == T_INPUT || \
+	current->type == T_OUTPUT || current->type == T_HEREDOC || \
+	current->type == T_PIPE)
 	{
-		temp = token_list;
-		token_list = token_list->next;
-		if (temp->value)
-			free(temp->value);
-		free(temp);
+		*token_list = des_tlist_create_syntlist(token_list, current->value, 2);
+		return ;
 	}
-}
-
-void	three_frees(char *s1, char *s2, char *s3)
-{
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	if (s3)
-		free(s3);
 }

@@ -6,16 +6,16 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:30:30 by bbierman          #+#    #+#             */
-/*   Updated: 2024/11/27 13:25:42 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:34:11 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-Token	*delete_node_and_glue(Token *target, Token **token_list)
+t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list)
 {
-	Token	*temp;
-	
+	t_Token	*temp;
+
 	temp = NULL;
 	if (!target || !token_list || !*token_list)
 		return (NULL);
@@ -39,10 +39,10 @@ Token	*delete_node_and_glue(Token *target, Token **token_list)
 	return (target);
 }
 
-void	delete_empty_ENV_and_quote(Token **token_list)
+void	delete_empty_ENV_and_quote(t_Token **token_list)
 {
-	Token	*current;
-	Token	*next;
+	t_Token	*current;
+	t_Token	*next;
 	
 	current = *token_list;
 	next = NULL;
@@ -58,10 +58,10 @@ void	delete_empty_ENV_and_quote(Token **token_list)
 			current = next;
 	}
 }
-void	delete_spaces(Token **token_list)
+void	delete_spaces(t_Token **token_list)
 {
-	Token	*current;
-	Token	*next;
+	t_Token	*current;
+	t_Token	*next;
 	
 	current = *token_list;
 	next = NULL;
@@ -75,7 +75,7 @@ void	delete_spaces(Token **token_list)
 	}
 }
 
-void	merge_two(Token *current, Token *next)
+void	merge_two(t_Token *current, t_Token *next)
 {
 	char	*merged_value;
 
@@ -98,9 +98,9 @@ void	merge_two(Token *current, Token *next)
 	free(next);
 }
 
-void	merge_text_env_and_quot(Token **token_list)
+void	merge_text_env_and_quot(t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 	
 	current = *token_list;
 	while (current && current->next)

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/09 17:14:55 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:37:01 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_token
 	size_t			length;
 	struct s_token	*next;
 	struct s_token	*prev;
-}			Token;
+}			t_Token;
 
 typedef struct s_env
 {
@@ -135,26 +135,26 @@ char	*find_valid_path(char *cmd, char **paths);
 
 /* PARSE */
 //LEXER
-Token	*new_token(char *input, t_TokenType type, size_t length);
-Token	*concatenate_token(Token *new_token, Token **token_list);
-Token	*tokenize_input(char *input);
+t_Token	*new_token(char *input, t_TokenType type, size_t length);
+t_Token	*concatenate_token(t_Token *new_token, t_Token **token_list);
+t_Token	*tokenize_input(char *input);
 
 //LEXER_TOKEN
-int		space_token(char *input, Token **token);
-int		quote_token(char *input, Token **token);
-int		operator_token(char *input, Token **token);
-int		env_token(char *input, Token **token);
-int		value_token(char *input, Token **token);
+int		space_token(char *input, t_Token **token);
+int		quote_token(char *input, t_Token **token);
+int		operator_token(char *input, t_Token **token);
+int		env_token(char *input, t_Token **token);
+int		value_token(char *input, t_Token **token);
 
 //LEXER_CHECK_ENV
-void	find_key_and_exchange_value_in_ENV(t_env *my_envp, Token *current);
-void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, Token *current, char *start);
+void	find_key_and_exchange_value_in_ENV(t_env *my_envp, t_Token *current);
+void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, t_Token *current, char *start);
 void	three_frees(char *s1, char *s2, char *s3);
 char	*compare_key_and_get_value(t_env *my_envp, char* key);
-void	do_env_in_DQUOT_and_ENV(Token *token_list, t_env *my_envp);
+void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp);
 
 //LEXER_ERROR_AND_FREE
-void	free_token_list(Token *token_list);
+void	free_token_list(t_Token *token_list);
 void	three_frees(char *s1, char *s2, char *s3);
 
 //LEXER_HELPER_FUNCTIONS 1-2
@@ -163,29 +163,30 @@ char	*ft_strndup(const char *s, size_t len);
 char	*find_end(char* start);
 char	*ft_strstr(char *big, char *little);
 char	*replace_substring(char *original, char *to_replace, char *replacement);
-void	replace_value(Token *current, char *old_key, char *value);
+void	replace_value(t_Token *current, char *old_key, char *value);
 
 //LEXER_PRINT
 char	*get_token_type_char(t_TokenType type);
-void	print_token_list(Token *token_list, char* name);
+void	print_token_list(t_Token *token_list, char* name);
 
 //REFINE_LEXER_TOKEN 1-2
-Token	*delete_node_and_glue(Token *target, Token **token_list);
-void	delete_spaces(Token **token_list);
-void	delete_empty_ENV_and_quote(Token **token_list);
-void	merge_two(Token *current, Token *next);
-void	merge_text_env_and_quot(Token **token_list);
-void	check_empty_DQUOT(Token **token_list);
-void	delete_spaces(Token **token_list);
-void	make_text_out_of_quot(Token **token_list);
-void	replace_special_value(Token *current, char *start);
+t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list);
+void	delete_spaces(t_Token **token_list);
+void	delete_empty_ENV_and_quote(t_Token **token_list);
+void	merge_two(t_Token *current, t_Token *next);
+void	merge_text_env_and_quot(t_Token **token_list);
+void	check_empty_DQUOT(t_Token **token_list);
+void	delete_spaces(t_Token **token_list);
+void	make_text_out_of_quot(t_Token **token_list);
+void	replace_special_value(t_Token *current, char *start);
 
-//GRAMMER_CHECK
-void	check_for_first_pipe_and_double_in_out_app_here(Token **token_list);
-void	check_for_combination_pipe_and_in_out_app_here(Token **token_list);
-void	check_empty_env_first(Token **token_list);
-void	check_for_terror(Token **token_list);
-Token	*des_tlist_create_syntaxelist(Token **token_list, char *value, int err);
+//LEXER_GRAMMER_CHECK 1-2 
+void	check_for_first_pipe_and_double_in_out_app_here(t_Token **token_list);
+void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list);
+void	check_empty_env_first(t_Token **token_list);
+void	check_for_terror(t_Token **token_list);
+t_Token	*des_tlist_create_syntlist(t_Token **token_list, char *value, int err);
+void	check_for_pipe_in_out_app_here_last(t_Token **token_list);
 
 //PARSER
 void	parser(t_shell *data, char *input, t_env **my_envp);
@@ -195,18 +196,18 @@ void	free_shell(t_shell *data);
 void	*safe_malloc_shell(size_t size, t_shell *data);
 
 //PARSER_INITIALIZE_SHELL 1-2
-int		count_cmds(Token **token_list);
-int		count_cmd_and_arg(Token **token_list, int cmd_nbr);
-int		count_redirect(Token **token_list, int cmd_nbr);
-void	initialize_shell(t_shell *data, Token *token_list, t_env *myenvp);
+int		count_cmds(t_Token **token_list);
+int		count_cmd_and_arg(t_Token **token_list, int cmd_nbr);
+int		count_redirect(t_Token **token_list, int cmd_nbr);
+void	initialize_shell(t_shell *data, t_Token *token_list, t_env *myenvp);
 void	initialize_redir(t_redirect *current, int redirect_count);
 void	initialize_cmds(int cmd_c, t_shell *data);
 
 //PARSER_PARSE_TO_SHELL
-int		process_redir(t_shell *data, Token **current_token, int redir_c, int cmd_c);
-Token	*setup_cmds_in_shell(t_shell *data, Token *current, int cmd_c);
-void	fill_shell(t_shell *data, Token **token_list);
-void	parse_to_shell(t_shell*	data, Token **token_list, t_env *my_envp);
+int		process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c);
+t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c);
+void	fill_shell(t_shell *data, t_Token **token_list);
+void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp);
 
 //PARSER_PRINT
 void	print_shell_commands(t_shell *data);
@@ -244,5 +245,6 @@ t_shell	*init_shell_struct(t_env *env);
 void	create_cmds(t_shell *data);
 void	print_cmds(t_shell *data);
 void	free_shell_struct(t_shell *data);
+
 
 #endif

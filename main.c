@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/09 18:02:35 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:06:03 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char **argv, char **envp)
 	/* check nb of argvs */
 	if (argc != 1 || argv[0] == NULL)
 		printf("Wrong nb of arguments\n");
-
 	/* env var list */
 	my_envp = create_myenvp(envp);		// create the env vars linked list
 	//env_tab = env_to_tab(*my_envp);		// convert it to a tab (char **)
@@ -38,7 +37,9 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	while (1) // Prompt anzeigen und Eingabe lesen
-	{
+	{	
+		if (!data)
+			data = init_shell_struct(*my_envp);
 		input = readline("minishell> ");
 		if (!input) // Falls Benutzer EOF eingibt (Strg+D)
 		{
@@ -50,6 +51,8 @@ int	main(int argc, char **argv, char **envp)
 		printf("You entered: %s\n", input);
 		parser(data, input, my_envp);
 		free(input);
+		free_shell_struct(data);
+		data = NULL;
 	}
 	/* free the people */
 	free_env_list(my_envp, NULL, NULL);
@@ -78,7 +81,10 @@ void	free_shell_struct(t_shell *data)
 			while (j < data->cmds[i].arg_count)
 			{
 				if (data->cmds[i].cmd[j])
-					free(data->cmds[i].cmd[j++]);
+				{
+					free(data->cmds[i].cmd[j]);
+					j++;
+				}
 			}
 			free(data->cmds[i].cmd);
 		}
@@ -88,33 +94,38 @@ void	free_shell_struct(t_shell *data)
 			while (j < data->cmds[i].redirect_count)
 			{
 				if (data->cmds[i].redir[j].infile)
-					free(data->cmds[i].redir[j++].infile);
+					free(data->cmds[i].redir[j].infile);
 				if (data->cmds[i].redir[j].trunc)
-					free(data->cmds[i].redir[j++].trunc);
+					free(data->cmds[i].redir[j].trunc);
 				if (data->cmds[i].redir[j].append)
-					free(data->cmds[i].redir[j++].append);
+					free(data->cmds[i].redir[j].append);
 				if (data->cmds[i].redir[j].here_delim)
-					free(data->cmds[i].redir[j++].here_delim);
+					free(data->cmds[i].redir[j].here_delim);
+				j++;
 			}
 			free(data->cmds[i].redir);
 		}
 		i++;
 	}
-	if (data->cmds)
-		free(data->cmds);
+	if (data->err_msg)
+		free(data->err_msg);
+	free(data->cmds);
 	free(data);
 }
 
 t_shell	*init_shell_struct(t_env *env)
 {
 	t_shell	*data;
-	int		i;
+	//int		i;
 
 	data = malloc(sizeof(t_shell));
 	if (!data)
 		return (NULL);
-	data->nb_cmds = 1;
-	data->cmds = malloc(data->nb_cmds * sizeof(t_cmd));
+	data->nb_cmds = 0;
+	data->cmds = NULL;
+	data->last_exit_status = 0;
+	data->err_msg = NULL;
+	/*data->cmds = malloc(data->nb_cmds * sizeof(t_cmd));
 	if (!data->cmds)
 	{
 		free(data);
@@ -126,7 +137,7 @@ t_shell	*init_shell_struct(t_env *env)
 		data->cmds[i].path = NULL;
 		data->cmds[i].cmd = NULL;
 		i++;
-	}
+	}*/
 	data->env = env;
 	return (data);
 }

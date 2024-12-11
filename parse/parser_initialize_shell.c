@@ -6,21 +6,23 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:03:01 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/09 17:14:03 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:32:17 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	count_cmds(Token **token_list)
+int	count_cmds(t_Token **token_list)
 {
-	Token	*current;
+	t_Token	*current;
 	int		cmd_count;
 
 	if (!token_list || !*token_list)
 		return (0);
-	cmd_count = 1;
+	cmd_count = 0;
 	current = *token_list;
+	if (current->type != T_ERROR)
+		cmd_count = 1;
 	while (current)
 	{
 		if (current->type == T_PIPE)
@@ -30,9 +32,9 @@ int	count_cmds(Token **token_list)
 	return (cmd_count);
 }
 
-int	count_cmd_and_arg(Token **token_list, int cmd_nbr)
+int	count_cmd_and_arg(t_Token **token_list, int cmd_nbr)
 {
-	Token	*current;
+	t_Token	*current;
 	int		cmd_and_arg_count;
 	int		pipe_count;
 
@@ -58,9 +60,9 @@ int	count_cmd_and_arg(Token **token_list, int cmd_nbr)
 	return (cmd_and_arg_count);
 }
 
-int	count_redirect(Token **token_list, int cmd_nbr)
+int	count_redirect(t_Token **token_list, int cmd_nbr)
 {
-	Token	*current;
+	t_Token	*current;
 	int		redirect_count;
 	int		pipe_count;
 
@@ -86,7 +88,7 @@ int	count_redirect(Token **token_list, int cmd_nbr)
 	return (redirect_count);
 }
 
-void	initialize_shell(t_shell *data, Token *token_list, t_env *myenvp)
+void	initialize_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
 {
 	int	cmd_count;
 
