@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/11 12:37:01 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/13 10:56:20 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ typedef struct	s_cmd
 	int			arg_count;
 	int			redirect_count;
 	t_redirect	*redir; // 30.11. B: need a 2-dimensional redirect, there can be more than one
+	int			input_fd;
+	int			output_fd;
 	//t_cmd		*next;
 }			t_cmd;
 
@@ -234,11 +236,19 @@ int		is_empty_str(char *str);
 /* __error_handle.c */
 void	error_handle(char *error_msg, int err_code);
 
-/* __frees.c */
+/* __frees.c */ 
 void	free_tab(char **tab);
 void	free_many_splits(char **split1, char **split2);
 void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile);
 void	multi_close(int fds[], int size, int infile, int outfile);
+
+//INIT_AND_FREE_SHELL
+void	free_shell_struct_cmds(t_shell *data, int i);
+void	free_shell_struct_redir(t_shell *data, int i);
+void	free_shell_struct(t_shell *data);
+t_shell	*init_shell_struct(t_env *env);
+
+
 
 /* OTHER (need to put somewhere OR just here to test the pipes */
 t_shell	*init_shell_struct(t_env *env);

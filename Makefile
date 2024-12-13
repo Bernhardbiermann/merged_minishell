@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/10 15:08:09 by bbierman         ###   ########.fr        #
+#    Updated: 2024/12/12 10:05:23 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC = main.c \
 	utils/print_env.c \
 	utils/manip_str.c \
 	utils/frees.c\
+	utils/init_and_free_shell.c \
 	utils/error_handle.c\
 	builtins/builtins.c \
 	execute/exec_cmds.c \
