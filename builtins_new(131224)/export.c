@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/13 16:49:32 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:09:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_env	*ft_export(char **args, t_shell *data)
 {
 	int		key_len;
 	char	*equal_ptr;
+	char	*key;
 	t_env	*current;
 	int		i;
 	int		j;
@@ -64,7 +65,16 @@ t_env	*ft_export(char **args, t_shell *data)
 		{ // inside the loop logic might go to another function
 			equal_ptr = ft_strchr(args[i], '=');
 			key_len = ft_strlen(args[i]) - ft_strlen(equal_ptr);
-			while (lst_ptr && ft_strncmp(*vars, lst_ptr->key, key_len) != 0)
+			key = ft_strlcpy(key, args[i], key_len);
+			current = data->env;
+			while (current)
+			{
+				if (ft_strcmp(current->key, key))
+				{
+					free(current->value);
+					current->value = ft_strdup(args[i][])
+				}
+			}
 				lst_ptr = lst_ptr->next;
 			free(lst_ptr->value);
 			if (ft_strlen(equal_ptr) > 1) // if something after equal sign, update value
