@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/13 17:09:00 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:36:38 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,53 +36,89 @@ int	is_valid_var_name(const char *str)
 	return (0);
 }
 
-t_env	*ft_export(char **args, t_shell *data)
+char	*safe_malloc(t_shell *data, size_t len)
+{
+	char	*value;
+
+	value = malloc(len + 1);
+	if (!value)
+	{
+		ft_printf("minishell: export: memory allocation error\n");
+		data->last_exit_status = 1;
+		return NULL;
+	}
+	return (value);
+}
+
+void	create_newnode_and_append(t_shell *data, char *equal_ptr, char *key)
+{
+	t_env	*new_node;
+	char	*value;
+
+	value = ft_strdup(equal_ptr + 1);
+	if (!value)
+	{
+		ft_printf("minishell: export: memory allocation failed\n");
+		data->last_exit_status = 1;
+		return ;
+	}
+	new_node = create_env_node(key, value);
+	if (new_node)
+		append_to_lst(data->env, new_node);
+	else
+		free(value);
+}
+
+void	expand_env(t_shell *data, char *input)
 {
 	int		key_len;
 	char	*equal_ptr;
 	char	*key;
 	t_env	*current;
+
+	equal_ptr = ft_strchr(input, '=');
+	key_len = ft_strlen(input) - ft_strlen(equal_ptr);
+	key = safe_malloc(data, key_len + 1);
+	if (!key)
+		return ;
+	ft_strlcpy(key, input, key_len + 1);
+	current = data->env;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			current->value = safe_malloc(data, equal_ptr + 1);
+			if (!current->value)
+				break ;
+		}
+		current = current->next;
+	}
+	if (!current)
+		create_newnode_and_append(data, equal_ptr, key);
+	free(key);
+}
+
+void	ft_export(char **args, t_shell *data)
+{
 	int		i;
-	int		j;
 
 	if (args == NULL)
-	{
 		print_env(data->env);
-		return (data->env);
-	}
 	i = 1;
 	while (args[i])
 	{
-		if (!ft_strchr(args[i], '=') && is_valid_var_name(args[i]) != NULL)
+		if (!ft_strchr(args[i], '=') && is_valid_var_name(args[i]) != 0)
 		{
-			ft_printf("minishell: export: `%s': not a valid identifier", args[i]);
+			ft_printf("minishell: export: `%s': \
+			not a valid identifier", args[i]);
 			data->last_exit_status = 1;
 			continue ;
 		}
 		else if (!ft_strchr(args[i], '=')) // 131224 B: the potential varibal will be safed in export but not in env
 			continue ;
-		else	/* update the value in case export VAR=xxx */
-		{ // inside the loop logic might go to another function
-			equal_ptr = ft_strchr(args[i], '=');
-			key_len = ft_strlen(args[i]) - ft_strlen(equal_ptr);
-			key = ft_strlcpy(key, args[i], key_len);
-			current = data->env;
-			while (current)
-			{
-				if (ft_strcmp(current->key, key))
-				{
-					free(current->value);
-					current->value = ft_strdup(args[i][])
-				}
-			}
-				lst_ptr = lst_ptr->next;
-			free(lst_ptr->value);
-			if (ft_strlen(equal_ptr) > 1) // if something after equal sign, update value
-				lst_ptr->value = ft_strdup(equal_ptr + 1);
-			else
-				lst_ptr->value = NULL;
-		}
-		vars++;
+		else
+			expand_env(data, args[i]);
+		i++;
 	}
-	return (env);
 }
