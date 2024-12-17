@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
+#    By: bernhardbiermann <bernhardbiermann@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/09 17:15:12 by bbierman         ###   ########.fr        #
+#    Updated: 2024/12/09 21:17:05 by bernhardbie      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,8 +77,8 @@ fclean: clean
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
-valgrind: 
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline_suppress.supp ./$(NAME)
+valgrind:
+	/usr/local/bin/valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline_suppress.supp ./minishell
 
 valchild:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --trace-children=yes ./$(NAME)
