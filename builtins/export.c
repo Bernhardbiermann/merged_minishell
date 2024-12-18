@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/19 12:22:10 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/18 14:55:52 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,50 +20,105 @@
 // CHECK1: input might be in another form, maybe already a char** ?
 // CHECK2: output format slightly different than env command. Check in bash
 
-t_env	*ft_export(char *input, t_env *env)
+int	is_valid_var_name(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_isalpha(str[0]) && str[0] != '_') //131224 B: First char has to be alpha or underscore
+		return (1);
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_') //131224 B: Next one can also be a number
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*safe_malloc(t_shell *data, size_t len)
+{
+	char	*value;
+
+	value = malloc(len + 1);
+	if (!value)
+	{
+		ft_printf("minishell: export: memory allocation error\n");
+		data->last_exit_status = 1;
+		return NULL;
+	}
+	return (value);
+}
+
+void	create_newnode_and_append(t_shell *data, char *equal_ptr, char *key)
+{
+	t_env	*new_node;
+	char	*value;
+
+	value = ft_strdup(equal_ptr + 1);
+	if (!value)
+	{
+		ft_printf("minishell: export: memory allocation failed\n");
+		data->last_exit_status = 1;
+		return ;
+	}
+	new_node = create_env_node(key, value);
+	if (new_node)
+		append_to_lst(&data->env, new_node);
+	else
+		free(value);
+}
+
+void	expand_env(t_shell *data, char *input)
 {
 	int		key_len;
 	char	*equal_ptr;
-	t_env	*lst_ptr;
-	char	**vars;
+	char	*key;
+	t_env	*current;
 
-	if (input == NULL)
+	equal_ptr = ft_strchr(input, '=');
+	key_len = ft_strlen(input) - ft_strlen(equal_ptr);
+	key = safe_malloc(data, key_len + 1);
+	if (!key)
+		return ;
+	ft_strlcpy(key, input, key_len + 1);
+	current = data->env;
+	while (current)
 	{
-		print_env(env);
-		return (env);
-	}
-	vars = ft_split(input, ' ');
-	if (!vars)
-		return (NULL);
-	while (*vars)
-	{
-		if (!ft_strchr(*vars, '=')) // if export VAR called without equal sign
-			// create VAR. check for maxlen?/ invalid format (alphanumerical only)?
-		else	/* update the value in case export VAR=xxx */
-		{ // inside the loop logic might go to another function
-			equal_ptr = ft_strchr(*vars, '=');
-			key_len = ft_strlen(*vars) - ft_strlen(equal_ptr);
-			lst_ptr = env;
-			while (lst_ptr && ft_strncmp(*vars, lst_ptr->key, key_len) != 0)
-				lst_ptr = lst_ptr->next;
-			free(lst_ptr->value);
-			if (ft_strlen(equal_ptr) > 1) // if something after equal sign, update value
-				lst_ptr->value = ft_strdup(equal_ptr + 1);
-			else
-				lst_ptr->value = NULL;
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			current->value = safe_malloc(data, ft_strlen(equal_ptr) + 1);
+			if (!current->value)
+				break ;
 		}
-		vars++;
+		current = current->next;
 	}
-	return (env);
+	if (!current)
+		create_newnode_and_append(data, equal_ptr, key);
+	free(key);
 }
 
-		/* if (!ft_strchr(input, '='))
-			new_envp[envp_size] = ft_strdup(input);
-		else
+void	ft_export(char **args, t_shell *data)
+{
+	int		i;
+
+	if (!args[1])
+		print_env(data->env);
+	i = 1;
+	while (args[i])
+	{
+		if (!ft_strchr(args[i], '=') && is_valid_var_name(args[i]) != 0)
 		{
-			var_name = ft_strdnup(input, (int)(strchr(input, '=') - input));
-			value = ft_strdup(input + strchr(input, '='));
-			new_envp[envp_size] = multi_strjoin(var_name, "=", value);
-			free(var_name);
-			free(value);
-		} */
+			ft_printf("minishell: export: `%s': \
+			not a valid identifier", args[i]);
+			data->last_exit_status = 1;
+			continue ;
+		}
+		else if (!ft_strchr(args[i], '=')) // 131224 B: the potential varibal will be safed in export but not in env
+			continue ;
+		else
+			expand_env(data, args[i]);
+		i++;
+	}
+}

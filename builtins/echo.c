@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:48:43 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/12 11:57:20 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/18 14:23:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,44 @@
 
 /* Clarify if check needed that the var exists before using getenv. 
 If that's the case use function below (expand_var)*/
-int	ft_echo(char *str, char arg)
+
+int	check_for_option_n(char *arg)
 {
-	int		i;
-	int		start;
-	char	*var_name;
+	int	i;
 
 	i = 0;
-	while (str[i])
+	if (arg[0] != '-')
+		return 1;
+	i++;
+	while (arg[i])
 	{
-		if (str[i] == '$')
-		{
-			start = i;
-			while (str[i] && str[i] != ' ')
-				i++;
-			var_name = malloc((i - start + 1) * sizeof(char));
-			if (!var_name)
-				return (EXIT_FAILURE);
-			ft_strncpy(var_name, str + start, i - start); 
-			ft_printf("%s", get_env(var_name));
-			free(var_name);
-		}
-		else
-			write(1, &str[i++], 1);
+		if (arg[i] != 'n')
+			return 1;
+		i++;
 	}
-	if (arg != 'n')
+	return (0);
+}
+
+int	ft_echo(char **args)
+{
+	int		i;
+	int		newline;
+
+	i = 1;
+	newline = 1;
+	while (check_for_option_n(args[i]))
+	{
+		newline = 0;
+		i++;
+	}
+	while (args[i])
+	{
+		write(1, args[i], ft_strlen(args[i]));
+		if (args[i + 1] != NULL)
+			write (1, " ", 1);
+		i++;
+	}
+	if (newline != 0)
 		write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
-
-/* void	expand_var(char *var_name)
-{
-	char	*var_val;
-
-	if (getenv(var_name))
-		var_val = getenv(var_name);
-	ft_printf("%s", var_val);
-} */
