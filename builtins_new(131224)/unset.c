@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:35 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 11:24:16 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:29:30 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	ft_unset(t_shell *data, char **args)
 	{
 		if (is_valid_var_name(args[i]) != 0)
 		{
-			ft_printf("minishell: export: `%s': not a valid identifier", args[i]);
+			ft_printf("minishell: export: `%s': not a valid identifier", \
+			args[i]);
 			data->last_exit_status = 1;
 			i++;
 			continue ;
