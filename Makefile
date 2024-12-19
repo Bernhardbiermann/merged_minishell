@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/18 14:18:34 by aroux            ###   ########.fr        #
+#    Updated: 2024/12/19 17:49:15 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRC = main.c \
 	builtins/pwd.c \
 	builtins/unset.c \
 	execute/exec_cmds.c \
-	execute/find_cmd_path.c
+	execute/find_cmd_path.c \
+	execute/child_process.c
 
 OBJ = $(SRC:.c=.o)
 

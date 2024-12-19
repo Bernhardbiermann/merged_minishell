@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/18 13:47:49 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/19 17:28:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,5 +85,7 @@ t_shell	*init_shell_struct(t_env *env)
 	data->last_exit_status = 0;
 	data->err_msg = NULL;
 	data->env = env;
+	data->std_in = dup(STDIN_FILENO);
+	data->std_out = dup(STDOUT_FILENO);
 	return (data);
 }

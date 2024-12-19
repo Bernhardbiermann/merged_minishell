@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 14:24:26 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/19 17:48:41 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,9 @@ typedef struct s_env
 /* 2.12: newly added struct */
 typedef struct s_redirect
 {
-	char			*infile;
-	char			*trunc;
-	char			*append;
-	char			*here_delim;
+	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
+	char			*filename;
 	int				fd_heredoc;
-	
 }			t_redirect;
 
 //5.12. New struct t_cmd;
@@ -98,6 +95,8 @@ typedef struct	s_shell
 	int		fd_hdoc;
 	int		last_exit_status;
 	char	*err_msg;
+	int		std_in;
+	int		std_out;
 }			t_shell;
 
 
@@ -138,26 +137,16 @@ t_env	*search_target_and_delete(t_env *current_input, char *key);
 void	ft_unset(t_shell *data, char **args);
 
 	/* EXECUTION */
-/* __execute.c */	// 5.12, A: this file is obsolete for now
-/* void	exec_cmd(t_shell *data);
-void	exec_one_cmd(t_shell *data);
-void	exec_more_cmds(t_shell *data);
-int		wait_for_children(t_shell *data, pid_t *pids); */
-
 /* __exec_cmds.c */
 void	execute(t_shell *data);
-void	exec_more_cmds(t_shell *data);
-void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
 void	exec_cmd(t_shell *data, int i);
+void	exec_more_cmds(t_shell *data);
 
-/* __pipes.c */  		 // 5.12, A: this file is obsolete for now
-/* void	create_pipes(t_shell *data, int nb_pipes);
-void	close_pipes(t_shell *data, int nb_pipes, int index_process); */
-
-/* __child_process.c */ // 5.12, A: this file is obsolete for now
-/* void	child_process(t_shell *data, int i);
-void	redirect_stdin(t_shell *data, int **pipes, int i);
-void	redirect_stdout(t_shell *data, int **pipes, int i); */
+/* __child_process.c */
+void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
+void	handle_redirections(t_cmd *cmd);
+void	open_dup_close(t_redirect redir);
+void 	redir_heredoc(t_redirect redir);
 
 /* __find_cmd_path.c */
 void	find_cmd_path(t_shell *data, int i);
