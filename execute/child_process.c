@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 11:34:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:12:40 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_redirections(t_cmd *cmd)
 	//	return;
 	//redir = cmd->redir;
 	i = 0;
-	while (&cmd->redir[i]) // 1912A: seems that Nick handled multiple redir by just having a linked list of redirection and using here a while loop
+	while (i < cmd->redirect_count) // 1912A: seems that Nick handled multiple redir by just having a linked list of redirection and using here a while loop
 	{
 		open_dup_close(cmd->redir[i]);
 		i++;
