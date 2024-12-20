@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:17:49 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:30:34 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:21:14 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ char	*get_token_type_char(t_TokenType type)
 		case 8: return "T_HEREDOC";  // Example: Quote
 		case 9: return "T_ENV";  // Example: Environment
 		case 10: return "T_TEXT"; // Unknown type
+		default: return "T_UNKNOWN"; // Fallback for unexpected values
 	}
 }
 
