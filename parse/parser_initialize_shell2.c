@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:13:15 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/09 17:28:40 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:34:06 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@ void	initialize_redir(t_redirect *current, int redirect_count)
 	i = 0;
 	while (i < redirect_count)
 	{
-		current->infile = NULL;
-		current->trunc = NULL;
-		current->append = NULL;
-		current->here_delim = NULL;
-		current->fd_heredoc = 0;
+		current->type = T_ERROR;
+		current->filename = NULL;
+		current->fd_heredoc = -1;
 		current++;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/12 10:08:35 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:40:04 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,8 @@ void	free_shell_struct_redir(t_shell *data, int i)
 		j = 0;
 		while (j < data->cmds[i].redirect_count)
 		{
-			if (data->cmds[i].redir[j].infile)
-				free(data->cmds[i].redir[j].infile);
-			if (data->cmds[i].redir[j].trunc)
-				free(data->cmds[i].redir[j].trunc);
-			if (data->cmds[i].redir[j].append)
-				free(data->cmds[i].redir[j].append);
-			if (data->cmds[i].redir[j].here_delim)
-				free(data->cmds[i].redir[j].here_delim);
+			if (data->cmds[i].redir[j].filename)
+				free(data->cmds[i].redir[j].filename);
 			j++;
 		}
 		free(data->cmds[i].redir);
@@ -85,5 +79,7 @@ t_shell	*init_shell_struct(t_env *env)
 	data->last_exit_status = 0;
 	data->err_msg = NULL;
 	data->env = env;
+	data->std_in = dup(STDIN_FILENO);
+	data->std_out = dup(STDOUT_FILENO);
 	return (data);
 }

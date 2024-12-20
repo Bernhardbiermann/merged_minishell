@@ -3,112 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/25 17:44:13 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/04 11:04:46 by aroux            ###   ########.fr       */
+/*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
+/*   Updated: 2024/12/20 11:34:11 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/* void	child_process(t_shell *data, int i)
+void	child_process(t_shell *data, int i, int *fd, int *prev_fd)
 {
-	char	**env_tab;
-
-	printf("Child %d redirecting stdin\n", i);
-	redirect_stdin(data, data->pipes, i);
-	printf("Child %d redirecting stdout\n", i);
-	redirect_stdout(data, data->pipes, i);
-	close_pipes(data, data->nb_cmds - 1, i);
- 	if (is_builtin(data, i) == 1)
+	handle_redirections(&data->cmds[i]);
+	if (*prev_fd != -1) // If there's a previous pipe, read from it
 	{
-		printf("Executing builtin function: %s\n", data->cmds[i]->cmd[0]);
-		//builtins_functions(data->cmds->cmd_name[i], data);
-		//clean and free_all
-		exit(EXIT_SUCCESS);
+		printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, *prev_fd, fd[1]);
+		if (dup2(*prev_fd, STDIN_FILENO) == -1)
+			error_handle("dup2 failed: child input", EXIT_FAILURE);
+		close(*prev_fd); // Close after duplicating
 	}
- 	while (1)
+	if (i != data->nb_cmds - 1) // If not last command, write to the current pipe
 	{
-		find_cmd_path(data, i); // access() just needs the command path in data->cmds_path?
-		env_tab = env_to_tab(data->env);
-		//print_env_tab(env_tab);
-		printf("Child %d executing command: %s\n", i, data->cmds[i]->path);
-		if (execve(data->cmds[i]->path, data->cmds[i]->cmd, env_tab) == -1) // seems to work when tested on a smaller scale
-		{
-			perror("execve failed");  // If execve fails, print the error and exit
-			free_tab(env_tab);
-			//other frees??
-			exit(EXIT_FAILURE);
-        }
-	 }
-} */
+		if (dup2(fd[1], STDOUT_FILENO) == -1) 
+			error_handle("dup2 failed: child output", EXIT_FAILURE);
+		close(fd[1]);
+	}
+	if (i != 0)
+		close(fd[0]);
+	exec_cmd(data, i);
+}
 
-/* if it's the 1st command (i = 0) we redirect the infile to the STDIN */
-/* void	redirect_stdin(t_shell *data, int **pipes, int i)
+/* four types of redirection, defined at parsing stage:
+- truncate  >  (overwrites whatever was in the output file)
+- append    >> (appends what is in the output file)
+- input 	<  (defines an input file that's gonna be the new end to read)
+- heredoc	>> (creates a file delimitated by an EOF mark, that the user can append)
+How Fabbio and his partner handled it: if they have a list of token, they check token->type = COMMAND, 
+and if token->next->type = redirection (trunc, append, input or heredoc), then we redirect the fd_in or the fd_out
+ */
+void	handle_redirections(t_cmd *cmd)
 {
-	int	infile;
-	
-	if (i == 0)
-	{
- 		ADD HERE HEREDOC HANDLING
-		if (data->infile->type == 2) // let's say 2 is the code for here_doc and 1 for normal doc?
-			infile = open(???); // how do i open a heredoc? 
- 		data->infile = strdup("test.txt");
-		if (!data->infile)
-		{
-    		// Handle allocation failure
-			printf("Malloc infile failed");
-		}
-		infile = open(data->infile, O_RDONLY);
-		if (infile < 0)
-		{
-			//free_all // to be defined
-			perror("Failed to open infile1");
-			exit(EXIT_FAILURE); // or EXIT_STATUS?
-		}
-		dup2(infile, STDIN_FILENO);
-		close(infile);
-	}
-	else // on dup2 le fd[0] to STDIN_FILENO
-	{
-		if (dup2(pipes[i - 1][0], STDIN_FILENO) == -1)
-		{
-			perror("dup failed for STDIN");
-			exit(EXIT_FAILURE);
-		}
-	}
-} */
+	//t_redirect	*redir;
+	int			i;
 
-/* If it's the last command (i = nb_cmds - 1), we redirect the STDOUT to the output file */
-/* void	redirect_stdout(t_shell *data, int **pipes, int i)
+	//if (!cmd->redir)
+	//	return;
+	//redir = cmd->redir;
+	i = 0;
+	while (&cmd->redir[i]) // 1912A: seems that Nick handled multiple redir by just having a linked list of redirection and using here a while loop
+	{
+		open_dup_close(cmd->redir[i]);
+		i++;
+	}
+}
+
+void	open_dup_close(t_redirect redir)
 {
-	int	outfile;
+	int	fd;
 
-	if (i == data->nb_cmds - 1) // last command
+	if (redir.type == T_INPUT) // input file
 	{
- 		ADD HERE HEREDOC HANDLING
-		if (data->outfile->type == 2) // let's say 2 is the code for here_doc and 1 for normal doc?
-			outfile = open(data_heredocWHATEVER, O_WRONLY | O_CREAT | O_APPEND, 0644); // how do i open a heredoc?
- 	
-		// will modify this part when date->outfile is passed on by parsing. if !outfile, this function should not be executed (add a check at beggining?)
-		printf("last command open outfile\n");
-		outfile = open("out_test", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (outfile < 0)
-		{
-			//free_all // to be defined
-			perror("Failed to open outfile");
-			exit(EXIT_FAILURE); // or EXIT_STATUS?
-		}
-		dup2(outfile, STDOUT_FILENO);
-		close(outfile);
+		fd = open(redir.filename, O_RDONLY);
+		if (fd < 0)
+			error_handle("Failed to open input file", EXIT_FAILURE);
+		if (dup2(fd, STDIN_FILENO) == -1)
+			error_handle("dup2 failed for input redirection", EXIT_FAILURE);
+		close(fd);
 	}
-	else // on dup2 le fd[0] to STDIN_FILENO
+	else if (redir.type == T_OUTPUT || redir.type == T_APPEND)
 	{
-		if (dup2(pipes[i][1], STDOUT_FILENO) == -1)
-		{
-			perror("dup failed for STDOUT");
-			exit(EXIT_FAILURE);
-		}
+		if (redir.type == T_OUTPUT)
+			fd = open(redir.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			fd = open(redir.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd < 0)
+			error_handle("Failed to open output file", EXIT_FAILURE);
+		if (dup2(fd, STDOUT_FILENO) == -1)
+			error_handle("dup2 failed for output redirection", EXIT_FAILURE);
+		close(fd);
 	}
-} */
+	//else if (redir.type == T_HEREDOC)
+	//	redir_heredoc(redir);
+}
+
+/* if heredoc, create pipe for the heredoc (suggested by chatGPT 1912A)*/
+void redir_heredoc(t_redirect redir)
+{
+	int	fd[2];
+
+	if (pipe(fd) == -1)
+		error_handle("pipe failed for heredoc", EXIT_FAILURE);
+	write(fd[1], redir.filename, 50); // 1912A: to adapt to what is effectively our heredoc form and content
+	close(fd[1]);
+	if (dup2(fd[0], STDIN_FILENO) == -1)
+		error_handle("dup2 failed for heredoc", EXIT_FAILURE);
+	close(fd[0]);
+}

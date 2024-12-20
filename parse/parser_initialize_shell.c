@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser_initialize_shell.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:03:01 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:32:17 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:25:54 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
 
 int	count_cmds(t_Token **token_list)
 {

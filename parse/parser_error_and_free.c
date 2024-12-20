@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_error_and_free.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2024/12/09 17:45:40 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:25:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,3 +41,4 @@ void	*safe_malloc_shell(size_t size, t_shell *data)
 	}
 	return (ptr);
 }
+

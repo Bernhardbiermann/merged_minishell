@@ -6,11 +6,17 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:32:54 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:26:39 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	fill_redir(t_shell *data, int redir_c, int cmd_c, t_Token *current)
+{
+	data->cmds[cmd_c].redir[redir_c].filename = ft_strdup(current->next->value);
+	data->cmds[cmd_c].redir[redir_c].type = current->type;
+}
 
 int	process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c)
 {
@@ -18,17 +24,13 @@ int	process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c
 	
 	current = *current_token;
 	if (current->type == T_INPUT)
-		data->cmds[cmd_c].redir[redir_c].infile = \
-		ft_strdup(current->next->value);
+		fill_redir(data, redir_c, cmd_c, current);
 	else if (current->type == T_OUTPUT)
-		data->cmds[cmd_c].redir[redir_c].trunc = \
-		ft_strdup(current->next->value);
+		fill_redir(data, redir_c, cmd_c, current);
 	else if (current->type == T_APPEND)
-		data->cmds[cmd_c].redir[redir_c].append = \
-		ft_strdup(current->next->value);
+		fill_redir(data, redir_c, cmd_c, current);
 	else
-		data->cmds[cmd_c].redir[redir_c].here_delim = \
-		ft_strdup(current->next->value);
+		fill_redir(data, redir_c, cmd_c, current);
 	return (1);
 }
 

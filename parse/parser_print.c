@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/10 11:54:53 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 10:37:09 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,24 @@ void	print_shell_commands(t_shell *data)
 		printf("  Redirections:\n");
 		for (int k = 0; k < data->cmds[i].redirect_count; k++) // Schleife über alle Redirects
 		{
-			if (data->cmds[i].redir[k].infile)
-				printf("    Input (<): %s\n", data->cmds[i].redir[k].infile);
-			if (data->cmds[i].redir[k].trunc)
-				printf("    Output (>): %s\n", data->cmds[i].redir[k].trunc);
-			if (data->cmds[i].redir[k].append)
-				printf("    Append (>>): %s\n", data->cmds[i].redir[k].append);
-			if (data->cmds[i].redir[k].here_delim)
-				printf("    Here-Document (<<): %s\n", data->cmds[i].redir[k].here_delim);
+			t_redirect *redir = &data->cmds[i].redir[k];
+			switch (redir->type)
+			{
+				case T_INPUT:
+					printf("    Input (<): %s\n", redir->filename);
+					break;
+				case T_OUTPUT:
+					printf("    Output (>): %s\n", redir->filename);
+					break;
+				case T_APPEND:
+					printf("    Append (>>): %s\n", redir->filename);
+					break;
+				case T_HEREDOC:
+					printf("    Here-Document (<<): FD: %d\n", redir->fd_heredoc);
+					break;
+				default:
+					printf("    Unknown redirection type\n");
+			}
 		}
 		printf("\n");
 	}

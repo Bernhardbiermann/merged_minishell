@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:20:42 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:30:58 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:38:49 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ int	operator_token(char *input, t_Token **token)
 	if ((input[0] == '>' && input[1] == '>') || \
 	(input[0] == '<' && input[1] == '<'))
 	{
-		if (input[0] == '>')
-			*token = new_token(ft_strndup(input, 2), T_APPEND, 2);
-		else
+		if (input[0] == '<')
 			*token = new_token(ft_strndup(input, 2), T_HEREDOC, 2);
+		else
+			*token = new_token(ft_strndup(input, 2), T_APPEND, 2);
 		return (2);
 	}
 	else
@@ -63,9 +63,9 @@ int	operator_token(char *input, t_Token **token)
 		if (input[0] == '|')
 			*token = new_token(ft_strndup(input, 1), T_PIPE, 1);
 		else if (input[0] == '>')
-			*token = new_token(ft_strndup(input, 1), T_INPUT, 1);
-		else
 			*token = new_token(ft_strndup(input, 1), T_OUTPUT, 1);
+		else
+			*token = new_token(ft_strndup(input, 1), T_INPUT, 1);
 		return (1);
 	}
 }

@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/18 10:46:39 by bbierman         ###   ########.fr        #
+#    Updated: 2024/12/20 10:29:48 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,15 +41,6 @@ SRC = main.c \
 	utils/init_and_free_shell.c \
 	utils/error_handle.c\
 	builtins/builtins.c \
-	execute/exec_cmds.c \
-	execute/pipes.c \
-	execute/child_process.c \
-	execute/find_cmd_path.c
-SRC_final = 	main.c \
-	parse/pouet1.c \
-	parse/pouet2.c \
-	execute/execute.c \
-	builtins/builtins.c \
 	builtins/cd.c \
 	builtins/echo.c \
 	builtins/env.c \
@@ -57,6 +48,9 @@ SRC_final = 	main.c \
 	builtins/export.c \
 	builtins/pwd.c \
 	builtins/unset.c \
+	execute/exec_cmds.c \
+	execute/find_cmd_path.c \
+	execute/child_process.c
 
 OBJ = $(SRC:.c=.o)
 

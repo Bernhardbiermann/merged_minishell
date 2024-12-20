@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/12 10:04:05 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:07:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ int	main(int argc, char **argv, char **envp)
 		printf("Failed to initialize shell struct.\n");
 		return (1);
 	}
+
+	/* TESTING EXECUTION PART */
+	/* create cmds (just for testing pipes, to be removed in the end) 
+	Here I am testing for test.txt < grep 'apple' | sort | uniq > out_test 
+	*/
+	//create_cmds(data);
+	//print_cmds(data); 		// print cmds to see if properly created
+	
 	while (1)
 	{	
 		if (!data)
@@ -44,13 +52,14 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);	
 		printf("You entered: %s\n", input);
 		parser(data, input, my_envp);
+		execute(data);
 		free(input);
 		free_shell_struct(data);
 		data = NULL;
 	}
 	/* free the people */
 	free_env_list(my_envp, NULL, NULL);
-	if (data)
-		free_shell_struct(data);
+//	if (data)
+//		free_shell_struct(data);
 	return (0);
 }

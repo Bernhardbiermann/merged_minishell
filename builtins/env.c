@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:16 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/13 10:51:57 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/13 14:24:07 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	list_envp_vars(char **envp)
 {
+	if (!envp)
+	{
+		printf("No enviromental variables available.\n");
+		return ;
+	}
 	while (**envp)
 	{
 		ft_printf("%s\n", *envp);

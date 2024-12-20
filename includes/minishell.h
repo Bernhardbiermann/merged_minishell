@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/13 10:56:20 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:16:21 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,9 @@ typedef struct s_env
 /* 2.12: newly added struct */
 typedef struct s_redirect
 {
-	char			*infile;
-	char			*trunc;
-	char			*append;
-	char			*here_delim;
+	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
+	char			*filename;
 	int				fd_heredoc;
-	
 }			t_redirect;
 
 //5.12. New struct t_cmd;
@@ -84,7 +81,7 @@ typedef struct	s_cmd
 	char		**cmd;
 	int			arg_count;
 	int			redirect_count;
-	t_redirect	*redir; // 30.11. B: need a 2-dimensional redirect, there can be more than one
+	t_redirect	*redir;
 	int			input_fd;
 	int			output_fd;
 	//t_cmd		*next;
@@ -92,50 +89,71 @@ typedef struct	s_cmd
 
 typedef struct	s_shell
 {
-	t_cmd	*cmds; // 5.12, A: in the end I left the **, because some functions only work with pointer and not t_cmd struct themselves. If you manage to make it work without the code exploding to your face, go for it ^^'
+	t_cmd	*cmds;
 	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
 	int		fd_hdoc;
 	int		last_exit_status;
 	char	*err_msg;
+	int		std_in;
+	int		std_out;
 }			t_shell;
 
 
 
 /* PROTOTYPES */
-/* BUILTINS */
-
+	/* BUILTINS */
 /* __builtins.c */
-int	is_builtin(t_shell *data, int i);
+int		is_builtin(t_shell *data, int i);
+void	exec_builtin(t_shell *data, int i);
 
-/* EXECUTE */
-/* __execute.c */	// 5.12, A: this file is obsolete for now
-/* void	exec_cmd(t_shell *data);
-void	exec_one_cmd(t_shell *data);
-void	exec_more_cmds(t_shell *data);
-int		wait_for_children(t_shell *data, pid_t *pids); */
+/* __cd.c */
+void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value);
+void	ft_cd(t_shell *data, const char *path);
 
+/* __echo.c */
+int		check_for_option_n(char *arg);
+int		ft_echo(char **args);
+
+/* __env.c */
+void	list_envp_vars(char **envp); // 18.12 A: are we using it in the end?
+
+/* __exit.c */
+int		is_a_number(char *str);
+void	ft_exit(char **args, t_shell *data);
+
+/* __export.c */
+int		is_valid_var_name(const char *str);
+char	*safe_malloc(t_shell *data, size_t len);
+void	create_newnode_and_append(t_shell *data, char *equal_ptr, char *key);
+void	expand_env(t_shell *data, char *input);
+void	ft_export(char **args, t_shell *data);
+
+/* __pwd.c */
+int	ft_pwd(t_shell *data);
+
+/* __unset.c */
+t_env	*search_target_and_delete(t_env *current_input, char *key);
+void	ft_unset(t_shell *data, char **args);
+
+	/* EXECUTION */
 /* __exec_cmds.c */
 void	execute(t_shell *data);
-void	exec_more_cmds(t_shell *data);
-void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
 void	exec_cmd(t_shell *data, int i);
+void	exec_more_cmds(t_shell *data);
 
-/* __pipes.c */  		 // 5.12, A: this file is obsolete for now
-/* void	create_pipes(t_shell *data, int nb_pipes);
-void	close_pipes(t_shell *data, int nb_pipes, int index_process); */
-
-/* __child_process.c */ // 5.12, A: this file is obsolete for now
-/* void	child_process(t_shell *data, int i);
-void	redirect_stdin(t_shell *data, int **pipes, int i);
-void	redirect_stdout(t_shell *data, int **pipes, int i); */
+/* __child_process.c */
+void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
+void	handle_redirections(t_cmd *cmd);
+void	open_dup_close(t_redirect redir);
+void 	redir_heredoc(t_redirect redir);
 
 /* __find_cmd_path.c */
 void	find_cmd_path(t_shell *data, int i);
 char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths);
 
-/* PARSE */
+	/* PARSING */
 //LEXER
 t_Token	*new_token(char *input, t_TokenType type, size_t length);
 t_Token	*concatenate_token(t_Token *new_token, t_Token **token_list);
@@ -214,7 +232,7 @@ void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp);
 //PARSER_PRINT
 void	print_shell_commands(t_shell *data);
 
-/* UTILS */
+	/* UTILS */
 /* __fill_env.c */
 t_env	*create_env_node(char *key, char *value);
 void	append_to_lst(t_env **lst, t_env *new);
@@ -251,10 +269,10 @@ t_shell	*init_shell_struct(t_env *env);
 
 
 /* OTHER (need to put somewhere OR just here to test the pipes */
-t_shell	*init_shell_struct(t_env *env);
-void	create_cmds(t_shell *data);
-void	print_cmds(t_shell *data);
-void	free_shell_struct(t_shell *data);
+//t_shell	*init_shell_struct(t_env *env); // 18.12 A: now in the utils
+void	create_cmds(t_shell *data);		// to be removed?
+void	print_cmds(t_shell *data);		// to be removed
+//void	free_shell_struct(t_shell *data);	// in the utils
 
 
 #endif
