@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 11:16:21 by bbierman         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:42:56 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ void	parser(t_shell *data, char *input, t_env **my_envp);
 //PARSER_ERROR_AND_FREE
 void	free_shell(t_shell *data);
 void	*safe_malloc_shell(size_t size, t_shell *data);
+t_redirect	*safe_malloc_redir(size_t size, t_shell *data);
 
 //PARSER_INITIALIZE_SHELL 1-2
 int		count_cmds(t_Token **token_list);

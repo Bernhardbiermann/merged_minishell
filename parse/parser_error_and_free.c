@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2024/12/17 16:25:48 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:42:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,21 @@ void	free_shell(t_shell *data)
 	}
 }
 
+t_redirect	*safe_malloc_redir(size_t size, t_shell *data)
+{
+	t_redirect	*ptr;
+
+	ptr = malloc(sizeof(t_redirect) * size);
+	if (!ptr)
+	{
+		free_shell(data);
+		//data->last_exit_status = 1;
+		exit (1);
+	}
+	return (ptr);
+}
+
+
 void	*safe_malloc_shell(size_t size, t_shell *data)
 {
 	void	*ptr;
@@ -41,4 +56,3 @@ void	*safe_malloc_shell(size_t size, t_shell *data)
 	}
 	return (ptr);
 }
-

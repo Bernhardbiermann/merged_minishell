@@ -6,11 +6,12 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:48:43 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 14:23:16 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:33:21 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
 
 /* Clarify if check needed that the var exists before using getenv. 
 If that's the case use function below (expand_var)*/
@@ -23,6 +24,8 @@ int	check_for_option_n(char *arg)
 	if (arg[0] != '-')
 		return 1;
 	i++;
+	if (arg[1] != 'n')
+		return 1;
 	while (arg[i])
 	{
 		if (arg[i] != 'n')
@@ -39,19 +42,21 @@ int	ft_echo(char **args)
 
 	i = 1;
 	newline = 1;
-	while (check_for_option_n(args[i]))
+	if (!args || !*args)
+		return 1;
+	while (args[i] && check_for_option_n(args[i]) == 0)
 	{
 		newline = 0;
 		i++;
 	}
 	while (args[i])
 	{
-		write(1, args[i], ft_strlen(args[i]));
-		if (args[i + 1] != NULL)
-			write (1, " ", 1);
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
 		i++;
 	}
-	if (newline != 0)
-		write(1, "\n", 1);
+	if (newline == 1)
+		printf("\n");
 	return (EXIT_SUCCESS);
 }

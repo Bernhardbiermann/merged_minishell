@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/19 17:47:01 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:42:47 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	exec_more_cmds(t_shell *data)
 				close(fd[1]);
 				prev_fd = fd[0];
 			}
+			else
+				close(fd[0]);
  		//	if (i > 0)
 		//	{
 		//		if (dup2(fd[0], STDIN_FILENO) == -1)

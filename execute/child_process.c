@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 13:12:40 by aroux            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:55:03 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,12 @@ void	child_process(t_shell *data, int i, int *fd, int *prev_fd)
 			error_handle("dup2 failed: child output", EXIT_FAILURE);
 		close(fd[1]);
 	}
-	if (i != 0)
-		close(fd[0]);
+//	if (i != 0)
+//		close(fd[0]);
+	if (fd[1] >= 0)
+		close(fd[1]);       // Close current pipe's write end
+	if (fd[0] >= 0)
+		close(fd[0]); 
 	exec_cmd(data, i);
 }
 
