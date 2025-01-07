@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 14:34:30 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:23:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void	free_shell_struct_cmds(t_shell *data, int i)
 		{
 			if (data->cmds[i].cmd[j])
 			{
-				free(data->cmds[i].cmd[j]);
+				free_nullify(data->cmds[i].cmd[j]);
 				j++;
 			}
 		}
-		free(data->cmds[i].cmd);	
+		free_nullify(data->cmds[i].cmd);
 	}
 	free_shell_struct_redir(data, i);
 }
@@ -60,10 +60,11 @@ void	free_shell_struct_redir(t_shell *data, int i)
 		while (j < data->cmds[i].redirect_count)
 		{
 			if (data->cmds[i].redir[j].filename)
-				free(data->cmds[i].redir[j].filename);
+				free_nullify(data->cmds[i].redir[j].filename);
 			j++;
 		}
 		free(data->cmds[i].redir);
+		data->cmds[i].redir = NULL;
 	}
 }
 
@@ -71,21 +72,25 @@ void	free_shell_struct(t_shell *data, t_env **my_env)
 {
 	int	i;
 
+	if (!data)
+		return ;
 	i = 0;
 	while (i < data->nb_cmds)
 	{
 		if (data->cmds[i].path)
-			free(data->cmds[i].path);
-		free_shell_struct_cmds(data, i);
+			free_nullify(data->cmds[i].path);
+		if (data->cmds)
+			free_shell_struct_cmds(data, i);
 		i++;
 	}
 	if (data->err_msg)
-		free(data->err_msg);
+		free_nullify(data->err_msg);
 	close_fd(data->prev_fd);
-	free(data->cmds);
+	free_nullify(data->cmds);
 	free_env_list(my_env, NULL, NULL);
 	free(data);
 }
+
 
 void	clean_shell_struct(t_shell *data)
 {

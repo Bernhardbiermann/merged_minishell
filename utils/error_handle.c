@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 14:43:58 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:58:55 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	close_fd(int fd)
 {
 	if (fd >= 0)
 		close(fd);
+	else
+		return ;
 }
 
 /* void	error_handle(char *error_msg, int err_code)

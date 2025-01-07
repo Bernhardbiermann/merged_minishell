@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 14:30:59 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 18:03:01 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 	{
 		find_cmd_path(data, i, my_env);
 		if (find_cmd_path(data, i, my_env) == 0)
-			error_handle(data, "command not found", EXIT_FAILURE, my_env);
+			error_handle(data, "command not found", 0, my_env);
 		// if no command path, clean fds, clean struct, exit with exit code 
 		env_tab = env_to_tab(data->env);
 		printf("Child %d executing command: %s\n", i, data->cmds[i].path);
@@ -72,6 +72,8 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 
 	i = 0;
 	data->prev_fd = -1;
+	fd[0] = -1; // important to initialize otherwise it's getting messed up when command not found
+	fd[1] = -1;
 	while (i < data->nb_cmds)
 	{
 		// save stdin and stout, reset them at the end

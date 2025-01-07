@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:28 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 14:32:10 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:26:53 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,21 @@ void	free_tab(char **tab)
 	tab = NULL;
 }
 
+void	free_nullify(void *to_be_freed)
+{
+	if (to_be_freed)
+	{
+		free(to_be_freed);
+		to_be_freed = NULL;
+	}
+}
+
 void	free_many_splits(char **split1, char **split2)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (split1[i])
-	{
-		free(split1[i]);
-		i++;
-	}
-	free(split1);
-	while (split2[j])
-	{
-		free(split2[j]);
-		j++;
-	}
-	free(split2);
+	if (split1)
+		free_tab(split1);
+	if (split2)
+		free_tab(split2);
 }
 
 void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile)
