@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 11:15:13 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:28:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,14 @@ void	exec_more_cmds(t_shell *data, t_env **my_env);
 
 /* __child_process.c */
 void	child_process(t_shell *data, int i, int *fd, t_env **my_env);
-void	handle_redirections(t_cmd *cmd);
-void	open_dup_close(t_redirect redir);
-void 	redir_heredoc(t_redirect redir);
+void	handle_redirections(t_cmd *cmd, t_shell *data, t_env **my_env);
+void	open_dup_close(t_redirect redir, t_shell *data, t_env **my_env);
+void 	redir_heredoc(t_redirect redir, t_shell *data, t_env **my_env);
 
 /* __find_cmd_path.c */
-void	find_cmd_path(t_shell *data, int i);
+int		find_cmd_path(t_shell *data, int i, t_env **my_env);
 char	*get_path(char **env);
-char	*find_valid_path(char *cmd, char **paths);
+char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **my_env);
 
 	/* PARSING */
 //LEXER
@@ -254,7 +254,8 @@ char	*multi_strjoin(char *str1, char *str2, char *str3);
 int		is_empty_str(char *str);
 
 /* __error_handle.c */
-void	error_handle(char *error_msg, int err_code);
+void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);
+void	close_fd(int fd);
 
 /* __frees.c */ 
 void	free_tab(char **tab);

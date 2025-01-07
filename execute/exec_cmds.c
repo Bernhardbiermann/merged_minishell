@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 13:20:04 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:30:59 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,17 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 	}
 	else
 	{
-		find_cmd_path(data, i);
+		find_cmd_path(data, i, my_env);
+		if (find_cmd_path(data, i, my_env) == 0)
+			error_handle(data, "command not found", EXIT_FAILURE, my_env);
+		// if no command path, clean fds, clean struct, exit with exit code 
 		env_tab = env_to_tab(data->env);
 		printf("Child %d executing command: %s\n", i, data->cmds[i].path);
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1) // seems to work when tested on a smaller scale
 		{
 			free_tab(env_tab);
 			//other frees?? free_exit_shell() function to implement
-			error_handle("execve failed", EXIT_FAILURE);
+			error_handle(data, "execve failed", EXIT_FAILURE, my_env);
 		}
 	}
 }
@@ -73,27 +76,27 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	{
 		// save stdin and stout, reset them at the end
 		if (i != data->nb_cmds - 1 && pipe(fd) == -1)
-			error_handle("pipe failed", EXIT_FAILURE);
+			error_handle(data, "pipe failed", EXIT_FAILURE, my_env);
 		pid = fork();
 		if (pid < 0)
-			error_handle("fork failed", EXIT_FAILURE);
+			error_handle(data, "fork failed", EXIT_FAILURE, my_env);
 		else if (pid == 0)
 			child_process(data, i, fd, my_env);
 		else
 		{
 			if (data->prev_fd != -1)
-				close(data->prev_fd);
+				close_fd(data->prev_fd);
 			if (i != data->nb_cmds - 1)
 			{
-				close(fd[1]);
+				close_fd(fd[1]);
 				data->prev_fd = fd[0];
 			}
 			else
-				close(fd[0]);
+				close_fd(fd[0]);
  		//	if (i > 0)
 		//	{
 		//		if (dup2(fd[0], STDIN_FILENO) == -1)
-		//			error_handle("dup2 failed: parent", EXIT_FAILURE);
+		//			error_handle(data, "dup2 failed: parent", EXIT_FAILURE, my_env);
 		//		close(fd[0]);
 		//	}
 		}
@@ -109,5 +112,7 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	while (i-- > 0)
 		wait(NULL);
 }
+
+
 
 

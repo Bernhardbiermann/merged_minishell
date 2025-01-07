@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:28 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/27 12:59:56 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:32:10 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,8 @@ void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile)
 	while (i-- > 0)
 		free_tab(cmds[i]);
 	free(cmds);
-	if (infile >= 0)
-		close(infile);
-	if (outfile >= 0)
-		close(outfile);
+	close_fd(infile);
+	close_fd(outfile);
 	exit(-1);
 }
 
@@ -69,12 +67,10 @@ void	multi_close(int fds[], int size, int infile, int outfile)
 	i = 0;
 	while (i < size)
 	{
-		close(fds[i]);
+		close_fd(fds[i]);
 		i++;
 	}
-	if (infile >= 0)
-		close(infile);
-	if (outfile >= 0)
-		close(outfile);
+	close_fd(infile);
+	close_fd(outfile);
 	return ;
 }

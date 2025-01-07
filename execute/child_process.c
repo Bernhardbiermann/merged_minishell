@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 11:14:35 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:30:39 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,24 @@
 
 void	child_process(t_shell *data, int i, int *fd, t_env **my_env)
 {
-	handle_redirections(&data->cmds[i]);
+	handle_redirections(&data->cmds[i], data, my_env);
 	if (data->prev_fd != -1) // If there's a previous pipe, read from it
 	{
 		printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, data->prev_fd, fd[1]);
 		if (dup2(data->prev_fd, STDIN_FILENO) == -1)
-			error_handle("dup2 failed: child input", EXIT_FAILURE);
-		close(data->prev_fd); // Close after duplicating
+			error_handle(data, "dup2 failed: child input", EXIT_FAILURE, my_env);
+		close_fd(data->prev_fd); // Close after duplicating
 	}
 	if (i != data->nb_cmds - 1) // If not last command, write to the current pipe
 	{
 		if (dup2(fd[1], STDOUT_FILENO) == -1) 
-			error_handle("dup2 failed: child output", EXIT_FAILURE);
-		close(fd[1]);
+			error_handle(data, "dup2 failed: child output", EXIT_FAILURE, my_env);
+		close_fd(fd[1]);
 	}
 //	if (i != 0)
 //		close(fd[0]);
-	if (fd[1] >= 0)
-		close(fd[1]);       // Close current pipe's write end
-	if (fd[0] >= 0)
-		close(fd[0]); 
+	close_fd(fd[1]);       // Close current pipe's write end
+	close_fd(fd[0]);
 	exec_cmd(data, i, my_env);
 }
 
@@ -45,7 +43,7 @@ void	child_process(t_shell *data, int i, int *fd, t_env **my_env)
 How Fabbio and his partner handled it: if they have a list of token, they check token->type = COMMAND, 
 and if token->next->type = redirection (trunc, append, input or heredoc), then we redirect the fd_in or the fd_out
  */
-void	handle_redirections(t_cmd *cmd)
+void	handle_redirections(t_cmd *cmd, t_shell *data, t_env **my_env)
 {
 	//t_redirect	*redir;
 	int			i;
@@ -56,12 +54,12 @@ void	handle_redirections(t_cmd *cmd)
 	i = 0;
 	while (i < cmd->redirect_count) // 1912A: seems that Nick handled multiple redir by just having a linked list of redirection and using here a while loop
 	{
-		open_dup_close(cmd->redir[i]);
+		open_dup_close(cmd->redir[i], data, my_env);
 		i++;
 	}
 }
 
-void	open_dup_close(t_redirect redir)
+void	open_dup_close(t_redirect redir, t_shell *data, t_env **my_env)
 {
 	int	fd;
 
@@ -69,10 +67,10 @@ void	open_dup_close(t_redirect redir)
 	{
 		fd = open(redir.filename, O_RDONLY);
 		if (fd < 0)
-			error_handle("Failed to open input file", EXIT_FAILURE);
+			error_handle(data, "Failed to open input file", EXIT_FAILURE, my_env);
 		if (dup2(fd, STDIN_FILENO) == -1)
-			error_handle("dup2 failed for input redirection", EXIT_FAILURE);
-		close(fd);
+			error_handle(data, "dup2 failed for input redirection", EXIT_FAILURE, my_env);
+		close_fd(fd);
 	}
 	else if (redir.type == T_OUTPUT || redir.type == T_APPEND)
 	{
@@ -81,25 +79,25 @@ void	open_dup_close(t_redirect redir)
 		else
 			fd = open(redir.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
-			error_handle("Failed to open output file", EXIT_FAILURE);
+			error_handle(data, "Failed to open output file", EXIT_FAILURE, my_env);
 		if (dup2(fd, STDOUT_FILENO) == -1)
-			error_handle("dup2 failed for output redirection", EXIT_FAILURE);
-		close(fd);
+			error_handle(data, "dup2 failed for output redirection", EXIT_FAILURE, my_env);
+		close_fd(fd);
 	}
 	//else if (redir.type == T_HEREDOC)
-	//	redir_heredoc(redir);
+	//	redir_heredoc(redir, ddata, my_env);
 }
 
 /* if heredoc, create pipe for the heredoc (suggested by chatGPT 1912A)*/
-void redir_heredoc(t_redirect redir)
+void redir_heredoc(t_redirect redir, t_shell *data, t_env **my_env)
 {
 	int	fd[2];
 
 	if (pipe(fd) == -1)
-		error_handle("pipe failed for heredoc", EXIT_FAILURE);
+		error_handle(data, "pipe failed for heredoc", EXIT_FAILURE, my_env);
 	write(fd[1], redir.filename, 50); // 1912A: to adapt to what is effectively our heredoc form and content
-	close(fd[1]);
+	close_fd(fd[1]);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
-		error_handle("dup2 failed for heredoc", EXIT_FAILURE);
-	close(fd[0]);
+		error_handle(data, "dup2 failed for heredoc", EXIT_FAILURE, my_env);
+	close_fd(fd[0]);
 }

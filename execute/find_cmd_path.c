@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/17 16:18:34 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 14:09:35 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	we concatenate all the paths with the input command to see if one 
 	works (if it's executed by execve())
 	we free what needs freeing, and we return the cmd_and_args to main */
-void	find_cmd_path(t_shell *data, int i)
+int	find_cmd_path(t_shell *data, int i, t_env **my_env)
 {
 	char	**paths;
 	char	*cmd_path;
@@ -35,20 +35,22 @@ void	find_cmd_path(t_shell *data, int i)
 	env_tab = env_to_tab(data->env);
 	paths = ft_split(get_path(env_tab), ':');
 	if (!paths)
-		error_handle("PATH not found", 0);
+		error_handle(data, "PATH not found", 0, my_env);
 	//cmd_and_args = ft_split(av, ' ');
 	cmd_and_args = data->cmds[i].cmd;
-	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths);
+	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths, data, my_env);
 	if (!cmd_path)
 	{
 		free_many_splits(paths, cmd_and_args);
-		return ;
+		//free_shell_struct(data, my_env);
+		return (0);
 	}
 	free(data->cmds[i].path);
 	data->cmds[i].path = cmd_path;
 	data->cmds[i].cmd = cmd_and_args;
 	free_tab(paths);
 	free_tab(env_tab);
+	return (1);
 }
 
 char	*get_path(char **env)
@@ -65,7 +67,7 @@ char	*get_path(char **env)
 	return (NULL);
 }
 
-char	*find_valid_path(char *cmd, char **paths)
+char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **my_env)
 {
 	char	*cmd_path;
 	int		i;
@@ -75,7 +77,7 @@ char	*find_valid_path(char *cmd, char **paths)
 	{
 		cmd_path = multi_strjoin(paths[i], "/", cmd);
 		if (!cmd_path)
-			error_handle("multi_strjoin failed", 0);
+			error_handle(data, "multi_strjoin failed", 0, my_env);
 		if (access(cmd_path, R_OK) == 0)
 		{
 			if (access(cmd_path, X_OK) == 0)

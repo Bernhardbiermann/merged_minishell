@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_and_free_shell.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 11:19:51 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:34:30 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	free_shell_struct(t_shell *data, t_env **my_env)
 	}
 	if (data->err_msg)
 		free(data->err_msg);
+	close_fd(data->prev_fd);
 	free(data->cmds);
 	free_env_list(my_env, NULL, NULL);
 	free(data);
