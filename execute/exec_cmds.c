@@ -3,34 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 13:42:47 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:15:29 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 /* 4.12: we first check if there is only one cmd, or if we have to create pipes in case of more cmds */
-void	execute(t_shell *data)
+void	execute(t_shell *data, t_env **my_env)
 {
 	if (data->nb_cmds <= 1 && is_builtin(data, 0) == 1) // if there is only one cmd and it is a builtin, we execute it. If it's not a builtin, we have to create a child process
-		exec_cmd(data, 0);
+		exec_cmd(data, 0, my_env);
 	else
-		exec_more_cmds(data);
+		exec_more_cmds(data, my_env);
 }
 
 /* executes each command
 	if it's a builtin, executes it and then has to clean and exit
 	if it's not, check for a valid path, and execve() exits and cleans */
-void	exec_cmd(t_shell *data, int i)
+void	exec_cmd(t_shell *data, int i, t_env **my_env)
 {
 	char	**env_tab;
 
 	if (is_builtin(data, i) == 1)
 	{
-		exec_builtin(data, i); // function to be implemented and exit(EXIT_SUCCESS)
+		exec_builtin(data, i, my_env); // function to be implemented and exit(EXIT_SUCCESS)
 		printf("execute builtin function\n");
 	}
 	else
@@ -55,16 +55,15 @@ void	exec_cmd(t_shell *data, int i)
 	At the moment: not working, I'm getting messages about dup2 that failed which I could not fix,
 	but the pipe logic worked at some point. Need to implement the redirection logic and then work from here.
 */
-void	exec_more_cmds(t_shell *data)
+void	exec_more_cmds(t_shell *data, t_env **my_env)
 {
 	int		i;
 	int		fd[2];
 	pid_t	pid;
-	int		prev_fd;
 	//int		status;
 
 	i = 0;
-	prev_fd = -1;
+	data->prev_fd = -1;
 	while (i < data->nb_cmds)
 	{
 		// save stdin and stout, reset them at the end
@@ -74,15 +73,15 @@ void	exec_more_cmds(t_shell *data)
 		if (pid < 0)
 			error_handle("fork failed", EXIT_FAILURE);
 		else if (pid == 0)
-			child_process(data, i, fd, &prev_fd);
+			child_process(data, i, fd, my_env);
 		else
 		{
-			if (prev_fd != -1)
-				close(prev_fd);
+			if (data->prev_fd != -1)
+				close(data->prev_fd);
 			if (i != data->nb_cmds - 1)
 			{
 				close(fd[1]);
-				prev_fd = fd[0];
+				data->prev_fd = fd[0];
 			}
 			else
 				close(fd[0]);

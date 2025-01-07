@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 15:07:31 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:14:01 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	main(int argc, char **argv, char **envp)
 	
 	while (1)
 	{	
-		if (!data)
-			data = init_shell_struct(*my_envp);
 		input = readline("minishell> ");
 		if (!input) // Falls Benutzer EOF eingibt (Strg+D)
 		{
@@ -52,14 +50,13 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);	
 		printf("You entered: %s\n", input);
 		parser(data, input, my_envp);
-		execute(data);
+		execute(data, my_envp);
 		free(input);
-		free_shell_struct(data);
-		data = NULL;
+		clean_shell_struct(data);
 	}
 	/* free the people */
-	free_env_list(my_envp, NULL, NULL);
-//	if (data)
-//		free_shell_struct(data);
+	if (data)
+		free_shell_struct(data, my_envp);
+	
 	return (0);
 }

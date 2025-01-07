@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 13:55:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:14:35 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	child_process(t_shell *data, int i, int *fd, int *prev_fd)
+void	child_process(t_shell *data, int i, int *fd, t_env **my_env)
 {
 	handle_redirections(&data->cmds[i]);
-	if (*prev_fd != -1) // If there's a previous pipe, read from it
+	if (data->prev_fd != -1) // If there's a previous pipe, read from it
 	{
-		printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, *prev_fd, fd[1]);
-		if (dup2(*prev_fd, STDIN_FILENO) == -1)
+		printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, data->prev_fd, fd[1]);
+		if (dup2(data->prev_fd, STDIN_FILENO) == -1)
 			error_handle("dup2 failed: child input", EXIT_FAILURE);
-		close(*prev_fd); // Close after duplicating
+		close(data->prev_fd); // Close after duplicating
 	}
 	if (i != data->nb_cmds - 1) // If not last command, write to the current pipe
 	{
@@ -34,7 +34,7 @@ void	child_process(t_shell *data, int i, int *fd, int *prev_fd)
 		close(fd[1]);       // Close current pipe's write end
 	if (fd[0] >= 0)
 		close(fd[0]); 
-	exec_cmd(data, i);
+	exec_cmd(data, i, my_env);
 }
 
 /* four types of redirection, defined at parsing stage:

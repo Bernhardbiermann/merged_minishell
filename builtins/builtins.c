@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:45:41 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 10:54:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:11:47 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_builtin(t_shell *data, int i)
 		return (0);
 }
 
-void	exec_builtin(t_shell *data, int i)
+void	exec_builtin(t_shell *data, int i, t_env **my_env)
 {
 	if (ft_strcmp(data->cmds[i].cmd[0], "cd") == 0)
 		ft_cd(data, data->cmds[i].cmd[1]);		// 18.12 A: seems to work fine 
@@ -41,7 +41,7 @@ void	exec_builtin(t_shell *data, int i)
 	else if (ft_strcmp(data->cmds[i].cmd[0], "env") == 0)
 		print_env(data->env);					// 18.12 A: is print_env() any different from what's currently defined in env.c?
 	else if (ft_strcmp(data->cmds[i].cmd[0], "exit") == 0)
-		ft_exit(data->cmds[i].cmd, data);		// 18.12 A: I think it works but not sure of expected funct behaviour
+		ft_exit(data->cmds[i].cmd, data, my_env);		// 18.12 A: I think it works but not sure of expected funct behaviour
 	else if (ft_strcmp(data->cmds[i].cmd[0], "export") == 0)
 		ft_export(data->cmds[i].cmd, data);		// 18.12 A: export has a weird behaviour, also printing werid characters
 	else if (ft_strcmp(data->cmds[i].cmd[0], "pwd") == 0)

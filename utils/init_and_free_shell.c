@@ -6,11 +6,29 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/20 10:40:04 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:19:51 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+t_shell	*init_shell_struct(t_env *env)
+{
+	t_shell	*data;
+
+	data = malloc(sizeof(t_shell));
+	if (!data)
+		return (NULL);
+	data->nb_cmds = 0;
+	data->cmds = NULL;
+	data->last_exit_status = 0;
+	data->err_msg = NULL;
+	data->env = env;
+	data->std_in = dup(STDIN_FILENO);
+	data->std_out = dup(STDOUT_FILENO);
+	data->prev_fd = -2;
+	return (data);
+}
 
 void	free_shell_struct_cmds(t_shell *data, int i)
 {
@@ -29,6 +47,7 @@ void	free_shell_struct_cmds(t_shell *data, int i)
 		}
 		free(data->cmds[i].cmd);	
 	}
+	free_shell_struct_redir(data, i);
 }
 
 void	free_shell_struct_redir(t_shell *data, int i)
@@ -48,7 +67,7 @@ void	free_shell_struct_redir(t_shell *data, int i)
 	}
 }
 
-void	free_shell_struct(t_shell *data)
+void	free_shell_struct(t_shell *data, t_env **my_env)
 {
 	int	i;
 
@@ -58,28 +77,34 @@ void	free_shell_struct(t_shell *data)
 		if (data->cmds[i].path)
 			free(data->cmds[i].path);
 		free_shell_struct_cmds(data, i);
-		free_shell_struct_redir(data, i);
 		i++;
 	}
 	if (data->err_msg)
 		free(data->err_msg);
 	free(data->cmds);
+	free_env_list(my_env, NULL, NULL);
 	free(data);
 }
 
-t_shell	*init_shell_struct(t_env *env)
+void	clean_shell_struct(t_shell *data)
 {
-	t_shell	*data;
+	int	i;
 
-	data = malloc(sizeof(t_shell));
-	if (!data)
-		return (NULL);
-	data->nb_cmds = 0;
+	i = 0;
+	while (i < data->nb_cmds)
+	{
+		if (data->cmds[i].path)
+			free(data->cmds[i].path);
+		free_shell_struct_cmds(data, i);
+		i++;
+	}
+	if (data->err_msg)
+		free(data->err_msg);
+	free(data->cmds);
 	data->cmds = NULL;
-	data->last_exit_status = 0;
 	data->err_msg = NULL;
-	data->env = env;
-	data->std_in = dup(STDIN_FILENO);
-	data->std_out = dup(STDOUT_FILENO);
-	return (data);
+	data->std_in = 0;
+	data->std_out = 0;
+	data->nb_cmds = 0;
+	data->prev_fd = -2;
 }

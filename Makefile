@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2024/12/20 10:29:48 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/07 10:57:00 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,7 @@ fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 valgrind:
-	/usr/local/bin/valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline_suppress.supp ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline_suppress.supp ./minishell
 
 valchild:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --trace-children=yes ./$(NAME)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/20 14:42:56 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:15:13 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct	s_shell
 	char	*err_msg;
 	int		std_in;
 	int		std_out;
+	int		prev_fd;
 }			t_shell;
 
 
@@ -105,7 +106,7 @@ typedef struct	s_shell
 	/* BUILTINS */
 /* __builtins.c */
 int		is_builtin(t_shell *data, int i);
-void	exec_builtin(t_shell *data, int i);
+void	exec_builtin(t_shell *data, int i, t_env **my_env);
 
 /* __cd.c */
 void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value);
@@ -120,7 +121,7 @@ void	list_envp_vars(char **envp); // 18.12 A: are we using it in the end?
 
 /* __exit.c */
 int		is_a_number(char *str);
-void	ft_exit(char **args, t_shell *data);
+void	ft_exit(char **args, t_shell *data, t_env **my_env);
 
 /* __export.c */
 int		is_valid_var_name(const char *str);
@@ -138,12 +139,12 @@ void	ft_unset(t_shell *data, char **args);
 
 	/* EXECUTION */
 /* __exec_cmds.c */
-void	execute(t_shell *data);
-void	exec_cmd(t_shell *data, int i);
-void	exec_more_cmds(t_shell *data);
+void	execute(t_shell *data, t_env **my_env);
+void	exec_cmd(t_shell *data, int i, t_env **my_env);
+void	exec_more_cmds(t_shell *data, t_env **my_env);
 
 /* __child_process.c */
-void	child_process(t_shell *data, int i, int *fd, int *prev_fd);
+void	child_process(t_shell *data, int i, int *fd, t_env **my_env);
 void	handle_redirections(t_cmd *cmd);
 void	open_dup_close(t_redirect redir);
 void 	redir_heredoc(t_redirect redir);
@@ -264,8 +265,9 @@ void	multi_close(int fds[], int size, int infile, int outfile);
 //INIT_AND_FREE_SHELL
 void	free_shell_struct_cmds(t_shell *data, int i);
 void	free_shell_struct_redir(t_shell *data, int i);
-void	free_shell_struct(t_shell *data);
+void	free_shell_struct(t_shell *data, t_env **my_env);
 t_shell	*init_shell_struct(t_env *env);
+void	clean_shell_struct(t_shell *data);
 
 
 
