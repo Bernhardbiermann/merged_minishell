@@ -1,0 +1,3 @@
+Child 1 dup2: prev_fd=5, fd[1]=6
+Child 1 executing command: /usr/bin/cat
+alex

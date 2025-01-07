@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 11:15:29 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:20:04 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,12 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 
 	if (is_builtin(data, i) == 1)
 	{
-		exec_builtin(data, i, my_env); // function to be implemented and exit(EXIT_SUCCESS)
+		exec_builtin(data, i, my_env);
+		if (data->nb_cmds > 1 || is_builtin(data, 0) == 0)
+		{
+			free_shell_struct(data, my_env);
+			exit(EXIT_SUCCESS);	
+		}
 		printf("execute builtin function\n");
 	}
 	else
