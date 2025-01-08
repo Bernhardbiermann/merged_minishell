@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/11 16:29:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:17:42 by bbierman         ###   ########.fr       */
+/*   Created: 2025/01/08 11:13:34 by bbierman          #+#    #+#             */
+/*   Updated: 2025/01/08 17:18:05 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_pwd(t_shell *data)
+int	check_name_and_empty_value(char *input)
 {
-	char	*cwd;
+	int	i;
 
-	cwd = malloc(1024);
-	if (!cwd)
-	{
-		perror("malloc");
-		data->last_exit_status = 1;
+	i = 0;
+	if (ft_isalpha(input[0]) == 0 && input[0] != '_')
 		return (1);
-	}
-	cwd = getcwd(cwd, 1024);
-	if (!cwd)
-	{
-		perror("pwd");
-		free(cwd);
-		data->last_exit_status = 1;
+	while (input[i] != '=' && (ft_isalnum(input[i]) == 1 || input[i] == '_'))
+		i++;
+	if (input[i] != '=')
 		return (1);
-	}
-	printf("%s\n", cwd);
-	free(cwd);
-	data->last_exit_status = 0;
-	return (0);
+	i++;
+	if (input[i] == '\0')
+		return (1);
+	else
+		return (0);
 }

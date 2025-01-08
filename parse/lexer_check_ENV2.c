@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   lexer_check_ENV2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/11 16:29:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:17:42 by bbierman         ###   ########.fr       */
+/*   Created: 2025/01/07 15:29:51 by bbierman          #+#    #+#             */
+/*   Updated: 2025/01/07 17:06:08 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_pwd(t_shell *data)
+void	check_last_error_status(t_shell *data, t_Token *current)
 {
-	char	*cwd;
+	char	*last_exit_status;
 
-	cwd = malloc(1024);
-	if (!cwd)
+	last_exit_status = ft_itoa(data->last_exit_status);
+	if ((current->value[0] = '?'))
 	{
-		perror("malloc");
-		data->last_exit_status = 1;
-		return (1);
+		replace_value(current, "?", last_exit_status);
 	}
-	cwd = getcwd(cwd, 1024);
-	if (!cwd)
+	else
 	{
-		perror("pwd");
-		free(cwd);
-		data->last_exit_status = 1;
-		return (1);
+		free(current->value);
+		current->value = ft_strdup("");
 	}
-	printf("%s\n", cwd);
-	free(cwd);
-	data->last_exit_status = 0;
-	return (0);
+	current->length = ft_strlen(current->value);
+	free(last_exit_status);
 }

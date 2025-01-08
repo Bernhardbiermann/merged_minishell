@@ -1,11 +1,7 @@
-Child 2 dup2: prev_fd=4, fd[1]=5
-Child 2 executing command: /usr/bin/uniq
-Child 1 executing command: /usr/bin/sort
 apple
 apple jam
 apple pie
 apple torte
-Child 0 executing command: /usr/bin/grep
 test2: ./pipex test "grep apple" "sort" output
 test3: ./pipex test "grep apple" "uniq" output
 test8: ./pipex test "grep apple" "sort" "uniq" output

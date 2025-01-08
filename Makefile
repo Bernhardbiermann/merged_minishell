@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
+#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/08 14:46:40 by aroux            ###   ########.fr        #
+#    Updated: 2025/01/08 17:50:19 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ LIBFT_DIR = includes/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 SRC = main.c \
 	parse/lexer_check_ENV.c \
+	parse/lexer_check_ENV2.c \
 	parse/lexer_error_and_free.c \
 	parse/lexer_grammer_check.c \
 	parse/lexer_grammer_check_2.c \
@@ -46,6 +47,7 @@ SRC = main.c \
 	builtins/env.c \
 	builtins/exit.c \
 	builtins/export.c \
+	builtins/export2.c \
 	builtins/pwd.c \
 	builtins/unset.c \
 	execute/exec_cmds.c \

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/20 10:37:09 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:12:03 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	print_shell_commands(t_shell *data)
 		{
 			printf("\n    %s", data->cmds[i].cmd[j]);
 		}
+		printf("\nnumber of cmd/args: %d\n", data->cmds[i].arg_count);
 		printf("\n");
 
 		// Umleitungen ausgeben

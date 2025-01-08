@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 18:54:57 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:30:09 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:30:51 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ void	replace_value(t_Token *current, char *old_key, char *value)
 	current->value = new_value;
 }
 
-void	replace_special_value(t_Token *current, char *start)
+void	replace_special_value(t_shell *data, t_Token *current, char *start)
 {
+	char	*last_exit_status;
+
+	last_exit_status = ft_itoa(data->last_exit_status);
 	if (start[1] == '?')
-		replace_value(current, "$?", "0");
+		replace_value(current, "$?", last_exit_status);
 	else if (start[1] == '$')
 		replace_value(current, "$$", "YOU'RE NOT ALLOWED TO DO THIS!");
 	else if (start[1] == ' ')
 		replace_value(current, "$ ", "\r ");
 	else
 		replace_value(current, "$", "\r");
+	free(last_exit_status);
 }

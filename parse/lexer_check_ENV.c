@@ -6,13 +6,14 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:41:11 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:26:31 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 15:34:38 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	find_key_and_exchange_value_in_ENV(t_env *my_envp, t_Token *current)
+void	find_key_and_exchange_value_in_ENV(t_shell *data, t_env *my_envp, \
+t_Token *current)
 {
 	t_env	*env_node;
 
@@ -28,13 +29,11 @@ void	find_key_and_exchange_value_in_ENV(t_env *my_envp, t_Token *current)
 		}
 		env_node = env_node->next;
 	}
-	free(current->value);
-	current->value = ft_strdup("");
-	current->length = ft_strlen(current->value);
+	check_last_error_status(data, current);
 }
 
 void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, \
-t_Token *current, char *start)
+t_Token *current, char *start, t_shell *data)
 {
 	char	*key;
 	char	*old_key;
@@ -45,7 +44,7 @@ t_Token *current, char *start)
 	{
 		if (start[1] == '?' || start[1] == '$' || start[1] == ' ' \
 		|| start[1] == '\0')
-			replace_special_value(current, start);
+			replace_special_value(data, current, start);
 		else
 		{
 			end = find_end(start + 1);
@@ -84,7 +83,8 @@ void	find_mask_and_exchange(t_Token *current, char *start)
 	}
 }
 
-void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp)
+void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp, \
+t_shell *data)
 {
 	t_Token	*current;
 	char	*start;
@@ -96,11 +96,11 @@ void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp)
 	while (current)
 	{
 		if (current->type == T_ENV)
-			find_key_and_exchange_value_in_ENV(my_envp, current);
+			find_key_and_exchange_value_in_ENV(data, my_envp, current);
 		if (current->type == T_D_QUOT && \
 		((start = ft_strchr(current->value, '$')) != NULL ))
 		{
-			find_key_and_exchange_value_in_DQUOT(my_envp, current, start);
+			find_key_and_exchange_value_in_DQUOT(my_envp, current, start, data);
 			if ((next = ft_strchr(current->value, '\r')) != NULL)
 				find_mask_and_exchange(current, next);
 		}

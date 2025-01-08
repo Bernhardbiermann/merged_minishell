@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/13 13:07:32 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:54:52 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 	immediately prior to the call to cd)." */
 
 /* function to update OLDPWD in the envp */
+
+static void	set_errorstatus_and_print_msg(t_shell *data, char *input)
+{
+	data->last_exit_status = 1;
+	ft_printf(input);
+}
+
 void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value)
 {
 	t_env	*current;
@@ -38,21 +45,23 @@ void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value)
 	}
 }
 
-void	ft_cd(t_shell *data, const char *path)
+void	ft_cd(t_shell *data, const char *path, int i)
 {
 	char	pwd_old[1024];
 	char	pwd_new[1024];
 
+	if (data->cmds[i].arg_count > 2)
+	{
+		set_errorstatus_and_print_msg(data, "cd: too many arguments\n");
+		return ;
+	}
 	if (getcwd(pwd_old, sizeof(pwd_old)) == NULL)
 		perror("ft_cd: getcwd failed");
-	if (path == NULL)
+	if (!path)
 	{
 		path = getenv("HOME");
-		if (path == NULL)
-		{
-			perror("No home directory set");
-			return ;
-		}
+		if (!path)
+			return (perror("No home directory set"));
 	}
 	if (chdir(path) == 0)
 	{
@@ -61,6 +70,5 @@ void	ft_cd(t_shell *data, const char *path)
 			update_pwd(data, "PWD", pwd_new);
 		return ;
 	}
-	else
-		perror("No such file or directory");
+	set_errorstatus_and_print_msg(data, "cd: No such file or directory\n");
 }

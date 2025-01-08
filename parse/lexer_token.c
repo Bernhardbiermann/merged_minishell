@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:20:42 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/20 11:38:49 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:47:55 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int	env_token(char *input, t_Token **token)
 	int	i;
 
 	i = 1;
-	while (input[i] && (ft_isalnum(input[i]) || input[i] == '_'))
+	while (input[i] && (ft_isalnum(input[i]) || input[i] == '_' || \
+	input[i] == '?'))
 		i++;
 	*token = new_token(ft_strndup(input + 1, i - 1), T_ENV, (i - 1));
 	return (i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:19:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:36:39 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	child_process(t_shell *data, int i, int *fd, t_env **my_env)
 	handle_redirections(&data->cmds[i], data, my_env);
 	if (data->prev_fd != -1) // If there's a previous pipe, read from it
 	{
-		printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, data->prev_fd, fd[1]);
+		//printf("Child %d dup2: prev_fd=%d, fd[1]=%d\n", i, data->prev_fd, fd[1]);
 		if (dup2(data->prev_fd, STDIN_FILENO) == -1)
 			error_handle(data, "dup2 failed: child input", EXIT_FAILURE, my_env);
 		close_fd(data->prev_fd); // Close after duplicating

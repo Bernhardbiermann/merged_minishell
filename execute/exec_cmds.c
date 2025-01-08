@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:21:11 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:36:23 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 			free_shell_struct(data, my_env);
 			exit(EXIT_SUCCESS);	
 		}
-		printf("execute builtin function\n");
+		//printf("execute builtin function\n");
 	}
 	else
 	{
@@ -45,7 +45,7 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 			error_handle(data, "command not found", 0, my_env);
 		// if no command path, clean fds, clean struct, exit with exit code 
 		env_tab = env_to_tab(data->env);
-		printf("Child %d executing command: %s\n", i, data->cmds[i].path);
+		//printf("Child %d executing command: %s\n", i, data->cmds[i].path);
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1) // seems to work when tested on a smaller scale
 		{
 			free_tab(env_tab);

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:30:30 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:34:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:49:40 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	merge_two(t_Token *current, t_Token *next)
 	free(next);
 }
 
-void	merge_text_env_and_quot(t_Token **token_list)
+void	merge_text_env_and_quote(t_Token **token_list)
 {
 	t_Token	*current;
 	
@@ -108,9 +108,11 @@ void	merge_text_env_and_quot(t_Token **token_list)
 		if((current->type == T_S_QUOT || current->type == T_D_QUOT || \
 		current->type == T_TEXT || current->type == T_ENV) \
 		&& (current->next->type == T_S_QUOT || current->next->type == T_D_QUOT \
-		|| current->next->type == T_TEXT || current->type == T_ENV))
+		|| current->next->type == T_TEXT || current->next->type == T_ENV))
+		{
 			merge_two(current, current->next);
-		else
-			current = current->next;
+			continue ;
+		}
+		current = current->next;
 	}
 }

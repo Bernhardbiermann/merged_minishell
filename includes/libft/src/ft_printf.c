@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42.fr>                +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:54:58 by aroux             #+#    #+#             */
-/*   Updated: 2024/05/08 17:44:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:53:06 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_printf(const char *format, ...)
 	{
 		if (*ptr != '%')
 		{
-			write(1, ptr, 1);
+			write(2, ptr, 1);
 			count++;
 		}
 		else

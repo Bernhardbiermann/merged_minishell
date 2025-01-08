@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 17:18:52 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:48:57 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	exec_builtin(t_shell *data, int i, t_env **my_env);
 
 /* __cd.c */
 void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value);
-void	ft_cd(t_shell *data, const char *path);
+void	ft_cd(t_shell *data, const char *path, int i);
 
 /* __echo.c */
 int		check_for_option_n(char *arg);
@@ -129,6 +129,7 @@ char	*safe_malloc(t_shell *data, size_t len);
 void	create_newnode_and_append(t_shell *data, char *equal_ptr, char *key);
 void	expand_env(t_shell *data, char *input);
 void	ft_export(char **args, t_shell *data);
+int		check_name_and_empty_value(char *input);
 
 /* __pwd.c */
 int	ft_pwd(t_shell *data);
@@ -168,11 +169,15 @@ int		env_token(char *input, t_Token **token);
 int		value_token(char *input, t_Token **token);
 
 //LEXER_CHECK_ENV
-void	find_key_and_exchange_value_in_ENV(t_env *my_envp, t_Token *current);
-void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, t_Token *current, char *start);
+void	find_key_and_exchange_value_in_ENV(t_shell *data, t_env *my_envp, t_Token *current);
+void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, t_Token *current, \
+char *start, t_shell *data);
 void	three_frees(char *s1, char *s2, char *s3);
 char	*compare_key_and_get_value(t_env *my_envp, char* key);
-void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp);
+void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp, \
+t_shell *data);
+void	check_last_error_status(t_shell *data, t_Token *current);
+
 
 //LEXER_ERROR_AND_FREE
 void	free_token_list(t_Token *token_list);
@@ -195,11 +200,11 @@ t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list);
 void	delete_spaces(t_Token **token_list);
 void	delete_empty_ENV_and_quote(t_Token **token_list);
 void	merge_two(t_Token *current, t_Token *next);
-void	merge_text_env_and_quot(t_Token **token_list);
+void	merge_text_env_and_quote(t_Token **token_list);
 void	check_empty_DQUOT(t_Token **token_list);
 void	delete_spaces(t_Token **token_list);
-void	make_text_out_of_quot(t_Token **token_list);
-void	replace_special_value(t_Token *current, char *start);
+void	make_text_out_of_quot_and_env(t_Token **token_list);
+void	replace_special_value(t_shell *data, t_Token *current, char *start);
 
 //LEXER_GRAMMER_CHECK 1-2 
 void	check_for_first_pipe_and_double_in_out_app_here(t_Token **token_list);

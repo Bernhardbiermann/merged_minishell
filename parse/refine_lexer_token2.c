@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:54:25 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/11 12:34:24 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:03:18 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ void	check_empty_DQUOT(t_Token **token_list)
 	}
 }
 
-void	make_text_out_of_quot(t_Token **token_list)
+void	make_text_out_of_quot_and_env(t_Token **token_list)
 {
 	t_Token	*current;
 
 	current = *token_list;
 	while (current)
 	{
-		if ((current->type == T_D_QUOT) || (current->type == T_S_QUOT))
+		if ((current->type == T_D_QUOT) || (current->type == T_S_QUOT) || \
+		(current->type == T_ENV))
 			current->type = T_TEXT;
 		current = current->next;
 	}

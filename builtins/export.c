@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 14:55:52 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:52:18 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	is_valid_var_name(const char *str)
 	int	i;
 
 	i = 0;
-	if (!ft_isalpha(str[0]) && str[0] != '_') //131224 B: First char has to be alpha or underscore
+	if (ft_isalpha(str[0]) == 0 && str[0] != '_')
 		return (1);
 	while (str[i])
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_') //131224 B: Next one can also be a number
+		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 			return (1);
 		i++;
 	}
@@ -45,7 +45,7 @@ char	*safe_malloc(t_shell *data, size_t len)
 	{
 		ft_printf("minishell: export: memory allocation error\n");
 		data->last_exit_status = 1;
-		return NULL;
+		return (NULL);
 	}
 	return (value);
 }
@@ -96,7 +96,6 @@ void	expand_env(t_shell *data, char *input)
 	}
 	if (!current)
 		create_newnode_and_append(data, equal_ptr, key);
-	free(key);
 }
 
 void	ft_export(char **args, t_shell *data)
@@ -110,13 +109,19 @@ void	ft_export(char **args, t_shell *data)
 	{
 		if (!ft_strchr(args[i], '=') && is_valid_var_name(args[i]) != 0)
 		{
-			ft_printf("minishell: export: `%s': \
-			not a valid identifier", args[i]);
+			ft_printf("minishell: `%s': not a valid identifier\n", args[i]);
 			data->last_exit_status = 1;
+		}
+		else if (!ft_strchr(args[i], '='))
+		{
+			i++;
 			continue ;
 		}
-		else if (!ft_strchr(args[i], '=')) // 131224 B: the potential varibal will be safed in export but not in env
-			continue ;
+		else if (check_name_and_empty_value(args[i]) != 0)
+		{
+			ft_printf("minishell: `%s': not a valid identifier\n", args[i]);
+			data->last_exit_status = 1;
+		}
 		else
 			expand_env(data, args[i]);
 		i++;

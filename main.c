@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:24:07 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:41:27 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ int	main(int argc, char **argv, char **envp)
 		input = readline("minishell> ");
 		if (!input) // Falls Benutzer EOF eingibt (Strg+D)
 		{
-			printf("\nExit minishell.\n");
+			//printf("\nExit minishell.\n");
 			break;
 		}
 		if (input[0] == '\0')
 			continue ;
 		if (*input) 	// Eingabe in die History aufnehmen
 			add_history(input);	
-		printf("You entered: %s\n", input);
+		//printf("You entered: %s\n", input);
 		parser(data, input, my_envp);
 		execute(data, my_envp);
 		free(input);
