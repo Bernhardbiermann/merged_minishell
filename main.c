@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 11:14:01 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:24:07 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	main(int argc, char **argv, char **envp)
 			printf("\nExit minishell.\n");
 			break;
 		}
+		if (input[0] == '\0')
+			continue ;
 		if (*input) 	// Eingabe in die History aufnehmen
 			add_history(input);	
 		printf("You entered: %s\n", input);

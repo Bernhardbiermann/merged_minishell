@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 17:05:25 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:23:29 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	find_cmd_path(t_shell *data, int i, t_env **my_env)
 	char	**paths;
 	char	*cmd_path;
 	char	**cmd_and_args;
-	char 	**env_tab;
+	char	**env_tab;
 
 /* 	if (is_empty_str(av) == 1)
 	{
@@ -39,14 +39,12 @@ int	find_cmd_path(t_shell *data, int i, t_env **my_env)
 		free_tab(env_tab);
 		error_handle(data, "PATH not found", 0, my_env);
 	}
-	//cmd_and_args = ft_split(av, ' ');
 	cmd_and_args = data->cmds[i].cmd;
 	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths, data, my_env);
 	if (!cmd_path)
 	{
 		free_tab(paths);
 		free_tab(env_tab);
-		//free_shell_struct(data, my_env);
 		return (0);
 	}
 	if (data->cmds[i].path)

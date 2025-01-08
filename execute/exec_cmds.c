@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 18:03:01 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/08 17:21:11 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1) // seems to work when tested on a smaller scale
 		{
 			free_tab(env_tab);
-			//other frees?? free_exit_shell() function to implement
 			error_handle(data, "execve failed", EXIT_FAILURE, my_env);
 		}
 	}
@@ -76,7 +75,6 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	fd[1] = -1;
 	while (i < data->nb_cmds)
 	{
-		// save stdin and stout, reset them at the end
 		if (i != data->nb_cmds - 1 && pipe(fd) == -1)
 			error_handle(data, "pipe failed", EXIT_FAILURE, my_env);
 		pid = fork();
@@ -95,17 +93,9 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 			}
 			else
 				close_fd(fd[0]);
- 		//	if (i > 0)
-		//	{
-		//		if (dup2(fd[0], STDIN_FILENO) == -1)
-		//			error_handle(data, "dup2 failed: parent", EXIT_FAILURE, my_env);
-		//		close(fd[0]);
-		//	}
 		}
 		i++;
 	}
-	dup2(data->std_in, STDIN_FILENO); // restore the stdin and standard out (check if it's the right approach)
-	dup2(data->std_out, STDOUT_FILENO);
 	// 4.12: when child process is created and then exits, it sends back 2 values; its exit status (failure or success) 
 	// and a pid_t value sent to the parent to tell it to wait or tell it the process has died (=it is finished)
 	//while (wait(&status) > 0) // we execute wait as long as there are still child processes running

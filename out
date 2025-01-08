@@ -1,7 +1,6 @@
-Child 1 dup2: prev_fd=5, fd[1]=6
+Child 2 dup2: prev_fd=4, fd[1]=5
+Child 2 executing command: /usr/bin/uniq
 Child 1 executing command: /usr/bin/sort
-apple
-apple
 apple
 apple jam
 apple pie
