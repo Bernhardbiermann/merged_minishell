@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:48:57 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/10 11:35:41 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/types.h>	// to use the pid_t type
 # include <sys/wait.h>	// wait()
 # include <sysexits.h>	// exit processes?
+# include <dirent.h>	// DIR type to check if a file is a directory
 # include "libft/include/libft.h"
 # include "libft/include/ft_printf.h"
 # include "libft/include/get_next_line.h"
@@ -132,7 +133,7 @@ void	ft_export(char **args, t_shell *data);
 int		check_name_and_empty_value(char *input);
 
 /* __pwd.c */
-int	ft_pwd(t_shell *data);
+int		ft_pwd(t_shell *data);
 
 /* __unset.c */
 t_env	*search_target_and_delete(t_env *current_input, char *key);
@@ -143,12 +144,14 @@ void	ft_unset(t_shell *data, char **args);
 void	execute(t_shell *data, t_env **my_env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
+int		wait_for_pids(t_shell *data, int nb_cmds);
 
 /* __child_process.c */
 void	child_process(t_shell *data, int i, int *fd, t_env **my_env);
-void	handle_redirections(t_cmd *cmd, t_shell *data, t_env **my_env);
-void	open_dup_close(t_redirect redir, t_shell *data, t_env **my_env);
-void 	redir_heredoc(t_redirect redir, t_shell *data, t_env **my_env);
+void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
+void	open_dup_close(t_redirect redir, int *pipe, t_shell *data, t_env **env);
+void	redir_heredoc(t_redirect redir, t_shell *data, t_env **my_env);
+void	check_redir(t_shell *data, t_redirect *redir, int *pipe, t_env **env);
 
 /* __find_cmd_path.c */
 int		find_cmd_path(t_shell *data, int i, t_env **my_env);
@@ -260,6 +263,7 @@ int		is_empty_str(char *str);
 
 /* __error_handle.c */
 void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);
+void	error_cmd_notfound(t_shell *data, int i, t_env **my_env);
 void	close_fd(int fd);
 
 /* __frees.c */ 
