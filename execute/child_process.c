@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/10 11:47:17 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/10 12:04:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ void	open_dup_close(t_redirect redir, int *pipe, t_shell *data, t_env **env)
 	if (redir.type == T_INPUT) // input file
 	{
 		fd = open(redir.filename, O_RDONLY);
+		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
 		if (fd < 0)
-			check_redir(data, &redir, pipe, env);
+			check_redir(data, &redir, pipe, env); // TODO: sort out for redundancy
 		if (dup2(fd, STDIN_FILENO) == -1)
 			error_handle(data, "dup2 failed for input redirection", 1, env);
 		close_fd(fd);
@@ -116,7 +117,7 @@ void	check_redir(t_shell *data, t_redirect *redir, int *pipe, t_env **env)
 	dir = opendir(redir->filename);
 	if (dir) // check right syntax but here check if a directory
 	{
-		write(2, redir->filename, ft_strlen(redir->filename));
+		write(2, "utils", ft_strlen("utils"));
 		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
 		closedir(dir);
 		close_fd(data->prev_fd);
