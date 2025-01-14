@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:35:58 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:50:48 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ typedef struct s_shell
 	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
-	t_Token	*hdoc;
+	t_Token	**hdoc;
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -296,6 +296,9 @@ void	free_many_splits(char **split1, char **split2);
 void	free_nullify(void *to_be_freed);
 void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile);
 void	multi_close(int fds[], int size, int infile, int outfile);
+
+//CHECK_T_ERROR
+int		check_t_error(t_shell *data);
 
 /* __shell_struct_init.c */ 
 t_shell	*init_shell_struct(t_env *env);

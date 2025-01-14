@@ -6,27 +6,11 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 16:33:10 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:54:39 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-t_shell	*init_shell_struct(t_env *env)
-{
-	t_shell	*data;
-
-	data = malloc(sizeof(t_shell));
-	if (!data)
-		return (NULL);
-	data->nb_cmds = 0;
-	data->cmds = NULL;
-	data->last_exit_status = 0;
-	data->err_msg = NULL;
-	data->env = env;
-	data->prev_fd = -2;
-	return (data);
-}
 
 void	free_shell_struct_cmds(t_shell *data, int i)
 {
@@ -66,6 +50,23 @@ void	free_shell_struct_redir(t_shell *data, int i)
 	}
 }
 
+void	free_pids_struct(t_pids **pids)
+{
+	t_pids	*current;
+	t_pids	*next;
+
+	if (!pids || !*pids)
+		return ;
+	current = *pids;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	*pids = NULL;
+}
+
 void	free_shell_struct(t_shell *data, t_env **my_env)
 {
 	int	i;
@@ -83,12 +84,14 @@ void	free_shell_struct(t_shell *data, t_env **my_env)
 	}
 	if (data->err_msg)
 		free_nullify(data->err_msg);
+	if (data->hdoc)
+		free_token_list(*data->hdoc);
 	close_fd(data->prev_fd);
+	free_pids_struct(&data->pids);
 	free_nullify(data->cmds);
 	free_env_list(my_env, NULL, NULL);
 	free(data);
 }
-
 
 void	clean_shell_struct(t_shell *data)
 {
@@ -104,8 +107,12 @@ void	clean_shell_struct(t_shell *data)
 	}
 	if (data->err_msg)
 		free(data->err_msg);
+	if (data->hdoc)
+		free_token_list(*data->hdoc);
+	//data->hdoc = NULL;
+	free_pids_struct(&data->pids);
 	free(data->cmds);
-	data->cmds = NULL;
+	data->cmds = NULL; // should it be here free_nullify()?
 	data->err_msg = NULL;
 	data->std_in = 0;
 	data->std_out = 0;

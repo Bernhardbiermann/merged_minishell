@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:29 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 15:21:01 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:39:41 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	create_hdoc_list(t_shell *data, t_Token **token_list)
 		{
 			merge_two(current, current->next, T_HEREDOC);
 			token = new_token(current->value, T_HEREDOC, ft_strlen(current->value));
-			concatenate_token(token, &data->hdoc);
+			concatenate_token(token, data->hdoc);
 			delete_node_and_glue(current, token_list);
 		}
 		current = current->next;
