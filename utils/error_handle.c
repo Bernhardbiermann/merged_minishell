@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:17:56 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:33:04 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	error_cmd_notfound(t_shell *data, int i, t_env **my_env)
 	last_exit_status = 127;
 	exit(last_exit_status) ;
 }
-
 
 void	close_fd(int fd)
 {

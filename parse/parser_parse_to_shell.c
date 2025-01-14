@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parse_to_shell.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/20 10:26:39 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:49:41 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ void	fill_shell(t_shell *data, t_Token **token_list)
 	}
 }
 
-void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp)
+void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp)
 {
-	initialize_shell(data, *token_list, my_envp);
+	malloc_for_shell(data, *token_list, my_envp);
 	fill_shell(data, token_list);
 }

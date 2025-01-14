@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:22:17 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:31:23 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/types.h>	// to use the pid_t type
 # include <sys/wait.h>	// wait()
 # include <sysexits.h>	// exit processes?
+# include <dirent.h>	// DIR type to check if a file is a directory
 # include <dirent.h>	// DIR type to check if a file is a directory
 # include "libft/include/libft.h"
 # include "libft/include/ft_printf.h"
@@ -100,7 +101,7 @@ typedef struct s_shell
 	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
-	t_Token	*hdoc;
+	int		fd_hdoc;
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -191,7 +192,7 @@ void	replace_value(t_Token *current, char *old_key, char *value);
 
 //LEXER_PRINT
 char	*get_token_type_char(t_TokenType type);
-void	print_token_list(t_Token *token_list, char* name);
+void	print_token_list(t_Token *token_list, char *name);
 
 //REFINE_LEXER_TOKEN 1-2
 t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list);
@@ -225,7 +226,7 @@ t_redir	*safe_malloc_redir(size_t size, t_shell *data);
 int		count_cmds(t_Token **token_list);
 int		count_cmd_and_arg(t_Token **token_list, int cmd_nbr);
 int		count_redirect(t_Token **token_list, int cmd_nbr);
-void	initialize_shell(t_shell *data, t_Token *token_list, t_env *myenvp);
+void	malloc_for_shell(t_shell *data, t_Token *token_list, t_env *myenvp);
 void	initialize_redir(t_redir *current, int redirect_count);
 void	initialize_cmds(int cmd_c, t_shell *data);
 
@@ -233,7 +234,7 @@ void	initialize_cmds(int cmd_c, t_shell *data);
 int		process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c);
 t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c);
 void	fill_shell(t_shell *data, t_Token **token_list);
-void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp);
+void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp);
 
 //PARSER_PRINT
 void	print_shell_commands(t_shell *data);
@@ -298,9 +299,6 @@ void	multi_close(int fds[], int size, int infile, int outfile);
 
 /* __shell_struct_init.c */ 
 t_shell	*init_shell_struct(t_env *env);
-
-//CHECK_T_ERROR
-int		check_t_error(t_shell *data);
 
 /* __shell_struct_free_clean.c */ 
 void	free_shell_struct_cmds(t_shell *data, int i);
