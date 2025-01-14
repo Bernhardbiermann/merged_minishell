@@ -6,7 +6,7 @@
 #    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/10 11:42:32 by aroux            ###   ########.fr        #
+#    Updated: 2025/01/14 14:30:43 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,8 @@ SRC = main.c \
 	utils/print_env.c \
 	utils/manip_str.c \
 	utils/frees.c\
-	utils/init_and_free_shell.c \
+	utils/shell_struct_init.c \
+	utils/shell_struct_free_clean.c \
 	utils/error_handle.c\
 	builtins/builtins.c \
 	builtins/cd.c \
@@ -52,6 +53,7 @@ SRC = main.c \
 	builtins/unset.c \
 	execute/exec_cmds.c \
 	execute/find_cmd_path.c \
+	execute/handle_pids.c \
 	execute/child_process.c
 
 OBJ = $(SRC:.c=.o)

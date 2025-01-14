@@ -6,13 +6,13 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:13:15 by bbierman          #+#    #+#             */
-/*   Updated: 2024/12/20 14:34:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/14 14:40:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	initialize_redir(t_redirect *current, int redirect_count)
+void	initialize_redir(t_redir *current, int redirect_count)
 {
 	int	i;
 

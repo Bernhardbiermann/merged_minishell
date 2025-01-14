@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/10 11:35:41 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/14 14:48:37 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,32 +67,39 @@ typedef struct s_env
 	int					size; // relevant??
 }			t_env;
 
+typedef struct s_pids	// 1401A: added this struct to handle child processes in the right order
+{
+	pid_t				pid;
+	struct s_pids		*next;
+}			t_pids;
+
 /* 2.12: newly added struct */
-typedef struct s_redirect
+typedef struct s_redir
 {
 	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
 	char			*filename;
 	int				fd_heredoc;
-}			t_redirect;
+}			t_redir;
 
 //5.12. New struct t_cmd;
-typedef struct	s_cmd
+typedef struct s_cmd
 {
-	char		*path; // 30.11. B: think it's not necessary, can store them in the **arg
-	char		**cmd;
-	int			arg_count;
-	int			redirect_count;
-	t_redirect	*redir;
-	int			input_fd;
-	int			output_fd;
-	//t_cmd		*next;
+	char	*path; // 30.11. B: think it's not necessary, can store them in the **arg
+	char	**cmd;
+	int		arg_count;
+	int		redirect_count;
+	t_redir	*redir;
+	int		input_fd;
+	int		output_fd;
+	//t_cmd	*next;
 }			t_cmd;
 
-typedef struct	s_shell
+typedef struct s_shell
 {
 	t_cmd	*cmds;
 	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
+	t_pids	*pids;	//1401A: added to handle child processes in the right order
 	int		fd_hdoc;
 	int		last_exit_status;
 	char	*err_msg;
@@ -101,10 +108,11 @@ typedef struct	s_shell
 	int		prev_fd;
 }			t_shell;
 
-
-
 /* PROTOTYPES */
-	/* BUILTINS */
+
+/************/
+/* BUILTINS */
+/************/
 /* __builtins.c */
 int		is_builtin(t_shell *data, int i);
 void	exec_builtin(t_shell *data, int i, t_env **my_env);
@@ -139,26 +147,10 @@ int		ft_pwd(t_shell *data);
 t_env	*search_target_and_delete(t_env *current_input, char *key);
 void	ft_unset(t_shell *data, char **args);
 
-	/* EXECUTION */
-/* __exec_cmds.c */
-void	execute(t_shell *data, t_env **my_env);
-void	exec_cmd(t_shell *data, int i, t_env **my_env);
-void	exec_more_cmds(t_shell *data, t_env **my_env);
-int		wait_for_pids(t_shell *data, int nb_cmds);
 
-/* __child_process.c */
-void	child_process(t_shell *data, int i, int *fd, t_env **my_env);
-void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
-void	open_dup_close(t_redirect redir, int *pipe, t_shell *data, t_env **env);
-void	redir_heredoc(t_redirect redir, t_shell *data, t_env **my_env);
-void	check_redir(t_shell *data, t_redirect *redir, int *pipe, t_env **env);
-
-/* __find_cmd_path.c */
-int		find_cmd_path(t_shell *data, int i, t_env **my_env);
-char	*get_path(char **env);
-char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **my_env);
-
-	/* PARSING */
+/***********/
+/* PARSING */
+/***********/
 //LEXER
 t_Token	*new_token(char *input, t_TokenType type, size_t length);
 t_Token	*concatenate_token(t_Token *new_token, t_Token **token_list);
@@ -196,7 +188,7 @@ void	replace_value(t_Token *current, char *old_key, char *value);
 
 //LEXER_PRINT
 char	*get_token_type_char(t_TokenType type);
-void	print_token_list(t_Token *token_list, char* name);
+void	print_token_list(t_Token *token_list, char *name);
 
 //REFINE_LEXER_TOKEN 1-2
 t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list);
@@ -223,26 +215,53 @@ void	parser(t_shell *data, char *input, t_env **my_envp);
 //PARSER_ERROR_AND_FREE
 void	free_shell(t_shell *data);
 void	*safe_malloc_shell(size_t size, t_shell *data);
-t_redirect	*safe_malloc_redir(size_t size, t_shell *data);
+t_redir	*safe_malloc_redir(size_t size, t_shell *data);
 
 //PARSER_INITIALIZE_SHELL 1-2
 int		count_cmds(t_Token **token_list);
 int		count_cmd_and_arg(t_Token **token_list, int cmd_nbr);
 int		count_redirect(t_Token **token_list, int cmd_nbr);
-void	initialize_shell(t_shell *data, t_Token *token_list, t_env *myenvp);
-void	initialize_redir(t_redirect *current, int redirect_count);
+void	malloc_for_shell(t_shell *data, t_Token *token_list, t_env *myenvp);
+void	initialize_redir(t_redir *current, int redirect_count);
 void	initialize_cmds(int cmd_c, t_shell *data);
 
 //PARSER_PARSE_TO_SHELL
 int		process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c);
 t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c);
 void	fill_shell(t_shell *data, t_Token **token_list);
-void	parse_to_shell(t_shell*	data, t_Token **token_list, t_env *my_envp);
+void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp);
 
 //PARSER_PRINT
 void	print_shell_commands(t_shell *data);
 
-	/* UTILS */
+/*************/
+/* EXECUTION */
+/*************/
+/* __exec_cmds.c */
+void	execute(t_shell *data, t_env **my_env);
+void	exec_cmd(t_shell *data, int i, t_env **my_env);
+void	exec_more_cmds(t_shell *data, t_env **my_env);
+void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);
+
+/* __handle_pids.c */
+void	add_to_pids_list(t_shell *data, pid_t pid);
+void	wait_for_pids(t_shell *data);
+
+/* __child_process.c */
+void	child_process(t_shell *data, int i, int *fd, t_env **env);
+void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
+void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env);
+void	redir_heredoc(t_redir redir, t_shell *data, t_env **my_env);
+void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env);
+
+/* __find_cmd_path.c */
+int		find_cmd_path(t_shell *data, int i, t_env **my_env);
+char	*get_path(char **env);
+char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
+
+/*********/
+/* UTILS */
+/*********/
 /* __fill_env.c */
 t_env	*create_env_node(char *key, char *value);
 void	append_to_lst(t_env **lst, t_env *new);
@@ -273,20 +292,14 @@ void	free_nullify(void *to_be_freed);
 void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile);
 void	multi_close(int fds[], int size, int infile, int outfile);
 
-//INIT_AND_FREE_SHELL
+/* __shell_struct_init.c */ 
+t_shell	*init_shell_struct(t_env *env);
+
+/* __shell_struct_free_clean.c */ 
 void	free_shell_struct_cmds(t_shell *data, int i);
 void	free_shell_struct_redir(t_shell *data, int i);
+void	free_pids_struct(t_pids **pids);
 void	free_shell_struct(t_shell *data, t_env **my_env);
-t_shell	*init_shell_struct(t_env *env);
 void	clean_shell_struct(t_shell *data);
-
-
-
-/* OTHER (need to put somewhere OR just here to test the pipes */
-//t_shell	*init_shell_struct(t_env *env); // 18.12 A: now in the utils
-void	create_cmds(t_shell *data);		// to be removed?
-void	print_cmds(t_shell *data);		// to be removed
-//void	free_shell_struct(t_shell *data);	// in the utils
-
 
 #endif
