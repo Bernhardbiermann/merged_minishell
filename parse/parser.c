@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/08 14:50:24 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:17:52 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	parser(t_shell *data, char *input, t_env **my_envp)
 	//print_token_list(token_list, "merge_text_env_and_quote");
 	delete_spaces(&token_list);
 	//print_token_list(token_list, "delete_spaces");
-	check_for_first_pipe_and_double_in_out_app_here(&token_list);
+	check_for_first_pipe(&token_list);
+	create_hdoc_list(data, &token_list);
+	check_for_double_in_out_app_here(&token_list);
 	check_for_combination_pipe_and_in_out_app_here(&token_list);
 	check_for_pipe_in_out_app_here_last(&token_list);
 	make_text_out_of_quot_and_env(&token_list);

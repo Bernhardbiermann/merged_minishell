@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 16:57:09 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:15:34 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,9 @@ void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list)
 	}
 }
 
-void	check_for_first_pipe_and_double_in_out_app_here(t_Token **token_list)
+void	check_for_first_pipe(t_Token **token_list)
 {
 	t_Token	*current;
-	t_Token	*next;
 
 	if (!token_list || !*token_list)
 		return ;
@@ -63,19 +62,6 @@ void	check_for_first_pipe_and_double_in_out_app_here(t_Token **token_list)
 	{
 		*token_list = des_tlist_create_syntlist(token_list, current->value, 258);
 		return ;
-	}
-	while (current && current->next)
-	{
-		next = current->next;
-		if ((current->type == T_INPUT || current->type == T_OUTPUT || \
-		current->type == T_APPEND || current->type == T_HEREDOC) && \
-		(next->type == T_INPUT || next->type == T_OUTPUT || next->type == \
-		T_APPEND || next->type == T_HEREDOC || next->type == T_PIPE))
-		{
-			*token_list = des_tlist_create_syntlist(token_list, next->value, 2);
-			return ;
-		}
-		current = current->next;
 	}
 }
 

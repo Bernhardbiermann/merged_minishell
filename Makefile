@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/08 17:50:19 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/14 16:11:03 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC = main.c \
 	parse/lexer_check_ENV.c \
 	parse/lexer_check_ENV2.c \
+	parse/lexer_create_heredoc_list.c \
 	parse/lexer_error_and_free.c \
 	parse/lexer_grammer_check.c \
 	parse/lexer_grammer_check_2.c \
@@ -35,11 +36,13 @@ SRC = main.c \
 	parse/parser_parse_to_shell.c \
 	parse/parser_print.c \
 	parse/parser.c \
+	utils/check_t_error.c \
 	utils/fill_env.c \
 	utils/print_env.c \
 	utils/manip_str.c \
 	utils/frees.c\
-	utils/init_and_free_shell.c \
+	utils/shell_struct_init.c \
+	utils/shell_struct_free_clean.c \
 	utils/error_handle.c\
 	builtins/builtins.c \
 	builtins/cd.c \
@@ -52,6 +55,7 @@ SRC = main.c \
 	builtins/unset.c \
 	execute/exec_cmds.c \
 	execute/find_cmd_path.c \
+	execute/handle_pids.c \
 	execute/child_process.c
 
 OBJ = $(SRC:.c=.o)

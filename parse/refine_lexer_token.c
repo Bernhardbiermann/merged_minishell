@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:30:30 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/08 14:49:40 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:12:29 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	delete_spaces(t_Token **token_list)
 	}
 }
 
-void	merge_two(t_Token *current, t_Token *next)
+void	merge_two(t_Token *current, t_Token *next, t_TokenType type)
 {
 	char	*merged_value;
 
@@ -92,7 +92,7 @@ void	merge_two(t_Token *current, t_Token *next)
 	current->next = next->next;
 	if (next->next)
 		next->next->prev = current;
-	current->type = T_TEXT;
+	current->type = type;
 	current->length = ft_strlen(current->value);
 	free(next->value);
 	free(next);
@@ -110,7 +110,7 @@ void	merge_text_env_and_quote(t_Token **token_list)
 		&& (current->next->type == T_S_QUOT || current->next->type == T_D_QUOT \
 		|| current->next->type == T_TEXT || current->next->type == T_ENV))
 		{
-			merge_two(current, current->next);
+			merge_two(current, current->next, T_TEXT);
 			continue ;
 		}
 		current = current->next;

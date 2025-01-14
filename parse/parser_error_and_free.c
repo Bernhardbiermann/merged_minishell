@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_error_and_free.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2024/12/20 14:42:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/14 16:12:58 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ void	free_shell(t_shell *data)
 	}
 }
 
-t_redirect	*safe_malloc_redir(size_t size, t_shell *data)
+t_redir	*safe_malloc_redir(size_t size, t_shell *data)
 {
-	t_redirect	*ptr;
+	t_redir	*ptr;
 
-	ptr = malloc(sizeof(t_redirect) * size);
+	ptr = malloc(sizeof(t_redir) * size);
 	if (!ptr)
 	{
 		free_shell(data);

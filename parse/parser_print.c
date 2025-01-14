@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/08 12:12:03 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:13:12 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	print_shell_commands(t_shell *data)
 		printf("  Redirections:\n");
 		for (int k = 0; k < data->cmds[i].redirect_count; k++) // Schleife über alle Redirects
 		{
-			t_redirect *redir = &data->cmds[i].redir[k];
+			t_redir *redir = &data->cmds[i].redir[k];
 			switch (redir->type)
 			{
 				case T_INPUT:

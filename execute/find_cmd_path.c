@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:23:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/14 14:32:11 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,32 @@
 	we concatenate all the paths with the input command to see if one 
 	works (if it's executed by execve())
 	we free what needs freeing, and we return the cmd_and_args to main */
-int	find_cmd_path(t_shell *data, int i, t_env **my_env)
+int	find_cmd_path(t_shell *data, int i, t_env **env)
 {
 	char	**paths;
 	char	*cmd_path;
 	char	**cmd_and_args;
 	char	**env_tab;
 
-/* 	if (is_empty_str(av) == 1)
-	{
-		ft_printf("permission denied:\n");
-		return (NULL);
-	} */
 	env_tab = env_to_tab(data->env);
 	paths = ft_split(get_path(env_tab), ':');
 	if (!paths)
 	{
 		free_tab(env_tab);
-		error_handle(data, "PATH not found", 0, my_env);
+		error_handle(data, "PATH not found", 0, env);
 	}
 	cmd_and_args = data->cmds[i].cmd;
-	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths, data, my_env);
+	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths, data, env);
 	if (!cmd_path)
 	{
-		free_tab(paths);
-		free_tab(env_tab);
+		free_many_splits(paths, env_tab);
 		return (0);
 	}
 	if (data->cmds[i].path)
 		free(data->cmds[i].path);
 	data->cmds[i].path = cmd_path;
 	data->cmds[i].cmd = cmd_and_args;
-	free_tab(paths);
-	free_tab(env_tab);
+	free_many_splits(paths, env_tab);
 	return (1);
 }
 

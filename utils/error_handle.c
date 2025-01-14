@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 17:58:55 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/14 16:17:56 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,23 @@ void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env)
 	else
 		exit(err_no);
 }
+
+void	error_cmd_notfound(t_shell *data, int i, t_env **my_env)
+{
+	int	last_exit_status;
+
+	//ft_printf("Command \'%s\' not found\n", data->cmds[i].cmd[0]);
+	write(2, "Command \'", 10);
+	write(2, data->cmds[i].cmd[0], ft_strlen( data->cmds[i].cmd[0]));
+	write(2, "\' not found\n", 12);
+	free_shell_struct(data, my_env);
+	if (my_env)
+		last_exit_status = 127;
+	//free_env_list(my_env, NULL, NULL);
+	last_exit_status = 127;
+	exit(last_exit_status) ;
+}
+
 
 void	close_fd(int fd)
 {
