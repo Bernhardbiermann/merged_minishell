@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 11:41:11 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 15:34:38 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:06:05 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_Token *current)
 	t_env	*env_node;
 
 	env_node = my_envp;
+	if (!data)
+		return ;
 	while (env_node)
 	{
 		if (ft_strcmp(env_node->key, current->value) == 0)

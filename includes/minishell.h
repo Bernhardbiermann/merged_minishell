@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:50:48 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:28:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ typedef struct s_token
 	struct s_token	*prev;
 }			t_Token;
 
+typedef struct s_hdoc
+{
+	char			*value;
+	struct s_hdoc	*next;
+}			t_hdoc;
+
 typedef struct s_env
 {
 	char				*key;
@@ -101,7 +107,7 @@ typedef struct s_shell
 	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
 	t_env	*env;
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
-	t_Token	**hdoc;
+	t_hdoc	*hdoc;
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -176,10 +182,12 @@ void	check_last_error_status(t_shell *data, t_Token *current);
 
 //LEXER_CREATE_HEREDOC_LIST
 int		grammer_check(t_Token *current);
-void	create_hdoc_list(t_shell *data, t_Token **token_list);
+t_hdoc	*concatenate_hdoc_token(t_hdoc *new_token, t_hdoc **token_list);
+t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list);
 
 //LEXER_ERROR_AND_FREE
 void	free_token_list(t_Token *token_list);
+void	free_hdoc_token_list(t_hdoc *token_list);
 void	three_frees(char *s1, char *s2, char *s3);
 
 //LEXER_HELPER_FUNCTIONS 1-2
@@ -215,7 +223,7 @@ t_Token	*des_tlist_create_syntlist(t_Token **token_list, char *value, int err);
 void	check_for_pipe_in_out_app_here_last(t_Token **token_list);
 
 //PARSER
-void	parser(t_shell *data, char *input, t_env **my_envp);
+int	parser(t_shell *data, char *input, t_env **my_envp);
 
 //PARSER_ERROR_AND_FREE
 void	free_shell(t_shell *data);
@@ -244,6 +252,7 @@ void	print_shell_commands(t_shell *data);
 /*************/
 /* __exec_cmds.c */
 void	execute(t_shell *data, t_env **my_env);
+void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);

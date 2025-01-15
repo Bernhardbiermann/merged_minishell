@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 16:32:07 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:10:06 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,33 @@ void	print_shell_commands(t_shell *data)
 			}
 		}
 		printf("\n");
+
+		// Heredoc-Liste ausgeben
+		/*if (data->hdoc) // Prüfen, ob die Heredoc-Liste existiert
+		{
+			printf("  Heredoc List:\n");
+			t_hdoc *current = data->hdoc; // Annahme: `hdoc` ist ein Array von Strukturen
+			while (current)
+			{
+				printf("    Token Value: %s\n", current->value);
+				current = current->next;
+			}
+		}
+		else
+		{
+			printf("  No Heredoc List for Command %d\n", i + 1);
+		}
+		printf("\n");*/
 	}
+	if (data->hdoc) // Prüfen, ob die Heredoc-Liste existiert
+	{
+		printf("  Heredoc List:\n");
+		t_hdoc *current = data->hdoc; // Annahme: `hdoc` ist ein Array von Strukturen
+		while (current)
+		{
+			printf("    Token Value: %s\n", current->value);
+			current = current->next;
+		}
+	}
+	printf("\n");
 }

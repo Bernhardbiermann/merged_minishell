@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_initialize_shell.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:03:01 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 14:48:12 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/15 16:13:56 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void	malloc_for_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
 {
 	int	cmd_count;
 
+	if (!token_list)
+		return ;
 	cmd_count = 0;
 	data->nb_cmds = count_cmds(&token_list);
 	data->cmds = safe_malloc_shell((sizeof(t_cmd) * data->nb_cmds), data);

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:29:51 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 17:06:08 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:33:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_last_error_status(t_shell *data, t_Token *current)
 	char	*last_exit_status;
 
 	last_exit_status = ft_itoa(data->last_exit_status);
-	if ((current->value[0] = '?'))
+	if (current->value[0] == '?')
 	{
 		replace_value(current, "?", last_exit_status);
 	}
