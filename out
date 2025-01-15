@@ -1,8 +1,2 @@
-apple
-apple jam
-apple pie
-apple torte
-test2: ./pipex test "grep apple" "sort" output
-test3: ./pipex test "grep apple" "uniq" output
-test8: ./pipex test "grep apple" "sort" "uniq" output
-test9: ./pipex test "grep apple" "uniq" output
+hi
+[?2004hminishell> [?2004l[?2004hminishell> [?2004l[?2004hminishell> ^C[?2004l

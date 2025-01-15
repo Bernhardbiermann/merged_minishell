@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 15:04:49 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/15 13:39:04 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env)
 	//t_redir	*redir;
 	int			i;
 
-	//if (!cmd->redir)
-	//	return;
+	if (!cmd->redir)
+		return;
 	//redir = cmd->redir;
 	i = 0;
 	while (i < cmd->redirect_count)
@@ -63,19 +63,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 {
 	int	fd;
 
-	if (redir.type == T_INPUT)
-	{
-		fd = open(redir.filename, O_RDONLY);
-		if (!pipe)
-			return ;
-		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
-		//if (fd < 0)
-		//	check_redir(data, &redir, pipe, env); // TODO: sort out for redundancy
-		if (dup2(fd, STDIN_FILENO) == -1)
-			error_handle(data, "dup2 failed for input redirection", 1, env);
-		close_fd(fd);
-	}
-	else if (redir.type == T_OUTPUT || redir.type == T_APPEND)
+	if (redir.type == T_OUTPUT || redir.type == T_APPEND)
 	{
 		if (redir.type == T_OUTPUT)
 			fd = open(redir.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -85,8 +73,21 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 			error_handle(data, "Failed to open output file", 1, env);
 		if (dup2(fd, STDOUT_FILENO) == -1)
 			error_handle(data, "dup2 failed for output redirection", 1, env);
-		close_fd(fd);
+		close(fd);
 	}
+	else if (redir.type == T_INPUT)
+	{
+		fd = open(redir.filename, O_RDONLY);
+		if (!pipe)
+			return ;
+		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
+		if (fd < 0)
+			error_handle(data, "file failed to open", 1, env);
+		if (dup2(fd, STDIN_FILENO) == -1)
+			error_handle(data, "dup2 failed for input redirection", 1, env);
+		close(fd);
+	}
+
 	//else if (redir.type == T_HEREDOC)
 	//	redir_heredoc(redir, ddata, my_env);
 }
@@ -105,12 +106,12 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 		close_fd(pipe[1]);
 		close_fd(pipe[0]);
 		free_shell_struct(data, env);
-		exit(127);
+		exit(1);
 	}
 	dir = opendir(redir->filename);
 	if (dir)
 	{
-		write(2, "utils", ft_strlen("utils"));
+		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
 		closedir(dir);
 		close_fd(data->prev_fd);

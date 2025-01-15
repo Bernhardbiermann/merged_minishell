@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:50:48 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:11:52 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,7 @@ void	print_shell_commands(t_shell *data);
 /*************/
 /* __exec_cmds.c */
 void	execute(t_shell *data, t_env **my_env);
+void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);
