@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 15:57:31 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/15 18:05:53 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,46 @@ void	exec_single_cmd(t_shell *data, t_env **env)
 {
 	int		fd[2];
 	pid_t	pid;
-	int		exit_status;
+//	int		exit_status;
 
- 	fd[0] = -1;
+	fd[0] = -1;
 	fd[1] = -1;
-	//if (pipe(fd) == -1)
-	//	error_handle(data, "pipe failed", EXIT_FAILURE, env);
 	pid = fork();
 	if (pid < 0)
 		error_handle(data, "fork failed", EXIT_FAILURE, env);
 	else if (pid == 0)
 	{
 		handle_redirections(&data->cmds[0], fd, data, env); 
-/* 		if (dup2(fd[0], STDIN_FILENO) == -1)
-			error_handle(data, "dup2 failed: child input", EXIT_FAILURE, env);
-		close_fd(fd[0]);
-		if (dup2(fd[1], STDOUT_FILENO) == -1) 
-			error_handle(data, "dup2 failed: child output", EXIT_FAILURE, env);
-		close_fd(fd[1]); */
 		exec_builtin(data, 0, env);
-		exit_status = data->last_exit_status;
+		collect_status_free_exit(data, env);
+		/* exit_status = data->last_exit_status;
 		free_shell_struct(data, env);
-		exit(exit_status);
+		exit(exit_status); */
 	}
-		//exec_cmd(data, 0, env);
 	else
 	{
 		add_to_pids_list(data, pid);
 		wait_for_pids(data);
-		//clean_shell_struct(data);
 		if (ft_strcmp(data->cmds[0].cmd[0], "exit") == 0)
 		{
-			exit_status = data->last_exit_status;
+			collect_status_free_exit(data, env);
+			/* exit_status = data->last_exit_status;
 			free_shell_struct(data, env);
-			exit(exit_status);
+			exit(exit_status); */
 		}
 	}
-		//parent_process(data, 0, fd, pid);
-	
 }
 
+// 1401A, 17h42: added to shrink the exec single cmd
+// TODO: add to next merge and clean comments in exec_single_cmd()
+void	collect_status_free_exit(t_shell *data, t_env **env)
+{
+	int		exit_status;
+
+	exit_status = data->last_exit_status;
+	free_shell_struct(data, env);
+	exit(exit_status);
+}
 
 /* executes each command
 	if it's a builtin, executes it and then cleans and exits
@@ -77,11 +77,11 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 	if (is_builtin(data, i) == 1)
 	{
 		exec_builtin(data, i, my_env);
-		if (data->nb_cmds > 1 || is_builtin(data, 0) == 0)
-		{
+	//	if (data->nb_cmds > 1 || is_builtin(data, 0) == 0) // TODO: remove for next merge
+	//	{
 			free_shell_struct(data, my_env);
 			exit(EXIT_SUCCESS);
-		}
+	//	}
 	}
 	else
 	{

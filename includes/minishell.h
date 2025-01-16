@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 16:28:00 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:51:51 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,7 @@ void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);
+void	collect_status_free_exit(t_shell *data, t_env **env);
 
 /* __handle_pids.c */
 void	add_to_pids_list(t_shell *data, pid_t pid);

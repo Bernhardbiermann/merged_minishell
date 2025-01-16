@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 13:39:04 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/16 13:45:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,58 @@
 	- executes the command */
 void	child_process(t_shell *data, int i, int *fd, t_env **env)
 {
-	handle_redirections(&data->cmds[i], fd, data, env); 
+	int	saved_stdout;
+
+	data->cmds[i].output_fd = -1; // TODO: 1401A - added to fix echo |echo, add to the merge if it works
+	handle_redirections(&data->cmds[i], fd, data, env);
 	if (data->prev_fd != -1)
 	{
 		if (dup2(data->prev_fd, STDIN_FILENO) == -1)
 			error_handle(data, "dup2 failed: child input", EXIT_FAILURE, env);
 		close_fd(data->prev_fd);
 	}
+	// TODO: 1401A suggested by chatgpt but doesnt seem to fix the code
+/* 	if (i == 0)  // First command
+	{
+		// Redirect output to the file (if output_fd is set)
+		if (data->cmds[i].output_fd != -1)
+		{
+			if (dup2(data->cmds[i].output_fd, STDOUT_FILENO) == -1)
+				error_handle(data, "dup2 failed: output redirection", EXIT_FAILURE, env);
+		}
+		// Redirect STDOUT to the pipe's write end
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			error_handle(data, "dup2 failed: pipe output", EXIT_FAILURE, env);
+	} */
 	if (i != data->nb_cmds - 1)
 	{
-		if (dup2(fd[1], STDOUT_FILENO) == -1) 
-			error_handle(data, "dup2 failed: child output", EXIT_FAILURE, env);
+		// 1401a, 18:49: added all this to try and solve echo >out | echo >out
+		// TODO: add to merged version if works
+		if (data->cmds[i].output_fd != -1)
+		{
+			saved_stdout = dup(STDOUT_FILENO);
+			if (dup2(fd[1], STDOUT_FILENO) == -1)
+				error_handle(data, "dup2 failed: outfile", EXIT_FAILURE, env);
+			if (dup2(saved_stdout, STDOUT_FILENO) == -1)
+				error_handle(data, "dup2 failed: restore STDOUT", EXIT_FAILURE, env);
+			close_fd(saved_stdout);
+		}
+		else
+		{
+			if (dup2(fd[1], STDOUT_FILENO) == -1) 
+				error_handle(data, "dup2 failed: child output", EXIT_FAILURE, env);
+		}
 		close_fd(fd[1]);
+	}
+	// TODO: 1401A - added to try to handle echo >out|echo>out
+	else // last command
+	{
+		if (data->cmds[i].output_fd != -1) 
+		{
+			// If we have output redirection, send it to file
+			if (dup2(data->cmds[i].output_fd, STDOUT_FILENO) == -1)
+				error_handle(data, "dup2 failed: last command output redirection", EXIT_FAILURE, env);
+		}
 	}
 	close_fd(fd[1]);
 	close_fd(fd[0]);
@@ -46,15 +86,17 @@ void	child_process(t_shell *data, int i, int *fd, t_env **env)
 void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env)
 {
 	//t_redir	*redir;
-	int			i;
+	int	i;
 
 	if (!cmd->redir)
-		return;
+		return ;
 	//redir = cmd->redir;
 	i = 0;
 	while (i < cmd->redirect_count)
 	{
 		open_dup_close(cmd->redir[i], pipe, data, env);
+		if (cmd->redir[i].type == T_OUTPUT || cmd->redir[i].type == T_APPEND)
+			cmd->output_fd = 1;
 		i++;
 	}
 }
@@ -69,6 +111,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 			fd = open(redir.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
 			fd = open(redir.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		// TODO: check redir to check if its a directory and if i have not the permissions to open the file(?)
 		if (fd < 0)
 			error_handle(data, "Failed to open output file", 1, env);
 		if (dup2(fd, STDOUT_FILENO) == -1)
@@ -78,7 +121,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 	else if (redir.type == T_INPUT)
 	{
 		fd = open(redir.filename, O_RDONLY);
-		if (!pipe)
+ 		if (!pipe) // TODO: check why i do this one, is it because it messes up with the code if there's just one single builtin?
 			return ;
 		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
 		if (fd < 0)
@@ -98,6 +141,16 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 {
 	DIR		*dir;
 
+/* 	if (access(redir->filename, F_OK) == -1) // check if i have the permissions to open the file
+	{
+		write(2, redir->filename, ft_strlen(redir->filename));
+		write(2, ": No such file or directory\n", 28);
+		close_fd(data->prev_fd);
+		close_fd(pipe[1]);
+		close_fd(pipe[0]);
+		free_shell_struct(data, env);
+		exit(1);
+	} */
 	if (access(redir->filename, F_OK) == -1)
 	{
 		write(2, redir->filename, ft_strlen(redir->filename));
