@@ -1,3 +1,10 @@
+apple
+apple pie
+apple
+apple jam
 apple torte
-banane
-hi apple
+apple
+test2: ./pipex test "grep apple" "sort" output
+test3: ./pipex test "grep apple" "uniq" output
+test8: ./pipex test "grep apple" "sort" "uniq" output
+test9: ./pipex test "grep apple" "uniq" output

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 18:05:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/16 17:27:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,13 @@ void	exec_single_cmd(t_shell *data, t_env **env)
 		handle_redirections(&data->cmds[0], fd, data, env); 
 		exec_builtin(data, 0, env);
 		collect_status_free_exit(data, env);
-		/* exit_status = data->last_exit_status;
-		free_shell_struct(data, env);
-		exit(exit_status); */
 	}
 	else
 	{
 		add_to_pids_list(data, pid);
 		wait_for_pids(data);
 		if (ft_strcmp(data->cmds[0].cmd[0], "exit") == 0)
-		{
 			collect_status_free_exit(data, env);
-			/* exit_status = data->last_exit_status;
-			free_shell_struct(data, env);
-			exit(exit_status); */
-		}
 	}
 }
 
@@ -77,17 +69,14 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 	if (is_builtin(data, i) == 1)
 	{
 		exec_builtin(data, i, my_env);
-	//	if (data->nb_cmds > 1 || is_builtin(data, 0) == 0) // TODO: remove for next merge
-	//	{
-			free_shell_struct(data, my_env);
-			exit(EXIT_SUCCESS);
-	//	}
+		free_shell_struct(data, my_env);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
 		find_cmd_path(data, i, my_env);
 		if (find_cmd_path(data, i, my_env) == 0)
-			error_cmd_notfound(data, i, my_env);
+			error_cmd_file_dir(data, i, my_env);
 		env_tab = env_to_tab(data->env);
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 15:17:54 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:24:56 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	child_process(t_shell *data, int i, int *fd, t_env **env)
 	int	saved_stdout;
 
 	data->cmds[i].output_fd = -1; // TODO: 1401A - added to fix echo |echo, add to the merge if it works
-	handle_redirections(&data->cmds[i], fd, data, env);
+//	handle_redirections(&data->cmds[i], fd, data, env);
 	if (data->prev_fd != -1)
 	{
 		if (dup2(data->prev_fd, STDIN_FILENO) == -1)
@@ -73,8 +73,10 @@ void	child_process(t_shell *data, int i, int *fd, t_env **env)
 				error_handle(data, "dup2 failed: last command output redirection", EXIT_FAILURE, env);
 		}
 	}
+	handle_redirections(&data->cmds[i], fd, data, env);
 	close_fd(fd[1]);
 	close_fd(fd[0]);
+	//handle_redirections(&data->cmds[i], fd, data, env);
 	exec_cmd(data, i, env);
 }
 
@@ -141,18 +143,18 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 {
 	DIR		*dir;
 
-/* 	if (access(redir->filename, F_OK) == -1) // check if i have the permissions to open the file
-	{
-		write(2, redir->filename, ft_strlen(redir->filename));
-		write(2, ": No such file or directory\n", 28);
-		close_fd(data->prev_fd);
-		close_fd(pipe[1]);
-		close_fd(pipe[0]);
-		free_shell_struct(data, env);
-		exit(1);
-	} */
 	if (access(redir->filename, F_OK) == -1)
 	{
+/* 		if (access(redir->filename, X_OK) == -1) // check if i have the permissions to open the file
+		{
+			write(2, redir->filename, ft_strlen(redir->filename));
+			write(2, ": No such file or directory\n", 28);
+			close_fd(data->prev_fd);
+			close_fd(pipe[1]);
+			close_fd(pipe[0]);
+			free_shell_struct(data, env);
+			exit(126);
+		} */
 		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": No such file or directory\n", 28);
 		close_fd(data->prev_fd);

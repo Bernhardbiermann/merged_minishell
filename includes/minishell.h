@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 13:58:34 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 17:26:00 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,9 @@ int		is_empty_str(char *str);
 
 /* __error_handle.c */
 void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);
-void	error_cmd_notfound(t_shell *data, int i, t_env **my_env);
+void	error_cmd_file_dir(t_shell *data, int i, t_env **env);
+void	error_directory(t_shell *data, char *cmd_name, t_env **env);
+void	free_shell_exit(t_shell *data, t_env **env, int errno);
 void	close_fd(int fd);
 
 /* __frees.c */ 
