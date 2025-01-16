@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 11:11:52 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/15 17:45:35 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,10 @@ void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);
+
+// 1401A, 17h42: added to shrink the exec single cmd
+// TODO: add to next merge
+void	collect_status_free_exit(t_shell *data, t_env **env);
 
 /* __handle_pids.c */
 void	add_to_pids_list(t_shell *data, pid_t pid);
