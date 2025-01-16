@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/16 13:52:16 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 14:48:19 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	//check_for_combination_pipe_and_in_out_app_here(&token_list);
 	check_for_pipe_in_out_app_here_last(&token_list);
 	make_text_out_of_quot_and_env(&token_list);
-	//print_token_list(token_list, "Everything!");
+	print_token_list(token_list, "Everything!");
 	if (token_list)
 		parse_to_shell(data, &token_list, *my_envp);
-	//print_shell_commands(data);
+	print_shell_commands(data);
 	if (check_t_error(data) != 0 || !token_list)
 		return (1);
 	free_token_list(token_list);

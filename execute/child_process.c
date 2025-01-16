@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 13:45:19 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/16 15:17:54 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 	}
 
 	//else if (redir.type == T_HEREDOC)
-	//	redir_heredoc(redir, ddata, my_env);
+	//	redir_heredoc(redir, data, my_env);
 }
 
 /* check if invalid redirection (NDFD: 127, is_dir: 126) 

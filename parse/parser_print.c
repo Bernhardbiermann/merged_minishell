@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/15 11:10:06 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:25:14 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	print_shell_commands(t_shell *data)
 					printf("    Append (>>): %s\n", redir->filename);
 					break;
 				case T_HEREDOC:
-					printf("    Here-Document (<<): FD: %d\n", redir->fd_heredoc);
+					printf("    Here-Document (<<): %s\n", redir->filename);
 					break;
 				default:
 					printf("    Unknown redirection type\n");

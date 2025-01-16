@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 13:51:51 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:58:34 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,7 @@ void	print_shell_commands(t_shell *data);
 /*************/
 /* __exec_cmds.c */
 void	execute(t_shell *data, t_env **my_env);
+void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_single_cmd(t_shell *data, t_env **env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);

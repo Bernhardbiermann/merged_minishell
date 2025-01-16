@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/15 11:00:07 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:59:11 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,3 +121,4 @@ void	clean_shell_struct(t_shell *data)
 	data->nb_cmds = 0;
 	data->prev_fd = -2;
 }
+
