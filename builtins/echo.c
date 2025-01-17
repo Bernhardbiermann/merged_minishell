@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:48:43 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 17:58:08 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 13:42:25 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ int	ft_echo(char **args)
 		newline = 0;
 		i++;
 	}
-	// if redirect : print to redirection
-	// else : print to stdout
 	while (args[i])
 	{
 		printf("%s", args[i]);

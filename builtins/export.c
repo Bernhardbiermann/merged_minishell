@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 17:52:18 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:47:20 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,6 @@
 	you can also export multiple vars: export VAR1=v1 VAR2=v2 VAR3=v3 */
 // CHECK1: input might be in another form, maybe already a char** ?
 // CHECK2: output format slightly different than env command. Check in bash
-
-int	is_valid_var_name(const char *str)
-{
-	int	i;
-
-	i = 0;
-	if (ft_isalpha(str[0]) == 0 && str[0] != '_')
-		return (1);
-	while (str[i])
-	{
-		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-char	*safe_malloc(t_shell *data, size_t len)
-{
-	char	*value;
-
-	value = malloc(len + 1);
-	if (!value)
-	{
-		ft_printf("minishell: export: memory allocation error\n");
-		data->last_exit_status = 1;
-		return (NULL);
-	}
-	return (value);
-}
 
 void	create_newnode_and_append(t_shell *data, char *equal_ptr, char *key)
 {
@@ -98,6 +68,12 @@ void	expand_env(t_shell *data, char *input)
 		create_newnode_and_append(data, equal_ptr, key);
 }
 
+static void	set_exitstatus_and_print(t_shell *data, char **args, int i)
+{
+	ft_printf("minishell: `%s': not a valid identifier\n", args[i]);
+	data->last_exit_status = 1;
+}
+
 void	ft_export(char **args, t_shell *data)
 {
 	int		i;
@@ -108,20 +84,14 @@ void	ft_export(char **args, t_shell *data)
 	while (args[i])
 	{
 		if (!ft_strchr(args[i], '=') && is_valid_var_name(args[i]) != 0)
-		{
-			ft_printf("minishell: `%s': not a valid identifier\n", args[i]);
-			data->last_exit_status = 1;
-		}
+			set_exitstatus_and_print(data, args, i);
 		else if (!ft_strchr(args[i], '='))
 		{
 			i++;
 			continue ;
 		}
 		else if (check_name_and_empty_value(args[i]) != 0)
-		{
-			ft_printf("minishell: `%s': not a valid identifier\n", args[i]);
-			data->last_exit_status = 1;
-		}
+			set_exitstatus_and_print(data, args, i);
 		else
 			expand_env(data, args[i]);
 		i++;
