@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:20:42 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 14:47:55 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:35:26 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,18 @@ int	quote_token(char *input, t_Token **token)
 	if (input[i] == input[0])
 	{
 		if (input[0] == '\'')
-			*token = new_token(ft_strndup(input + 1, i - 1), T_S_QUOT , (i - 1));
+			*token = new_token(ft_strndup(input + 1, i - 1), T_S_QUOT, \
+			(i - 1));
 		else
-			*token = new_token(ft_strndup(input + 1, i - 1), T_D_QUOT , (i - 1));
+			*token = new_token(ft_strndup(input + 1, i - 1), T_D_QUOT, \
+			(i - 1));
 		return (i + 1);
 	}
 	else
 	{
 		*token = \
 new_token(ft_strdup("minishell: Unclosed quotation marks detected"), \
-T_ERROR , 1);
+T_ERROR, 1);
 		return (i);
 	}
 }

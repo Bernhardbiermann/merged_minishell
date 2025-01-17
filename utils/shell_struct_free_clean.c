@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/16 13:59:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:45:16 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,8 @@ void	clean_shell_struct(t_shell *data)
 	if (data->err_msg)
 		free(data->err_msg);
 	if (data->hdoc)
-	{
 		free_hdoc_token_list(data->hdoc);
-		data->hdoc = NULL;
-	}
+	data->hdoc = NULL;
 	free_pids_struct(&data->pids);
 	free(data->cmds);
 	data->cmds = NULL; // should it be here free_nullify()?

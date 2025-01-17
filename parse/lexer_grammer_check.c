@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 15:15:34 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:25:16 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	check_for_first_pipe(t_Token **token_list)
 	current = *token_list;
 	if (current->type == T_PIPE)
 	{
-		*token_list = des_tlist_create_syntlist(token_list, current->value, 258);
+		*token_list = des_tlist_create_syntlist(token_list, \
+		current->value, 258);
 		return ;
 	}
 }
@@ -103,4 +104,3 @@ void	check_for_terror(t_Token **token_list)
 		current = current->next;
 	}
 }
-

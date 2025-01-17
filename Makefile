@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/14 16:31:40 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/17 11:18:37 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC = main.c \
 	utils/check_t_error.c \
 	utils/fill_env.c \
 	utils/print_env.c \
+	utils/setup_signals.c \
 	utils/manip_str.c \
 	utils/frees.c\
 	utils/shell_struct_init.c \

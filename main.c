@@ -6,11 +6,13 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/15 16:05:14 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:34:29 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+volatile sig_atomic_t	g_signal_received = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -29,11 +31,12 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (1)
 	{	
+		if (g_signal_received == 1)
+			data->last_exit_status = 130;
+		g_signal_received = 0;
 		input = readline("minishell> ");
 		if (!input)
 			break ;
-		if (input[0] == '\0')
-			continue ;
 		if (*input)
 			add_history(input);	
 		if (parser(data, input, my_envp) == 0)

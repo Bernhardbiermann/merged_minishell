@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parse_to_shell.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 14:49:41 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 13:00:05 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ void	fill_redir(t_shell *data, int redir_c, int cmd_c, t_Token *current)
 	data->cmds[cmd_c].redir[redir_c].type = current->type;
 }
 
-int	process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c)
+int	process_redir(t_shell *data, t_Token **current_token, int redir_c, \
+int cmd_c)
 {
 	t_Token	*current;
-	
+
 	current = *current_token;
 	if (current->type == T_INPUT)
 		fill_redir(data, redir_c, cmd_c, current);
@@ -38,7 +39,7 @@ t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c)
 {
 	int		arg_c;
 	int		redir_c;
-	
+
 	arg_c = 0;
 	redir_c = 0;
 	while (current && current->type != T_PIPE)

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:55:58 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/15 14:04:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:24:38 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	check_for_pipe_in_out_app_here_last(t_Token **token_list)
 	if (!token_list || !*token_list)
 		return ;
 	current = *token_list;
-	while(current->next)
+	while (current->next)
 		current = current->next;
 	if (current->type == T_APPEND || current->type == T_INPUT || \
 	current->type == T_OUTPUT || current->type == T_HEREDOC || \

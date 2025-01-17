@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 11:04:18 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/16 11:15:50 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:30:23 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	read_heredoc(t_shell *data)
 {
 	char	*line;
 
-	//setup signal
+	setup_signal(HEREDOC);
 	while(1)
 	{
 		line = readline(">");

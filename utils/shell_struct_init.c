@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:11 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 16:33:38 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:47:29 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_shell	*init_shell_struct(t_env *env)
 {
 	t_shell	*data;
 
+	setup_signal(INTERACTIVE);
 	data = malloc(sizeof(t_shell));
 	if (!data)
 		return (NULL);

@@ -6,13 +6,13 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:54:25 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/07 14:03:18 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:42:17 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	check_empty_DQUOT(t_Token **token_list)
+void	check_empty_dquot(t_Token **token_list)
 {
 	t_Token	*current;
 

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2025/01/14 16:31:51 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:53:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,10 @@ t_redir	*safe_malloc_redir(size_t size, t_shell *data)
 	if (!ptr)
 	{
 		free_shell(data);
-		//data->last_exit_status = 1;
 		exit (1);
 	}
 	return (ptr);
 }
-
 
 void	*safe_malloc_shell(size_t size, t_shell *data)
 {

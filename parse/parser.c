@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/16 15:39:20 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 13:27:12 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	//print_token_list(token_list, "1");
 	check_empty_env_first(&token_list);
 	//print_token_list(token_list, "2");
-	do_env_in_DQUOT_and_ENV(token_list, *my_envp, data);
-	//print_token_list(token_list, "do_env_in_DQUOT_and_ENV");
-	check_empty_DQUOT(&token_list);
-	//print_token_list(token_list, "check_empty_DQUOT");
-	delete_empty_ENV_and_quote(&token_list);
-	//print_token_list(token_list, "delete_empty_ENV_and_quote");
+	do_env_in_dquot_and_env(token_list, *my_envp, data);
+	//print_token_list(token_list, "do_env_in_dquot_and_env");
+	check_empty_dquot(&token_list);
+	//print_token_list(token_list, "check_empty_dquot");
+	delete_empty_env_and_quote(&token_list);
+	//print_token_list(token_list, "delete_empty_env_and_quote");
 	merge_text_env_and_quote(&token_list);
 	//print_token_list(token_list, "merge_text_env_and_quote");
 	delete_spaces(&token_list);

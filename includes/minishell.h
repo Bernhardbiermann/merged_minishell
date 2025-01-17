@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 17:26:00 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 13:27:12 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@
 # include "libft/include/get_next_line.h"
 
 /* MACROS */
+# define INTERACTIVE 1
+# define RESET 2
+# define WAIT 3
+# define HEREDOC 4
 
 /* STRUCTURES */
 // PARSE_LEXER
@@ -171,12 +175,12 @@ int		env_token(char *input, t_Token **token);
 int		value_token(char *input, t_Token **token);
 
 //LEXER_CHECK_ENV
-void	find_key_and_exchange_value_in_ENV(t_shell *data, t_env *my_envp, t_Token *current);
-void	find_key_and_exchange_value_in_DQUOT(t_env *my_envp, t_Token *current, \
+void	find_key_and_exchange_value_in_env(t_shell *data, t_env *my_envp, t_Token *current);
+void	find_key_and_exchange_value_in_dquot(t_env *my_envp, t_Token *current, \
 char *start, t_shell *data);
 void	three_frees(char *s1, char *s2, char *s3);
 char	*compare_key_and_get_value(t_env *my_envp, char* key);
-void	do_env_in_DQUOT_and_ENV(t_Token *token_list, t_env *my_envp, \
+void	do_env_in_dquot_and_env(t_Token *token_list, t_env *my_envp, \
 t_shell *data);
 void	check_last_error_status(t_shell *data, t_Token *current);
 
@@ -205,10 +209,10 @@ void	print_token_list(t_Token *token_list, char *name);
 //REFINE_LEXER_TOKEN 1-2
 t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list);
 void	delete_spaces(t_Token **token_list);
-void	delete_empty_ENV_and_quote(t_Token **token_list);
+void	delete_empty_env_and_quote(t_Token **token_list);
 void	merge_two(t_Token *current, t_Token *next, t_TokenType type);
 void	merge_text_env_and_quote(t_Token **token_list);
-void	check_empty_DQUOT(t_Token **token_list);
+void	check_empty_dquot(t_Token **token_list);
 void	delete_spaces(t_Token **token_list);
 void	make_text_out_of_quot_and_env(t_Token **token_list);
 void	replace_special_value(t_shell *data, t_Token *current, char *start);
@@ -295,6 +299,13 @@ void	print_env_tab(char **tab);
 /* __manip_str.c */
 char	*multi_strjoin(char *str1, char *str2, char *str3);
 int		is_empty_str(char *str);
+
+/*__setup_signals.c */
+void	setup_signal(int type);
+void	exit_signal(int exit_status);
+void	set_sigaction(struct sigaction *sa, void (*f_handler)(int), int signum);
+void	handle_sigint_interactive(int signum);
+void	handle_sigint_heredoc(int signum);
 
 /* __error_handle.c */
 void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);

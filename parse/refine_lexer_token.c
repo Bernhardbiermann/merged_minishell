@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 13:30:30 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 14:12:29 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:41:25 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list)
 	if (target->prev == NULL)
 	{
 		*token_list = target->next;
-		if(target->next)
+		if (target->next)
 			target->next->prev = NULL;
 	}
 	else
@@ -34,16 +34,16 @@ t_Token	*delete_node_and_glue(t_Token *target, t_Token **token_list)
 	temp = target;
 	target = target->next;
 	if (temp->value)
-		free(temp->value);	
+		free(temp->value);
 	free(temp);
 	return (target);
 }
 
-void	delete_empty_ENV_and_quote(t_Token **token_list)
+void	delete_empty_env_and_quote(t_Token **token_list)
 {
 	t_Token	*current;
 	t_Token	*next;
-	
+
 	current = *token_list;
 	next = NULL;
 	while (current)
@@ -52,17 +52,18 @@ void	delete_empty_ENV_and_quote(t_Token **token_list)
 		if (current->type == T_ENV && current->value[0] == '\0')
 			current = delete_node_and_glue(current, token_list);
 		else if ((current->type == T_D_QUOT || current->type == T_S_QUOT) \
-		 && current->value[0] == '\0')
+		&& current->value[0] == '\0')
 			current = delete_node_and_glue(current, token_list);
 		else
 			current = next;
 	}
 }
+
 void	delete_spaces(t_Token **token_list)
 {
 	t_Token	*current;
 	t_Token	*next;
-	
+
 	current = *token_list;
 	next = NULL;
 	while (current)
@@ -79,13 +80,15 @@ void	merge_two(t_Token *current, t_Token *next, t_TokenType type)
 {
 	char	*merged_value;
 
+	merged_value = NULL;
 	if (!current || !next)
 		return ;
-	if (!(merged_value = malloc(ft_strlen(current->value) + \
-	ft_strlen(next->value) + 1)))
+	merged_value = malloc(ft_strlen(current->value) + \
+	ft_strlen(next->value) + 1);
+	if (!merged_value)
 		exit(EXIT_FAILURE);
 	ft_strlcpy(merged_value, current->value, (ft_strlen(current->value) + 1));
-	ft_strlcat(merged_value, next->value, (ft_strlen(next->value)+ \
+	ft_strlcat(merged_value, next->value, (ft_strlen(next->value) + \
 	ft_strlen(current->value) + 1));
 	free(current->value);
 	current->value = merged_value;
@@ -101,11 +104,11 @@ void	merge_two(t_Token *current, t_Token *next, t_TokenType type)
 void	merge_text_env_and_quote(t_Token **token_list)
 {
 	t_Token	*current;
-	
+
 	current = *token_list;
 	while (current && current->next)
 	{
-		if((current->type == T_S_QUOT || current->type == T_D_QUOT || \
+		if ((current->type == T_S_QUOT || current->type == T_D_QUOT || \
 		current->type == T_TEXT || current->type == T_ENV) \
 		&& (current->next->type == T_S_QUOT || current->next->type == T_D_QUOT \
 		|| current->next->type == T_TEXT || current->next->type == T_ENV))

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:03:01 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/15 16:13:56 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:59:02 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,26 @@ int	count_redirect(t_Token **token_list, int cmd_nbr)
 	return (redirect_count);
 }
 
-void	malloc_for_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
+static int	setup_core_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
 {
 	int	cmd_count;
 
-	if (!token_list)
-		return ;
 	cmd_count = 0;
 	data->nb_cmds = count_cmds(&token_list);
 	data->cmds = safe_malloc_shell((sizeof(t_cmd) * data->nb_cmds), data);
 	data->env = myenvp;
 	data->last_exit_status = 0;
 	data->err_msg = NULL;
+	return (cmd_count);
+}
+
+void	malloc_for_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
+{
+	int	cmd_count;
+
+	if (!token_list)
+		return ;
+	cmd_count = setup_core_shell(data, token_list, myenvp);
 	while (cmd_count < data->nb_cmds)
 	{
 		data->cmds[cmd_count].path = NULL;
