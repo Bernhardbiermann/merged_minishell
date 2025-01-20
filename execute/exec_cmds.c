@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 15:30:40 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/20 18:14:40 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@
 (then no need for pipes), or if we have to create pipes */
 void	execute(t_shell *data, t_env **my_env)
 {
-	if (data->nb_cmds <= 1 && is_builtin(data, 0) == 1)
-		exec_single_cmd(data, my_env);
+	if (data->nb_cmds <= 1 && data->cmds[0].cmd[0])
+	{
+		if (is_builtin(data, 0) == 1)
+			exec_single_cmd(data, my_env);
+	}
 	else
 		exec_more_cmds(data, my_env);
 }
@@ -63,8 +66,10 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	data->prev_fd = -1;
 	fd[0] = -1;
 	fd[1] = -1;
+	//printf("nb of cmd strcuts %i\n", data->nb_cmds);
 	while (i < data->nb_cmds)
 	{
+
 		if (i != data->nb_cmds - 1 && pipe(fd) == -1)
 			error_handle(data, "pipe failed", EXIT_FAILURE, my_env);
 		pid = fork();
@@ -86,6 +91,11 @@ void	exec_cmd(t_shell *data, int i, t_env **my_env)
 {
 	char	**env_tab;
 
+	if (!data->cmds[i].cmd[0])
+	{
+		free_shell_struct(data, my_env);
+		exit(EXIT_SUCCESS);
+	}
 	if (is_builtin(data, i) == 1)
 	{
 		exec_builtin(data, i, my_env);

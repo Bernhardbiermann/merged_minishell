@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 14:22:55 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:53:42 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 		close(fd);
 	}
 	else if (redir.type == T_HEREDOC)
-		redir_heredoc(redir, data, env);
+		exec_heredoc(data, &redir, redir.redir_arg, env);
 }
 
 /* check if invalid redirection (NDFD: 127, is_dir: 126) 
@@ -154,7 +154,8 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 // 1701A: check the logic, not sure it works as it is
 void	redir_heredoc(t_redir redir, t_shell *data, t_env **env)
 {
-	if (redir.last_redir_in == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
+	exec_heredoc(data, &redir, redir.redir_arg, env);
+/* 	if (redir.last_redir_in == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
 	{
 		exec_heredoc(data, redir.redir_arg, env);
 		close_fd(data->fd_heredoc);
@@ -162,9 +163,10 @@ void	redir_heredoc(t_redir redir, t_shell *data, t_env **env)
 	else
 	{
 		exec_heredoc(data, redir.redir_arg, env);
+		printf("check data->fd_heredoc: %d\n", data->fd_heredoc);
 		if (dup2(data->fd_heredoc, STDIN_FILENO) == -1)
-			error_handle(data, "dup2 failed for input redirection", 1, env);
+			error_handle(data, "dup2 failed for hdoc redirection", 1, env);
 		close_fd(data->fd_heredoc);
-	}
+	} */
 }
 

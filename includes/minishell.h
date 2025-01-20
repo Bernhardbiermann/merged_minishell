@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 14:28:52 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:30:24 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,7 +283,7 @@ char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
 /* __handle_heredoc.c */
-int		exec_heredoc(t_shell *data, char *delimiter, t_env **env);
+int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env);
 void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env);
 
 
