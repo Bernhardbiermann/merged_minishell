@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:51:10 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:25:46 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,22 @@ void	print_shell_commands(t_shell *data)
 			{
 				case T_INPUT:
 				{
-					printf("    Input (<): %s\n", redir->filename);
+					printf("    Input (<): %s\n", redir->redir_arg);
 					break ;
 				}
 				case T_OUTPUT:
 				{
-					printf("    Output (>): %s\n", redir->filename);
+					printf("    Output (>): %s\n", redir->redir_arg);
 					break ;
 				}
 				case T_APPEND:
 				{
-					printf("    Append (>>): %s\n", redir->filename);
+					printf("    Append (>>): %s\n", redir->redir_arg);
 					break ;
 				}
 				case T_HEREDOC:
 				{
-					printf("    Here-Document (<<): %s\n", redir->filename);
+					printf("    Here-Document (<<): %s\n", redir->redir_arg);
 					break ;
 				}
 				default :

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 17:03:02 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:43:17 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
+int	exec_heredoc(t_shell *data, char *delimiter, t_env **env)
 {
-	int		*fd;
+	int		fd[2];
 	int		status;
 	int		exit_status;
 	pid_t	pid;
@@ -30,7 +30,7 @@ void	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 		exit_status = waitpid(pid, &status, 0);
 		if (exit_status != 0)
 			return (1);
-		redir->fd_heredoc = fd[0]; // to be closed after heredoc is no longer useful, ou a refermer dans toutes les fonctions de nettoyage et free
+		data->fd_heredoc = fd[0]; // to be closed after heredoc is no longer useful, ou a refermer dans toutes les fonctions de nettoyage et free
 
 		
 
@@ -39,6 +39,7 @@ void	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 //        } else if (WIFSIGNALED(status)) {
 //            printf("Child terminated by signal %d\n", WTERMSIG(status));
 	}
+	return (0);
 }
 
 void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env)
@@ -46,6 +47,8 @@ void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env)
 	char	*line;
 	
 	close(fd[0]);
+	if (!env && !data)
+		return ;
 	while (1)
 	{
 		line = readline("heredoc>");

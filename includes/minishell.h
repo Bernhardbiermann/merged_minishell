@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 11:29:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/20 14:02:08 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ typedef struct s_pids
 typedef struct s_redir
 {
 	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
-	char			*filename;
-	int				last_redir; // 2001A: flag to add from parsing
+	char			*redir_arg;
+	int				last_redir_in; // 2001A: flag to add from parsing
 	//int				fd_heredoc; // maybe put that in the dat0a so it's easier to clean up
 }			t_redir;
 
@@ -113,7 +113,6 @@ typedef struct s_shell
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
 	t_hdoc	*hdoc;
 	int		fd_heredoc; //1701A propose to move that here so easier to clean up
-	
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -279,6 +278,12 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env);
 int		find_cmd_path(t_shell *data, int i, t_env **my_env);
 char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
+
+/* __handle_heredoc.c */
+int		exec_heredoc(t_shell *data, char *delimiter, t_env **env);
+void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env);
+
+
 
 /*********/
 /* UTILS */

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 11:34:29 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:29:33 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!input)
 			break ;
 		if (*input)
-			add_history(input);	
+			add_history(input);
 		if (parser(data, input, my_envp) == 0)
 			execute(data, my_envp);
 		free(input);

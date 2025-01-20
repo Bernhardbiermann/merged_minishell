@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 11:45:16 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:25:46 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	free_shell_struct_redir(t_shell *data, int i)
 		j = 0;
 		while (j < data->cmds[i].redirect_count)
 		{
-			if (data->cmds[i].redir[j].filename)
-				free_nullify(data->cmds[i].redir[j].filename);
+			if (data->cmds[i].redir[j].redir_arg)
+				free_nullify(data->cmds[i].redir[j].redir_arg);
 			j++;
 		}
 		free(data->cmds[i].redir);
