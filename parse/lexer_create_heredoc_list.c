@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_create_heredoc_list.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:29 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 12:42:46 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:50:31 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ int	grammer_check(t_Token *current)
 		return (0);
 }
 
-t_hdoc	*new_hdoc_token(char *value)
+t_hdoc	*new_hdoc_token(char *delimiter) // 1701A: suggested change from "value" to "delimiter"
 {
 	t_hdoc	*new_token;
 
 	new_token = malloc(sizeof(t_hdoc));
 	if (!new_token)
 		return (NULL);
-	new_token->value = ft_strdup(value);
+	new_token->delim = ft_strdup(delimiter);
 	new_token->next = NULL;
 	return (new_token);
 }

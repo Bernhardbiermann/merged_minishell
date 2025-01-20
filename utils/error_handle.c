@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 17:30:03 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 15:23:53 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,4 @@ void	free_shell_exit(t_shell *data, t_env **env, int errno)
 {
 	free_shell_struct(data, env);
 	exit(errno);
-}
-
-void	close_fd(int fd)
-{
-	if (fd >= 0)
-		close(fd);
-	else
-		return ;
 }

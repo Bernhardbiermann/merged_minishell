@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/16 17:27:48 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/17 15:30:40 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	exec_single_cmd(t_shell *data, t_env **env)
 {
 	int		fd[2];
 	pid_t	pid;
-//	int		exit_status;
 
 	fd[0] = -1;
 	fd[1] = -1;
@@ -45,44 +44,6 @@ void	exec_single_cmd(t_shell *data, t_env **env)
 		wait_for_pids(data);
 		if (ft_strcmp(data->cmds[0].cmd[0], "exit") == 0)
 			collect_status_free_exit(data, env);
-	}
-}
-
-// 1401A, 17h42: added to shrink the exec single cmd
-// TODO: add to next merge and clean comments in exec_single_cmd()
-void	collect_status_free_exit(t_shell *data, t_env **env)
-{
-	int		exit_status;
-
-	exit_status = data->last_exit_status;
-	free_shell_struct(data, env);
-	exit(exit_status);
-}
-
-/* executes each command
-	if it's a builtin, executes it and then cleans and exits
-	if it's not, check for a valid path, and execve() exits and cleans */
-void	exec_cmd(t_shell *data, int i, t_env **my_env)
-{
-	char	**env_tab;
-
-	if (is_builtin(data, i) == 1)
-	{
-		exec_builtin(data, i, my_env);
-		free_shell_struct(data, my_env);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		find_cmd_path(data, i, my_env);
-		if (find_cmd_path(data, i, my_env) == 0)
-			error_cmd_file_dir(data, i, my_env);
-		env_tab = env_to_tab(data->env);
-		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1)
-		{
-			free_tab(env_tab);
-			error_handle(data, "execve failed", EXIT_FAILURE, my_env);
-		}
 	}
 }
 
@@ -116,6 +77,33 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 		i++;
 	}
 	wait_for_pids(data);
+}
+
+/* executes each command
+	if it's a builtin, executes it and then cleans and exits
+	if it's not, check for a valid path, and execve() exits and cleans */
+void	exec_cmd(t_shell *data, int i, t_env **my_env)
+{
+	char	**env_tab;
+
+	if (is_builtin(data, i) == 1)
+	{
+		exec_builtin(data, i, my_env);
+		free_shell_struct(data, my_env);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		find_cmd_path(data, i, my_env);
+		if (find_cmd_path(data, i, my_env) == 0)
+			error_cmd_file_dir(data, i, my_env);
+		env_tab = env_to_tab(data->env);
+		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1)
+		{
+			free_tab(env_tab);
+			error_handle(data, "execve failed", EXIT_FAILURE, my_env);
+		}
+	}
 }
 
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid)

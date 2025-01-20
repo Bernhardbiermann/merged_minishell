@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 13:27:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:29:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@
 # include <stdlib.h>
 # include <limits.h>	// getwd()
 # include <fcntl.h>		// O_WRONLY and O_CREAT files
-# include <readline/readline.h>
+# include <readline/readline.h>	//	readline()
 # include <readline/history.h>
 # include <signal.h>
 # include <sys/types.h>	// to use the pid_t type
 # include <sys/wait.h>	// wait()
 # include <sysexits.h>	// exit processes?
-# include <dirent.h>	// DIR type to check if a file is a directory
 # include <dirent.h>	// DIR type to check if a file is a directory
 # include "libft/include/libft.h"
 # include "libft/include/ft_printf.h"
@@ -66,7 +65,7 @@ typedef struct s_token
 
 typedef struct s_hdoc
 {
-	char			*value;
+	char			*delim; // 1701A: suggest change from value to "delim" to make clearer that it's the delimiter
 	struct s_hdoc	*next;
 }			t_hdoc;
 
@@ -78,7 +77,7 @@ typedef struct s_env
 	int					size; // relevant??
 }			t_env;
 
-typedef struct s_pids	// 1401A: added this struct to handle child processes in the right order
+typedef struct s_pids
 {
 	pid_t				pid;
 	struct s_pids		*next;
@@ -89,7 +88,8 @@ typedef struct s_redir
 {
 	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
 	char			*filename;
-	int				fd_heredoc;
+	int				last_redir; // 2001A: flag to add from parsing
+	//int				fd_heredoc; // maybe put that in the dat0a so it's easier to clean up
 }			t_redir;
 
 //5.12. New struct t_cmd;
@@ -108,10 +108,12 @@ typedef struct s_cmd
 typedef struct s_shell
 {
 	t_cmd	*cmds;
-	int		nb_cmds; // 9.12. B: I try to figure out a way with the array-approach; 
+	int		nb_cmds;
 	t_env	*env;
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
 	t_hdoc	*hdoc;
+	int		fd_heredoc; //1701A propose to move that here so easier to clean up
+	
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -179,13 +181,14 @@ void	find_key_and_exchange_value_in_env(t_shell *data, t_env *my_envp, t_Token *
 void	find_key_and_exchange_value_in_dquot(t_env *my_envp, t_Token *current, \
 char *start, t_shell *data);
 void	three_frees(char *s1, char *s2, char *s3);
-char	*compare_key_and_get_value(t_env *my_envp, char* key);
+char	*compare_key_and_get_value(t_env *my_envp, char *key);
 void	do_env_in_dquot_and_env(t_Token *token_list, t_env *my_envp, \
 t_shell *data);
 void	check_last_error_status(t_shell *data, t_Token *current);
 
 //LEXER_CREATE_HEREDOC_LIST
 int		grammer_check(t_Token *current);
+t_hdoc	*new_hdoc_token(char *delimiter);
 t_hdoc	*concatenate_hdoc_token(t_hdoc *new_token, t_hdoc **token_list);
 t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list);
 
@@ -257,11 +260,9 @@ void	print_shell_commands(t_shell *data);
 /* __exec_cmds.c */
 void	execute(t_shell *data, t_env **my_env);
 void	exec_single_cmd(t_shell *data, t_env **env);
-void	exec_single_cmd(t_shell *data, t_env **env);
-void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
+void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);
-void	collect_status_free_exit(t_shell *data, t_env **env);
 
 /* __handle_pids.c */
 void	add_to_pids_list(t_shell *data, pid_t pid);
@@ -312,14 +313,17 @@ void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);
 void	error_cmd_file_dir(t_shell *data, int i, t_env **env);
 void	error_directory(t_shell *data, char *cmd_name, t_env **env);
 void	free_shell_exit(t_shell *data, t_env **env, int errno);
-void	close_fd(int fd);
 
 /* __frees.c */ 
 void	free_tab(char **tab);
 void	free_many_splits(char **split1, char **split2);
 void	free_nullify(void *to_be_freed);
 void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile);
+
+/* __frees2.c */
+void	close_fd(int fd);
 void	multi_close(int fds[], int size, int infile, int outfile);
+void	collect_status_free_exit(t_shell *data, t_env **env);
 
 //CHECK_T_ERROR
 int		check_t_error(t_shell *data);

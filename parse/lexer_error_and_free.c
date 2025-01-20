@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error_and_free.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:39:21 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 12:23:58 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:50:50 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	free_hdoc_token_list(t_hdoc *token_list)
 	{
 		temp = token_list;
 		token_list = token_list->next;
-		if (temp->value)
-			free(temp->value);
+		if (temp->delim)
+			free(temp->delim);
 		free(temp);
 	}
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
+#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/17 11:18:37 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/17 15:36:11 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRC = main.c \
 	utils/setup_signals.c \
 	utils/manip_str.c \
 	utils/frees.c\
+	utils/frees2.c\
 	utils/shell_struct_init.c \
 	utils/shell_struct_free_clean.c \
 	utils/error_handle.c\
@@ -57,7 +58,8 @@ SRC = main.c \
 	execute/exec_cmds.c \
 	execute/find_cmd_path.c \
 	execute/handle_pids.c \
-	execute/child_process.c
+	execute/child_process.c\
+	execute/handle_heredoc.c
 
 OBJ = $(SRC:.c=.o)
 

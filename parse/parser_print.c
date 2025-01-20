@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_print.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 13:04:30 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:51:10 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	print_shell_commands(t_shell *data)
 		current = data->hdoc;
 		while (current)
 		{
-			printf("    Token Value: %s\n", current->value);
+			printf("    Token Value: %s\n", current->delim);
 			current = current->next;
 		}
 	}
