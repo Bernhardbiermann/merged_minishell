@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
+#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/17 15:36:11 by aroux            ###   ########.fr        #
+#    Updated: 2025/01/20 14:26:03 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC = main.c \
 	parse/parser_error_and_free.c \
 	parse/parser_initialize_shell.c \
 	parse/parser_initialize_shell2.c \
+	parse/parser_mark_last_infile.c \
 	parse/parser_parse_to_shell.c \
 	parse/parser_print.c \
 	parse/parser.c \

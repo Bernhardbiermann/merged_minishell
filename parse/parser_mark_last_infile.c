@@ -1,46 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_initialize_shell2.c                         :+:      :+:    :+:   */
+/*   parser_mark_last_infile.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/09 17:13:15 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 14:24:51 by bbierman         ###   ########.fr       */
+/*   Created: 2025/01/20 14:05:59 by bbierman          #+#    #+#             */
+/*   Updated: 2025/01/20 14:33:36 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	initialize_redir(t_redir *current, int redirect_count)
+static void		mark_last_in_or_heredoc(t_shell *data, int j)
 {
 	int	i;
+	int	count;
 
-	if (!current || redirect_count <= 0)
-		return ;
+	count = 0;
 	i = 0;
-	while (i < redirect_count)
+	while (i < data->cmds[j].redirect_count)
 	{
-		current->type = T_ERROR;
-		current->redir_arg = NULL;
-		current->last_redir_in = 0;
-		current++;
+		if (data->cmds[j].redir[i].type == T_HEREDOC || \
+		data->cmds[j].redir[i].type == T_INPUT)
+			count = i;
 		i++;
 	}
+	if (count != 0)
+		data->cmds[j].redir[count].last_redir_in = 1;
 }
 
-void	initialize_cmds(int cmd_c, t_shell *data)
+void	mark_last_infile(t_shell *data)
 {
 	int	i;
 
-	if (!data || !data->cmds || cmd_c < 0 || cmd_c >= data->nb_cmds)
-		return ;
-	if (!data->cmds[cmd_c].cmd)
-		return ;
 	i = 0;
-	while (i < (data->cmds[cmd_c].arg_count + 1))
+	if (data->nb_cmds < 1)
+		return ;
+	while (i < data->nb_cmds)
 	{
-		data->cmds[cmd_c].cmd[i] = NULL;
+		mark_last_in_or_heredoc(data, i);
 		i++;
 	}
 }

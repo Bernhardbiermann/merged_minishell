@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 12:41:51 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:22:55 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 // 1701A: check the logic, not sure it works as it is
 void	redir_heredoc(t_redir redir, t_shell *data, t_env **env)
 {
-	if (redir.last_redir == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
+	if (redir.last_redir_in == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
 	{
 		exec_heredoc(data, redir.redir_arg, env);
 		close_fd(data->fd_heredoc);

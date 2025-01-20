@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 14:02:08 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:28:52 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,9 @@ void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp);
 
 //PARSER_PRINT
 void	print_shell_commands(t_shell *data);
+
+//PARSER_MARK_LAST_INFILE
+void	mark_last_infile(t_shell *data);
 
 /*************/
 /* EXECUTION */

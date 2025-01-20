@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 12:25:46 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:27:06 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,5 @@ void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp)
 {
 	malloc_for_shell(data, *token_list, my_envp);
 	fill_shell(data, token_list);
+	mark_last_infile(data);
 }

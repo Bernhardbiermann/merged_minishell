@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 12:25:46 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:50:40 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,25 @@ void	print_shell_commands(t_shell *data)
 				case T_INPUT:
 				{
 					printf("    Input (<): %s\n", redir->redir_arg);
+					printf("    last_in_heredoc: %d\n", redir->last_redir_in);
 					break ;
 				}
 				case T_OUTPUT:
 				{
 					printf("    Output (>): %s\n", redir->redir_arg);
+					printf("    last_in_heredoc: %d\n", redir->last_redir_in);
 					break ;
 				}
 				case T_APPEND:
 				{
 					printf("    Append (>>): %s\n", redir->redir_arg);
+					printf("    last_in_heredoc: %d\n", redir->last_redir_in);
 					break ;
 				}
 				case T_HEREDOC:
 				{
 					printf("    Here-Document (<<): %s\n", redir->redir_arg);
+					printf("    last_in_heredoc: %d\n", redir->last_redir_in);
 					break ;
 				}
 				default :

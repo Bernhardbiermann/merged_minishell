@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 13:27:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:43:50 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	//print_token_list(token_list, "Everything!");
 	if (token_list)
 		parse_to_shell(data, &token_list, *my_envp);
-	//print_shell_commands(data);
+	print_shell_commands(data);
 	if (check_t_error(data) != 0 || !token_list)
 		return (1);
 	free_token_list(token_list);
