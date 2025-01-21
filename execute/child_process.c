@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 17:53:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/21 14:08:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 	if (redir.type == T_OUTPUT || redir.type == T_APPEND)
 	{
 		if (redir.type == T_OUTPUT)
-			fd = open(redir.redir_arg, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fd = open(redir.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
-			fd = open(redir.redir_arg, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			fd = open(redir.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		// TODO: check redir to check if its a directory and if i have not the permissions to open the file(?)
 		// check_redir(data, &redir, pipe, env);
 		if (fd < 0)
@@ -109,7 +109,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 	}
 	else if (redir.type == T_INPUT)
 	{
-		fd = open(redir.redir_arg, O_RDONLY);
+		fd = open(redir.filename, O_RDONLY);
 		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
 		if (fd < 0)
 			error_handle(data, "file failed to open", 1, env);
@@ -118,7 +118,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 		close(fd);
 	}
 	else if (redir.type == T_HEREDOC)
-		exec_heredoc(data, &redir, redir.redir_arg, env);
+		exec_heredoc(data, &redir, redir.filename, env);
 }
 
 /* check if invalid redirection (NDFD: 127, is_dir: 126) 
@@ -127,9 +127,9 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 {
 	DIR		*dir;
 
-	if (redir->type == T_INPUT && access(redir->redir_arg, F_OK) == -1)
+	if (redir->type == T_INPUT && access(redir->filename, F_OK) == -1)
 	{
-		write(2, redir->redir_arg, ft_strlen(redir->redir_arg));
+		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": No such file or directory\n", 28);
 		close_fd(data->prev_fd);
 		close_fd(pipe[1]);
@@ -137,10 +137,10 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 		free_shell_struct(data, env);
 		exit(1);
 	}
-	dir = opendir(redir->redir_arg);
+	dir = opendir(redir->filename);
 	if (dir)
 	{
-		write(2, redir->redir_arg, ft_strlen(redir->redir_arg));
+		write(2, redir->filename, ft_strlen(redir->filename));
 		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
 		closedir(dir);
 		close_fd(data->prev_fd);
@@ -154,15 +154,15 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 // 1701A: check the logic, not sure it works as it is
 void	redir_heredoc(t_redir redir, t_shell *data, t_env **env)
 {
-	exec_heredoc(data, &redir, redir.redir_arg, env);
+	exec_heredoc(data, &redir, redir.filename, env);
 /* 	if (redir.last_redir_in == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
 	{
-		exec_heredoc(data, redir.redir_arg, env);
+		exec_heredoc(data, redir.*filename, env);
 		close_fd(data->fd_heredoc);
 	}
 	else
 	{
-		exec_heredoc(data, redir.redir_arg, env);
+		exec_heredoc(data, redir.*filename, env);
 		printf("check data->fd_heredoc: %d\n", data->fd_heredoc);
 		if (dup2(data->fd_heredoc, STDIN_FILENO) == -1)
 			error_handle(data, "dup2 failed for hdoc redirection", 1, env);

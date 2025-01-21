@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 11:55:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:09:49 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ typedef struct s_pids
 typedef struct s_redir
 {
 	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
-	char			*redir_arg;
+	char			*filename;
+	char			*hdoc_delim;
 	int				last_redir_in; // 2001A: flag to add from parsing
 	//int				fd_heredoc; // maybe put that in the dat0a so it's easier to clean up
 }			t_redir;

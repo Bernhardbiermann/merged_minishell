@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 14:27:06 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:13:21 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	fill_redir(t_shell *data, int redir_c, int cmd_c, t_Token *current)
 {
-	data->cmds[cmd_c].redir[redir_c].redir_arg = ft_strdup(current->next->value);
+	data->cmds[cmd_c].redir[redir_c].hdoc_delim = ft_strdup(current->next->value);
 	data->cmds[cmd_c].redir[redir_c].type = current->type;
 }
 
