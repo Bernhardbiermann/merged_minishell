@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 17:28:12 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/21 17:36:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,100 @@
 
 int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 {
-	int		fd[2];
 	int		status;
+	//int		exit_status;
+	int		heredoc;
+	char	*hdoc_file;
 	pid_t	pid;
 
-	if (pipe(fd) == -1)
-		error_handle(data, "pipe failed in hdoc", EXIT_FAILURE, env);
-	printf("Pipe created: fd[0] = %d, fd[1] = %d\n", fd[0], fd[1]);
+	hdoc_file = NULL;
+	if (create_hdoc_tmp(&hdoc_file, redir) < 0)
+		return (-1);
+	heredoc = open(hdoc_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (heredoc < 0)
+		error_handle(data, "failed to open heredoc file", EXIT_FAILURE, env);
 	pid = fork();
 	if (pid < 0)
 		error_handle(data, "fork failed", EXIT_FAILURE, env);
 	else if (pid == 0)
-		write_heredoc_in_pipe(data, fd, delimiter, env);
-	else 
 	{
-		close(fd[1]);
-		/* exit_status = waitpid(pid, &status, 0);
-		if (exit_status != 0)
-			return (1);
-		data->fd_heredoc = fd[0]; // to be closed after heredoc is no longer useful, ou a refermer dans toutes les fonctions de nettoyage et free
- */
-		if (waitpid(pid, &status, 0) == -1) //wait for child process to finish
-			error_handle(data, "waitpid failed", EXIT_FAILURE, env);
-		if (!WIFEXITED(status)) //check exit status of the child
-			error_handle(data, "heredoc child process did not exit normally", EXIT_FAILURE, env);
-		if (WEXITSTATUS(status) != 0) //check exit status of the child process
-			error_handle(data, "heredoc child process returned error", 1, env);
-
-	//	data->fd_heredoc = fd[0];
-		if (redir->last_redir_in == 1)
-		{
-			if (dup2(fd[0], STDIN_FILENO) == -1)
-				error_handle(data, "dup2 failed for hdoc redirection", 1, env);	
-		}
-		close_fd(fd[0]);
+		write_heredoc_in_file(data, heredoc, delimiter, env);
+		close(heredoc);
+		free(hdoc_file);
+		exit(0);
 	}
+	close(heredoc);
+	if (waitpid(pid, &status, 0) == -1)
+		error_handle(data, "waitpid failed", EXIT_FAILURE, env);
+
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		error_handle(data, "heredoc child process failed", EXIT_FAILURE, env);
+	redir->filename = hdoc_file;
 	return (0);
 }
+/* testing chatGPT's version */
+/* int create_hdoc_tmp(char **filename, t_redir *redir)
+{
+	int 	fd;
+	char	*unique_suffix;
 
-void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env)
+	// Generate a unique suffix based on redir's memory address
+	unique_suffix = ft_itoa((uintptr_t)redir); // Or any unique identifier
+	if (!unique_suffix)
+		return (1);
+
+	// Allocate memory for filename and build the unique name
+	*filename = malloc(ft_strlen("hdoc_") + ft_strlen(unique_suffix) + 1);
+	if (!*filename)
+	{
+		free(unique_suffix);
+		return (1);
+	}
+	ft_strlcpy(*filename, "hdoc_", ft_strlen("hdoc_") + 1);
+	ft_strlcat(*filename, unique_suffix, ft_strlen("hdoc_") + ft_strlen(unique_suffix) + 1);
+	free(unique_suffix);
+
+	// Create the file with the unique name
+	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("hdoc failed to open");
+		free(*filename);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+} */
+
+/* We create a temporary file named hdoc.tmp */
+ int	create_hdoc_tmp(char **filename, t_redir *redir)
+{
+	int		fd;
+
+	if (!redir)
+		return (-1);
+	*filename = malloc(ft_strlen("hdoc.tmp") + 1);
+	if (!*filename)
+		return (1);
+	ft_strlcpy(*filename, "hdoc.tmp", ft_strlen("hdoc.tmp"));
+	if (access(*filename, F_OK) == 0)
+		unlink(*filename);
+	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("hdoc failed to open");
+		free(*filename);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+} 
+
+void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env)
 {
 	char	*line;
 	
-	close(fd[0]);
+	//setup_signal(HEREDOC);
 	if (!env && !data)
 		return ;
 	while (1)
@@ -64,7 +115,7 @@ void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env)
 		line = readline("hdoc> ");
 		if (!line)
 		{
-			// print weird warning in case CTRL + D
+			write(2, "warning: here-document delimited by end-of-file\n", ft_strlen("warning: here-document delimited by end-of-file\n"));
 			break ;
 		}
 		if (ft_strcmp(line, delimiter) == 0)
@@ -72,9 +123,9 @@ void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env)
 			free(line);
 			break ;
 		}
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
+		write(heredoc, line, ft_strlen(line));
+		write(heredoc, "\n", 1);
+		free(line);
 	}
-	printf("Child writing to fd[1]: %d\n", fd[1]);
-	close(fd[1]);
+	//setup_signal(INTERACTIVE);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 14:08:00 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:18:08 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 		close(fd);
 	}
 	else if (redir.type == T_HEREDOC)
-		exec_heredoc(data, &redir, redir.filename, env);
+		redir_heredoc(data, &redir, env);
 }
 
 /* check if invalid redirection (NDFD: 127, is_dir: 126) 
@@ -151,22 +151,22 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 	}
 	return ;
 }
-// 1701A: check the logic, not sure it works as it is
-void	redir_heredoc(t_redir redir, t_shell *data, t_env **env)
-{
-	exec_heredoc(data, &redir, redir.filename, env);
-/* 	if (redir.last_redir_in == 0) // if not the last heredoc we just execute it but we don't plug it to the rest of the execution
-	{
-		exec_heredoc(data, redir.*filename, env);
-		close_fd(data->fd_heredoc);
-	}
-	else
-	{
-		exec_heredoc(data, redir.*filename, env);
-		printf("check data->fd_heredoc: %d\n", data->fd_heredoc);
-		if (dup2(data->fd_heredoc, STDIN_FILENO) == -1)
-			error_handle(data, "dup2 failed for hdoc redirection", 1, env);
-		close_fd(data->fd_heredoc);
-	} */
-}
 
+void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env)
+{
+	int	hdoc_fd;
+
+	if (exec_heredoc(data, redir, redir->hdoc_delim, env) < 0)
+		error_handle(data, "hdoc execution failed", 1, env);
+	if (redir->last_redir_in == 0)
+		return ;
+	hdoc_fd = open(redir->filename, O_RDONLY);
+	if (hdoc_fd < 0)
+		error_handle(data, "failed to open hdoc", 1, env);
+	if (dup2(hdoc_fd, STDIN_FILENO) == -1)
+	{
+		close_fd(hdoc_fd);
+		error_handle(data, "dup2 failed for hdoc redirection", 1, env);
+	}
+	close_fd(hdoc_fd);
+}

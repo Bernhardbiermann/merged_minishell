@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 14:09:49 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:23:44 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ void	wait_for_pids(t_shell *data);
 void	child_process(t_shell *data, int i, int *fd, t_env **env);
 void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
 void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env);
-void	redir_heredoc(t_redir redir, t_shell *data, t_env **my_env);
+void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env);
 void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env);
 
 /* __find_cmd_path.c */
@@ -285,9 +285,9 @@ char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
 /* __handle_heredoc.c */
-int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env);
-void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env);
-
+int		exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env);
+int create_hdoc_tmp(char **filename, t_redir *redir);
+void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env);
 
 
 /*********/
