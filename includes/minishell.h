@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 10:22:39 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 11:55:12 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@ char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
 /* __handle_heredoc.c */
-int		exec_heredoc(t_shell *data, char *delimiter, t_env **env);
+int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env);
 void	write_heredoc_in_pipe(t_shell *data, int *fd, char *delimiter, t_env **env);
 
 

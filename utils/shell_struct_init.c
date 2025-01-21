@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_struct_init.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:11 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 11:47:29 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:15:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_shell	*init_shell_struct(t_env *env)
 	data->nb_cmds = 0;
 	data->cmds = NULL;
 	data->hdoc = NULL;
+	data->fd_heredoc = -1;
 	data->last_exit_status = 0;
 	data->err_msg = NULL;
 	data->env = env;
