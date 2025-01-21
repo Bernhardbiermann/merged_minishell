@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 14:28:52 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:22:39 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,8 +225,9 @@ void	check_for_first_pipe(t_Token **token_list);
 void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list);
 void	check_empty_env_first(t_Token **token_list);
 void	check_for_terror(t_Token **token_list);
+void	check_for_double_pipe(t_Token **token_list);
 t_Token	*des_tlist_create_syntlist(t_Token **token_list, char *value, int err);
-void	check_for_pipe_in_out_app_here_last(t_Token **token_list);
+void	check_for_redir_last(t_Token **token_list);
 
 //PARSER
 int	parser(t_shell *data, char *input, t_env **my_envp);

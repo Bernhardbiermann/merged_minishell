@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 14:43:50 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 11:51:58 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,20 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	data->hdoc = create_hdoc_list(data, &token_list);
 	//print_token_list(token_list, "after heredoc");
 	check_for_double_in_out_app_here(&token_list);
+	check_for_double_pipe(&token_list);
 	//check_for_combination_pipe_and_in_out_app_here(&token_list);
-	check_for_pipe_in_out_app_here_last(&token_list);
+	check_for_redir_last(&token_list);
 	make_text_out_of_quot_and_env(&token_list);
 	//print_token_list(token_list, "Everything!");
 	if (token_list)
 		parse_to_shell(data, &token_list, *my_envp);
-	print_shell_commands(data);
+	//print_shell_commands(data);
 	if (check_t_error(data) != 0 || !token_list)
+	{
+		if (token_list)
+			free_token_list(token_list);
 		return (1);
+	}
 	free_token_list(token_list);
 	return (0);
 }

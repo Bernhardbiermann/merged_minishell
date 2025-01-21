@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:29 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 14:48:13 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:29:10 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,13 @@ int	grammer_check(t_Token *current)
 		next->type == T_APPEND || next->type == T_HEREDOC || \
 		next->type == T_PIPE))
 			return (1);
-		else
-			return (0);
+		if (current->type == T_PIPE && next->type == T_PIPE)
+			return (1);
 	}
+	if ((current->type == T_INPUT || current->type == T_OUTPUT || \
+		current->type == T_APPEND || current->type == T_HEREDOC || \
+		current->type == T_PIPE ) && current->next == NULL)
+		return (1);
 	else
 		return (0);
 }
