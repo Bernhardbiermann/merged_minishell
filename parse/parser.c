@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 13:41:12 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:47:02 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	//gc_check_for_combination_pipe_and_in_out_app_here(&token_list);
 	gc_check_for_redir_last(data, &token_list);
 	make_text_out_of_quot_and_env(&token_list);
-	print_token_list(token_list, "Everything!");
+	//print_token_list(token_list, "Everything!");
 	do_heredoc_token(data, &token_list, my_envp);
 	//execute Heredocs
 	if (check_t_error(data) != 0 || !token_list)
@@ -51,7 +51,7 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 		return (1);
 	}
 	parse_to_shell(data, &token_list, *my_envp);
-	print_shell_commands(data);
+	//print_shell_commands(data);
 	free_token_list(token_list);
 	return (0);
 }
