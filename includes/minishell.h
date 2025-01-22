@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 17:23:44 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/22 14:01:13 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ typedef struct s_token
 {
 	t_TokenType		type;
 	char			*value;
+	char			*hdoc_name;
+	char			*hdoc_delim;
+	int				grammer_err;
 	size_t			length;
 	struct s_token	*next;
 	struct s_token	*prev;
@@ -88,7 +91,7 @@ typedef struct s_redir
 {
 	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
 	char			*filename;
-	char			*hdoc_delim;
+	//char			*hdoc_delim;
 	int				last_redir_in; // 2001A: flag to add from parsing
 	//int				fd_heredoc; // maybe put that in the dat0a so it's easier to clean up
 }			t_redir;
@@ -221,14 +224,14 @@ void	make_text_out_of_quot_and_env(t_Token **token_list);
 void	replace_special_value(t_shell *data, t_Token *current, char *start);
 
 //LEXER_GRAMMER_CHECK 1-2 
-void	check_for_double_in_out_app_here(t_Token **token_list);
-void	check_for_first_pipe(t_Token **token_list);
-void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list);
+void	gc_check_for_double_in_out_app_here(t_shell *data, t_Token **token_list);
+void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list);
+void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, t_Token **token_list);
 void	check_empty_env_first(t_Token **token_list);
-void	check_for_terror(t_Token **token_list);
-void	check_for_double_pipe(t_Token **token_list);
-t_Token	*des_tlist_create_syntlist(t_Token **token_list, char *value, int err);
-void	check_for_redir_last(t_Token **token_list);
+void	gc_check_for_openquots(t_shell *data, t_Token **token_list);
+void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list);
+void	set_err_in_tokenlist(t_shell *data, t_Token **token_list, char *value, int err);
+void	gc_check_for_redir_last(t_shell *data, t_Token **token_list);
 
 //PARSER
 int	parser(t_shell *data, char *input, t_env **my_envp);
@@ -285,10 +288,11 @@ char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
 /* __handle_heredoc.c */
-int		exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env);
-int create_hdoc_tmp(char **filename, t_redir *redir);
+void	do_heredoc_token(t_shell *data, t_Token **token_list, t_env **env);
+int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env);
+int		create_hdoc_tmp(char **filename);
 void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env);
-
+int		create_hdocname(char *hdoc_name);
 
 /*********/
 /* UTILS */

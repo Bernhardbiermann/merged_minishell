@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_error_and_free.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:39:21 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:50:50 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/22 13:00:57 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 void	free_token_list(t_Token *token_list)
 {
-	t_Token	*temp;
+	t_Token	*tmp;
 
 	while (token_list)
 	{
-		temp = token_list;
+		tmp = token_list;
 		token_list = token_list->next;
-		if (temp->value)
-			free(temp->value);
-		free(temp);
+		if (tmp->value)
+			free(tmp->value);
+		if (tmp->hdoc_delim)
+			free(tmp->hdoc_delim);
+		if (tmp->hdoc_name)
+			free(tmp->hdoc_name);
+		free(tmp);
 	}
 }
 

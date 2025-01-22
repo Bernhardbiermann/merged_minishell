@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 17:18:08 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/22 14:09:08 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 			error_handle(data, "dup2 failed for output redirection", 1, env);
 		close(fd);
 	}
-	else if (redir.type == T_INPUT)
+	else if (redir.type == T_INPUT || redir.type == T_HEREDOC)
 	{
 		fd = open(redir.filename, O_RDONLY);
 		check_redir(data, &redir, pipe, env); // TODO: exit status is not the right one (0 instead of 127/126, needs checking)
@@ -117,8 +117,8 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 			error_handle(data, "dup2 failed for input redirection", 1, env);
 		close(fd);
 	}
-	else if (redir.type == T_HEREDOC)
-		redir_heredoc(data, &redir, env);
+	//else if (redir.type == T_HEREDOC)
+	//	redir_heredoc(data, &redir, env);
 }
 
 /* check if invalid redirection (NDFD: 127, is_dir: 126) 
@@ -152,7 +152,7 @@ void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env)
 	return ;
 }
 
-void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env)
+/*void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env)
 {
 	int	hdoc_fd;
 
@@ -169,4 +169,4 @@ void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env)
 		error_handle(data, "dup2 failed for hdoc redirection", 1, env);
 	}
 	close_fd(hdoc_fd);
-}
+}*/

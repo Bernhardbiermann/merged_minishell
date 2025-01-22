@@ -6,30 +6,30 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/21 10:07:59 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 13:05:53 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_Token	*des_tlist_create_syntlist(t_Token **token_list, char *value, int err)
+void	set_err_in_tokenlist(t_shell *data, t_Token **token_list, char *value, int err)
 {
-	t_Token	*new_token_list;
-	char	*replaced_msg;
+	t_Token	*current;
 	char	*new_value;
 	char	*err_msg;
 
-	new_token_list = NULL;
+	current = *token_list;
+	new_value = NULL;
 	new_value = ft_strdup(value);
 	err_msg = ft_strdup("minishell: syntax error near unexpected token `?'");
-	free_token_list(*token_list);
-	replaced_msg = replace_substring(err_msg, "?", new_value);
-	new_token_list = new_token(ft_strdup(replaced_msg), T_ERROR, err);
-	three_frees(replaced_msg, err_msg, new_value);
-	return (new_token_list);
+	data->err_msg = replace_substring(err_msg, "?", new_value);
+	data->last_exit_status = err;
+	current->grammer_err = 1;
+	free(new_value);
+	free(err_msg);
 }
 
-void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list)
+void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, t_Token **token_list)
 {
 	t_Token	*current;
 	t_Token	*next;
@@ -44,14 +44,14 @@ void	check_for_combination_pipe_and_in_out_app_here(t_Token **token_list)
 		(next->type == T_INPUT || next->type == T_OUTPUT || \
 		next->type == T_APPEND || next->type == T_HEREDOC))
 		{
-			*token_list = des_tlist_create_syntlist(token_list, "newline", 2);
+			set_err_in_tokenlist(data, &current, "newline", 2);
 			return ;
 		}
 		current = current->next;
 	}
 }
 
-void	check_for_first_pipe(t_Token **token_list)
+void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list)
 {
 	t_Token	*current;
 
@@ -60,7 +60,7 @@ void	check_for_first_pipe(t_Token **token_list)
 	current = *token_list;
 	if (current->type == T_PIPE)
 	{
-		*token_list = des_tlist_create_syntlist(token_list, current->value, 258);
+		set_err_in_tokenlist(data, &current, current->value, 258);
 		return ;
 	}
 }
@@ -85,7 +85,7 @@ void	check_empty_env_first(t_Token **token_list)
 	}
 }
 
-void	check_for_terror(t_Token **token_list)
+void	gc_check_for_openquots(t_shell *data, t_Token **token_list)
 {
 	t_Token	*current;
 
@@ -96,8 +96,7 @@ void	check_for_terror(t_Token **token_list)
 	{
 		if (current->type == T_ERROR)
 		{
-			*token_list = des_tlist_create_syntlist(token_list, \
-"unclosed quotation mark", 2);
+			set_err_in_tokenlist(data, &current, "unclosed quotation mark", 2);
 			return ;
 		}
 		current = current->next;

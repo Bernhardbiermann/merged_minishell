@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:17:15 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/14 14:04:04 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 13:50:19 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,11 @@ t_Token	*new_token(char *input, t_TokenType type, size_t length)
 	new_token = malloc(sizeof(t_Token));
 	if (!new_token)
 		return (NULL);
-	new_token->value = input;
 	new_token->type = type;
+	new_token->value = input;
+	new_token->hdoc_name = NULL;
+	new_token->hdoc_delim = NULL;
+	new_token->grammer_err = 0;
 	new_token->length = length;
 	new_token->next = NULL;
 	new_token->prev = NULL;

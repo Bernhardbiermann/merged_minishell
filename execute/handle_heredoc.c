@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/21 17:36:20 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/22 14:21:43 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
+int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env)
 {
 	int		status;
 	//int		exit_status;
@@ -21,7 +21,7 @@ int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 	pid_t	pid;
 
 	hdoc_file = NULL;
-	if (create_hdoc_tmp(&hdoc_file, redir) < 0)
+	if (create_hdoc_tmp(&hdoc_file) < 0)
 		return (-1);
 	heredoc = open(hdoc_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (heredoc < 0)
@@ -33,7 +33,6 @@ int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 	{
 		write_heredoc_in_file(data, heredoc, delimiter, env);
 		close(heredoc);
-		free(hdoc_file);
 		exit(0);
 	}
 	close(heredoc);
@@ -42,7 +41,8 @@ int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
 		error_handle(data, "heredoc child process failed", EXIT_FAILURE, env);
-	redir->filename = hdoc_file;
+	current->hdoc_name = hdoc_file;
+	setup_signal(INTERACTIVE);
 	return (0);
 }
 /* testing chatGPT's version */
@@ -80,18 +80,15 @@ int	exec_heredoc(t_shell *data, t_redir *redir, char *delimiter, t_env **env)
 } */
 
 /* We create a temporary file named hdoc.tmp */
- int	create_hdoc_tmp(char **filename, t_redir *redir)
+int	create_hdoc_tmp(char **filename)
 {
 	int		fd;
 
-	if (!redir)
-		return (-1);
-	*filename = malloc(ft_strlen("hdoc.tmp") + 1);
+	*filename = malloc(ft_strlen("hdoc.tmp.000") + 1);
 	if (!*filename)
-		return (1);
-	ft_strlcpy(*filename, "hdoc.tmp", ft_strlen("hdoc.tmp"));
-	if (access(*filename, F_OK) == 0)
-		unlink(*filename);
+		return (-1);
+	if (create_hdocname(*filename) != 0)
+		return (-1);
 	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -107,7 +104,7 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 {
 	char	*line;
 	
-	//setup_signal(HEREDOC);
+	setup_signal(HEREDOC);
 	if (!env && !data)
 		return ;
 	while (1)
@@ -127,5 +124,24 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 		write(heredoc, "\n", 1);
 		free(line);
 	}
-	//setup_signal(INTERACTIVE);
+	setup_signal(WAIT);
+}
+
+int	create_hdocname(char *hdoc_name)
+{
+	int	i;
+
+	i = 1;
+	ft_memset(hdoc_name, 0, 13);
+	ft_memcpy(hdoc_name, "hdoc.tmp.000", ft_strlen("hdoc.tmp.000"));
+	while (i < 1000)
+	{
+		hdoc_name[11] = '0' + (i % 10);
+		hdoc_name[10] = '0' + (i / 10);
+		hdoc_name[9] = '0' + (i / 100);
+		if (access(hdoc_name, F_OK) != 0)
+			return (0);
+		i++;
+	}
+	return (-1);
 }

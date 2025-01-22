@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/21 14:14:21 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:06:38 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	print_shell_commands(t_shell *data)
 				}
 				case T_HEREDOC:
 				{
-					printf("    Here-Document (<<): %s\n", redir->hdoc_delim);
+					printf("    Here-Document (<<): %s\n", redir->filename);
 					printf("    last_in_heredoc: %d\n", redir->last_redir_in);
 					break ;
 				}

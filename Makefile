@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/20 14:26:03 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/22 13:42:15 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC = main.c \
 	parse/lexer_helper_functions.c \
 	parse/lexer_helper_functions_2.c \
 	parse/lexer_print.c \
+	parse/lexer_setup_heredoc.c \
 	parse/lexer_token.c \
 	parse/lexer.c \
 	parse/refine_lexer_token.c \

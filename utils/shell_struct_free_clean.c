@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/21 14:19:54 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:16:46 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,11 @@ void	free_shell_struct_redir(t_shell *data, int i)
 		while (j < data->cmds[i].redirect_count)
 		{
 			if (data->cmds[i].redir[j].filename)
+			{
+				if (data->cmds[i].redir[j].type == T_HEREDOC)
+					unlink(data->cmds[i].redir[j].filename);
 				free_nullify(data->cmds[i].redir[j].filename);
-			if (data->cmds[i].redir[j].hdoc_delim)
-				free_nullify(data->cmds[i].redir[j].hdoc_delim);
+			}
 			j++;
 		}
 		free(data->cmds[i].redir);
