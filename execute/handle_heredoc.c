@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 11:28:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 12:22:52 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+extern volatile sig_atomic_t	g_signal_received;
+
 int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env)
 {
 	int		status;
-	//int		exit_status;
+	int		exit_status;
 	int		heredoc;
 	char	*hdoc_file;
 	pid_t	pid;
@@ -35,17 +37,23 @@ int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env)
 		close(heredoc);
 		free(hdoc_file);
 		free_shell_struct(data, env);
+		// if rreceive signal exit(err_code)
 		exit(0);
 	}
+	setup_signal(WAIT);
 	close(heredoc);
 	if (waitpid(pid, &status, 0) == -1)
-		error_handle(data, "waitpid failed", EXIT_FAILURE, env);
-
-	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-		error_handle(data, "heredoc child process failed", EXIT_FAILURE, env);
+	{
+		perror("waitpid failed");
+		exit_status = 1;
+	}
+	if (WIFEXITED(status))
+		exit_status = 0;
+	else
+		exit_status = WTERMSIG(status) + 128;
 	current->hdoc_name = hdoc_file;
 	setup_signal(INTERACTIVE);
-	return (0);
+	return (exit_status);
 }
 /* testing chatGPT's version */
 /* int create_hdoc_tmp(char **filename, t_redir *redir)
@@ -112,6 +120,12 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 	while (1)
 	{
 		line = readline("hdoc> ");
+		if (!line && g_signal_received == 1)
+		{
+			close(heredoc);
+			free_shell_struct(data, env);
+			exit (130);
+		}
 		if (!line)
 		{
 			write(2, "warning: here-document delimited by end-of-file\n", ft_strlen("warning: here-document delimited by end-of-file\n"));
