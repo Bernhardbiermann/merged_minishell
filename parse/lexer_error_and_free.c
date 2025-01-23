@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:39:21 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 13:00:57 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 11:25:12 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,33 @@
 void	free_token_list(t_Token *token_list)
 {
 	t_Token	*tmp;
+	t_Token	*next;
 
-	while (token_list)
+	if (!token_list)
+		return ;
+	tmp = token_list;
+	while (tmp)
 	{
-		tmp = token_list;
-		token_list = token_list->next;
+		next = tmp->next;
 		if (tmp->value)
+		{
 			free(tmp->value);
+			tmp->value = NULL;
+		}
 		if (tmp->hdoc_delim)
+		{
 			free(tmp->hdoc_delim);
+			tmp->hdoc_delim = NULL;
+		} 
 		if (tmp->hdoc_name)
+		{
 			free(tmp->hdoc_name);
+			tmp->hdoc_name = NULL;
+		}
 		free(tmp);
+		tmp = next;
 	}
+	token_list = NULL;
 }
 
 void	free_hdoc_token_list(t_hdoc *token_list)

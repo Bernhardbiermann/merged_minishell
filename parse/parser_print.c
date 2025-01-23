@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:49:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 14:06:38 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 10:29:57 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	print_shell_commands(t_shell *data)
 {
 	t_redir	*redir;
-	t_hdoc	*current;
 
 	for (int i = 0; i < data->nb_cmds; i++)
 	{
@@ -62,16 +61,6 @@ void	print_shell_commands(t_shell *data)
 			}
 		}
 		printf("\n");
-	}
-	if (data->hdoc)
-	{
-		printf("  Heredoc List:\n");
-		current = data->hdoc;
-		while (current)
-		{
-			printf("    Token Value: %s\n", current->delim);
-			current = current->next;
-		}
 	}
 	printf("\n");
 }

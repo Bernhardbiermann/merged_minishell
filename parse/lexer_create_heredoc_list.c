@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:29 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/21 10:29:10 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 10:25:40 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_hdoc	*concatenate_hdoc_token(t_hdoc *new_token, t_hdoc **token_list)
 	return (*token_list);
 }
 
-t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list)
+/*t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list)
 {
 	t_Token	*current;
 	t_Token	*next;
@@ -93,3 +93,4 @@ t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list)
 	}
 	return (hdoc_list);
 }
+*/

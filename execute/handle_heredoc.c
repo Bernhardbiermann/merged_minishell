@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/22 14:21:43 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 11:28:11 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env)
 	{
 		write_heredoc_in_file(data, heredoc, delimiter, env);
 		close(heredoc);
+		free(hdoc_file);
+		free_shell_struct(data, env);
 		exit(0);
 	}
 	close(heredoc);
@@ -122,6 +124,7 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 		}
 		write(heredoc, line, ft_strlen(line));
 		write(heredoc, "\n", 1);
+		// if i received a SIGINT, free and exit
 		free(line);
 	}
 	setup_signal(WAIT);

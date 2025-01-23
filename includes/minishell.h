@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/22 14:01:13 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 11:23:50 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ typedef struct s_shell
 	t_cmd	*cmds;
 	int		nb_cmds;
 	t_env	*env;
+	t_Token	*token_list;
 	t_pids	*pids;	//1401A: added to handle child processes in the right order
-	t_hdoc	*hdoc;
 	int		fd_heredoc; //1701A propose to move that here so easier to clean up
 	int		last_exit_status;
 	char	*err_msg;
@@ -193,7 +193,6 @@ void	check_last_error_status(t_shell *data, t_Token *current);
 int		grammer_check(t_Token *current);
 t_hdoc	*new_hdoc_token(char *delimiter);
 t_hdoc	*concatenate_hdoc_token(t_hdoc *new_token, t_hdoc **token_list);
-t_hdoc	*create_hdoc_list(t_shell *data, t_Token **token_list);
 
 //LEXER_ERROR_AND_FREE
 void	free_token_list(t_Token *token_list);

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 15:43:45 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 14:44:51 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:54:00 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,6 @@ void	handle_sigint_heredoc(int signum)
 {
 	(void)signum;
 	write(STDOUT_FILENO, "\n", 1);
-	exit(130);
+	//exit(130);
 }
 

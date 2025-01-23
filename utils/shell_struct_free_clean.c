@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 14:16:46 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 11:25:32 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ void	free_shell_struct(t_shell *data, t_env **my_env)
 	}
 	if (data->err_msg)
 		free_nullify(data->err_msg);
-	if (data->hdoc)
-		free_hdoc_token_list(data->hdoc);
+	if (data->token_list)
+		free_token_list(data->token_list);
 	close_fd(data->prev_fd);
 	free_pids_struct(&data->pids);
 	free_nullify(data->cmds);
@@ -111,9 +111,9 @@ void	clean_shell_struct(t_shell *data)
 	}
 	if (data->err_msg)
 		free(data->err_msg);
-	if (data->hdoc)
-		free_hdoc_token_list(data->hdoc);
-	data->hdoc = NULL;
+	if (data->token_list)
+		free_token_list(data->token_list);
+	data->token_list = NULL;
 	free_pids_struct(&data->pids);
 	free(data->cmds);
 	data->cmds = NULL; // should it be here free_nullify()?
