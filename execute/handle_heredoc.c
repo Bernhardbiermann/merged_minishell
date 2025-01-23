@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 12:22:52 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/23 15:24:38 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,6 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 	while (1)
 	{
 		line = readline("hdoc> ");
-		if (!line && g_signal_received == 1)
-		{
-			close(heredoc);
-			free_shell_struct(data, env);
-			exit (130);
-		}
 		if (!line)
 		{
 			write(2, "warning: here-document delimited by end-of-file\n", ft_strlen("warning: here-document delimited by end-of-file\n"));
@@ -136,6 +130,7 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 			free(line);
 			break ;
 		}
+		do_expansion_in_heredocs(data, &line);
 		write(heredoc, line, ft_strlen(line));
 		write(heredoc, "\n", 1);
 		// if i received a SIGINT, free and exit

@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 16:54:52 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:33:52 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,12 @@ void	ft_cd(t_shell *data, const char *path, int i)
 	{
 		set_errorstatus_and_print_msg(data, "cd: too many arguments\n");
 		return ;
+	}
+	if (data->cmds[i].cmd[0] && !data->cmds[i].cmd[1])
+	{
+		path = getenv("HOME");
+		if (!path)
+			return (perror("No home directory set"));
 	}
 	if (getcwd(pwd_old, sizeof(pwd_old)) == NULL)
 		perror("ft_cd: getcwd failed");

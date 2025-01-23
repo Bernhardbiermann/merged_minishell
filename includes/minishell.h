@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 11:23:50 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:21:17 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,10 +288,13 @@ char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
 /* __handle_heredoc.c */
 void	do_heredoc_token(t_shell *data, t_Token **token_list, t_env **env);
-int	exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env);
+int		exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env);
 int		create_hdoc_tmp(char **filename);
 void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env);
 int		create_hdocname(char *hdoc_name);
+
+/*__do_expansion_in_hdoc.c */
+void	do_expansion_in_heredocs(t_shell *data, char **line);
 
 /*********/
 /* UTILS */

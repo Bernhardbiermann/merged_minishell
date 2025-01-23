@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/20 18:14:40 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/23 16:17:07 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	execute(t_shell *data, t_env **my_env)
 	{
 		if (is_builtin(data, 0) == 1)
 			exec_single_cmd(data, my_env);
+		else
+			exec_more_cmds(data, my_env);
 	}
 	else
 		exec_more_cmds(data, my_env);

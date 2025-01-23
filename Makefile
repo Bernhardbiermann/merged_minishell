@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/22 13:42:15 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/23 14:02:23 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SRC = main.c \
 	execute/find_cmd_path.c \
 	execute/handle_pids.c \
 	execute/child_process.c\
+	execute/do_expansion_in_hdoc.c \
 	execute/handle_heredoc.c
 
 OBJ = $(SRC:.c=.o)
