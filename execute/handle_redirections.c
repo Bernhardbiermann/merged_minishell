@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:01:29 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 11:02:01 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 16:45:02 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env)
 	else if (redir.type == T_INPUT || redir.type == T_HEREDOC)
 	{
 		fd = open(redir.filename, O_RDONLY);
-		check_redir(data, &redir, pipe, env);
+		if (pipe)
+			check_redir(data, &redir, pipe, env);
 		if (fd < 0)
 			error_handle(data, "file failed to open", 1, env);
 		if (dup2(fd, STDIN_FILENO) == -1)

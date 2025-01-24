@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 12:56:56 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 17:03:15 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ int		is_builtin(t_shell *data, int i);
 void	exec_builtin(t_shell *data, int i, t_env **my_env);
 
 /* __cd.c */
-void	update_pwd(t_shell *data, char *envp_key, char *envp_new_value);
-void	ft_cd(t_shell *data, const char *path, int i);
+void	update_pwd(char *envp_key, char *envp_new_value, t_env **env);
+void	ft_cd(t_shell *data, char *path, int i, t_env **env);
 
 /* __echo.c */
 int		check_for_option_n(char *arg);
@@ -148,7 +148,7 @@ void	ft_export(char **args, t_shell *data);
 int		check_name_and_empty_value(char *input);
 
 /* __pwd.c */
-int		ft_pwd(t_shell *data);
+int		ft_pwd(t_shell *data, t_env **env);
 
 /* __unset.c */
 t_env	*search_target_and_delete(t_env *current_input, char *key);
@@ -255,7 +255,9 @@ void	mark_last_infile(t_shell *data);
 /*************/
 /* __exec_cmds.c */
 void	execute(t_shell *data, t_env **my_env);
-void	exec_single_cmd(t_shell *data, t_env **env);
+void	exec_single_builtin(t_shell *data, t_env **env);
+void	exec_echo(t_shell *data, t_env **env);
+//void	exec_single_builtin_child(t_shell *data, t_env **env);
 void	exec_more_cmds(t_shell *data, t_env **my_env);
 void	exec_cmd(t_shell *data, int i, t_env **my_env);
 void	parent_process(t_shell *data, int i, int *pipe, pid_t pid);

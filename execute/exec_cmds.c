@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 10:39:20 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 17:13:38 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,15 @@ void	execute(t_shell *data, t_env **my_env)
 	if (data->nb_cmds <= 1 && data->cmds[0].cmd[0])
 	{
 		if (is_builtin(data, 0) == 1)
-			exec_single_cmd(data, my_env);
+		{
+			if (ft_strcmp(data->cmds[0].cmd[0], "echo") == 0)
+				exec_echo(data, my_env);
+			else
+			{
+				handle_redirections(&data->cmds[0], NULL, data, my_env); 
+				exec_builtin(data, 0, my_env);
+			}
+		}
 		else
 			exec_more_cmds(data, my_env);
 	}
@@ -27,7 +35,7 @@ void	execute(t_shell *data, t_env **my_env)
 		exec_more_cmds(data, my_env);
 }
 
-void	exec_single_cmd(t_shell *data, t_env **env)
+void	exec_echo(t_shell *data, t_env **env)
 {
 	int		fd[2];
 	pid_t	pid;
