@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   do_expansion_in_hdoc.c                             :+:      :+:    :+:   */
+/*   hdoc_expand.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:19:02 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 10:34:15 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:21:23 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start);
+static char	*replace_special_val_hdoc(t_shell *data, char **line, char *start);
 static char	*replace_value_hdoc(char **line, char *old_key, char *value);
-static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s,\
- char **line);
- static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacement);
+static char	*find_key_and_exchange_val_hdoc(t_shell *data, char *s, \
+	char **line);
+static char	*replace_substring_hdoc(char **ori, char *to_replace, char *new);
 
 char	*do_expansion_in_heredocs(t_shell *data, char **line)
 {
@@ -28,9 +28,9 @@ char	*do_expansion_in_heredocs(t_shell *data, char **line)
 		while (s != NULL)
 		{
 			if (s[1] == '?' || s[1] == '$' || s[1] == ' ' || s[1] == '\0')
-				*line = replace_special_value_hdoc(data, line, s);
+				*line = replace_special_val_hdoc(data, line, s);
 			else
-				*line = find_key_and_exchange_value_hdoc(data, s, line);
+				*line = find_key_and_exchange_val_hdoc(data, s, line);
 			s = ft_strchr(*line, '$');
 		}
 		s = ft_strchr(*line, '\r');
@@ -46,7 +46,7 @@ char	*do_expansion_in_heredocs(t_shell *data, char **line)
 	return (*line);
 }
 
-static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start)
+static char	*replace_special_val_hdoc(t_shell *data, char **line, char *start)
 {
 	char	*last_exit_status;
 	char	*new_value;
@@ -55,7 +55,7 @@ static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start)
 	if (start[1] == '?')
 		new_value = replace_value_hdoc(line, "$?", last_exit_status);
 	else if (start[1] == '$')
-		new_value = replace_value_hdoc(line, "$$", "YOU'RE NOT ALLOWED TO DO THIS!");
+		new_value = replace_value_hdoc(line, "$$", "THIS IS NOT ALLOWED!");
 	else if (start[1] == ' ')
 		new_value = replace_value_hdoc(line, "$ ", "\r ");
 	else
@@ -66,7 +66,7 @@ static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start)
 
 static char	*replace_value_hdoc(char **line, char *old_key, char *value)
 {
-	char *new_value;
+	char	*new_value;
 
 	if (!line || !*line || !*old_key || !*value)
 		return (NULL);
@@ -78,7 +78,7 @@ static char	*replace_value_hdoc(char **line, char *old_key, char *value)
 	return (new_value);
 }
 
-static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s, char **line)
+static char	*find_key_and_exchange_val_hdoc(t_shell *data, char *s, char **line)
 {
 	char	*key;
 	char	*old_key;
@@ -92,10 +92,10 @@ static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s, char **lin
 	value = compare_key_and_get_value(data->env, key);
 	new_line = replace_value_hdoc(line, old_key, value);
 	three_frees(key, old_key, value);
-	return(new_line);
+	return (new_line);
 }
 
-static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacement)
+static char	*replace_substring_hdoc(char **ori, char *to_replace, char *new)
 {
 	char	*position;
 	char	*new_str;
@@ -103,23 +103,21 @@ static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacem
 	size_t	new_range;
 	size_t	prefix_len;
 
-	if (!ori || !*ori || !to_replace || !replacement)
+	if (!ori || !*ori || !to_replace || !new)
 		return (NULL);
 	to_replace_len = ft_strlen(to_replace);
 	position = ft_strstr(*ori, to_replace);
 	if (!position)
 		return (*ori);
-	new_range = ft_strlen(*ori) - to_replace_len + ft_strlen(replacement);
+	new_range = ft_strlen(*ori) - to_replace_len + ft_strlen(new);
 	new_str = malloc(sizeof(char) * (new_range + 1));
 	if (!new_str)
 		return (NULL);
 	prefix_len = position - *ori;
 	ft_memcpy(new_str, *ori, prefix_len);
-	ft_memcpy(new_str + prefix_len, replacement, ft_strlen(replacement));
-	ft_memcpy(new_str + prefix_len + ft_strlen(replacement), position + \
+	ft_memcpy(new_str + prefix_len, new, ft_strlen(new));
+	ft_memcpy(new_str + prefix_len + ft_strlen(new), position + \
 	to_replace_len, ft_strlen(*ori) - prefix_len - to_replace_len);
 	new_str[new_range] = '\0';
-	//free(*ori);
-	//*ori = NULL;
 	return (new_str);
 }

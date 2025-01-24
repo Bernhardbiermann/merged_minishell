@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 11:31:24 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:35:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	delete_spaces(&token_list);
 	//print_token_list(token_list, "delete_spaces");
 	gc_check_for_first_pipe(data, &token_list);
-	//data->hdoc = create_hdoc_list(data, &token_list);
 	//print_token_list(token_list, "after heredoc");
 	gc_check_for_double_in_out_app_here(data, &token_list);
 	gc_check_for_double_pipe(data, &token_list);

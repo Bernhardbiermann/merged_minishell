@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 15:43:45 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 12:26:42 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 12:04:45 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	setup_signal(int type)
 {
 	struct sigaction	sa_quit;
 	struct sigaction	sa_int;
-	
+
 	if (type == INTERACTIVE)
 	{
 		set_sigaction(&sa_quit, SIG_IGN, SIGQUIT);
@@ -73,4 +73,3 @@ void	handle_sigint_heredoc(int signum)
 	write(STDOUT_FILENO, "\n", 1);
 	exit(130);
 }
-

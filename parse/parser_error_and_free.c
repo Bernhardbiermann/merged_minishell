@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_error_and_free.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 11:24:32 by bernhardbie       #+#    #+#             */
-/*   Updated: 2025/01/17 12:53:00 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:50:41 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	*safe_malloc_shell(size_t size, t_shell *data)
 {
 	void	*ptr;
 
-	ptr = calloc(1, size);
+	ptr = ft_calloc(1, size);
 	if (!ptr)
 	{
 		free_shell(data);

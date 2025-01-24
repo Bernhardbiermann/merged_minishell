@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_env.c                                        :+:      :+:    :+:   */
+/*   env_print.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 11:17:27 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/28 14:27:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 11:57:28 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,28 +74,3 @@ void	print_env_tab(char **tab)
 		i++;
 	}
 }
-
-/* bubble sort algo to sort the entries alphabetically*/
-/* pb here i cannot directly compare t_env vars, need to convert them to strings*/
-/* t_env	**sort_env(t_env **env, int env_len)
-{
-	int		i;
-	t_env	*tmp;
-
-	while (env_len > 1)
-	{
-		i = 0;
-		while (i < env_len - 1)
-		{
-			if (ft_strcmp(env[i]->key, env[i + 1]->key) > 0)
-			{
-				tmp = env[i];
-				env[i] = env[i + 1];
-				env[i + 1] = tmp;
-			}
-			i++;
-		}
-		env_len--;
-	}
-	return (env);
-} */

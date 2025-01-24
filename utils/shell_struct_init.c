@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_struct_init.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:11 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 10:27:36 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:53:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ t_shell	*init_shell_struct(t_env *env)
 	setup_signal(INTERACTIVE);
 	data = malloc(sizeof(t_shell));
 	if (!data)
+	{
+		printf("Failed to initialize shell struct.\n");
 		return (NULL);
+	}
 	data->pids = NULL;
 	data->nb_cmds = 0;
 	data->cmds = NULL;
@@ -31,4 +34,3 @@ t_shell	*init_shell_struct(t_env *env)
 	data->prev_fd = -2;
 	return (data);
 }
-

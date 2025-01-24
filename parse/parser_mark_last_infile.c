@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_mark_last_infile.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:05:59 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/20 15:28:16 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:31:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void		mark_last_in_or_heredoc(t_shell *data, int i)
+static void	mark_last_in_or_heredoc(t_shell *data, int i)
 {
 	int	j;
 	int	count;

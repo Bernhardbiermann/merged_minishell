@@ -3,30 +3,29 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
+#    By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/23 14:02:23 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/24 12:49:08 by aroux            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra
 INCLUDES = -Iincludes
 LIBFT_DIR = includes/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 SRC = main.c \
 	parse/lexer_check_ENV.c \
 	parse/lexer_check_ENV2.c \
-	parse/lexer_create_heredoc_list.c \
 	parse/lexer_error_and_free.c \
 	parse/lexer_grammer_check.c \
 	parse/lexer_grammer_check_2.c \
+	parse/lexer_hdoc_setup.c \
 	parse/lexer_helper_functions.c \
 	parse/lexer_helper_functions_2.c \
 	parse/lexer_print.c \
-	parse/lexer_setup_heredoc.c \
 	parse/lexer_token.c \
 	parse/lexer.c \
 	parse/refine_lexer_token.c \
@@ -39,8 +38,11 @@ SRC = main.c \
 	parse/parser_print.c \
 	parse/parser.c \
 	utils/check_t_error.c \
-	utils/fill_env.c \
-	utils/print_env.c \
+	utils/env_fill.c \
+	utils/env_print.c \
+	utils/hdoc_expand.c \
+	utils/hdoc_exec.c \
+	utils/hdoc_create.c \
 	utils/setup_signals.c \
 	utils/manip_str.c \
 	utils/frees.c\
@@ -60,9 +62,8 @@ SRC = main.c \
 	execute/exec_cmds.c \
 	execute/find_cmd_path.c \
 	execute/handle_pids.c \
-	execute/child_process.c\
-	execute/do_expansion_in_hdoc.c \
-	execute/handle_heredoc.c
+	execute/child_process.c \
+	execute/handle_redirections.c
 
 OBJ = $(SRC:.c=.o)
 

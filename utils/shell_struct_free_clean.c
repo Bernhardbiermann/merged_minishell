@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_struct_free_clean.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 11:25:32 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:56:21 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,11 @@ void	free_shell_struct(t_shell *data, t_env **my_env)
 	free(data);
 }
 
-void	clean_shell_struct(t_shell *data)
+void	clean_shell_struct(t_shell *data, char *input)
 {
 	int	i;
 
+	free(input);
 	i = 0;
 	while (i < data->nb_cmds)
 	{
@@ -116,11 +117,10 @@ void	clean_shell_struct(t_shell *data)
 	data->token_list = NULL;
 	free_pids_struct(&data->pids);
 	free(data->cmds);
-	data->cmds = NULL; // should it be here free_nullify()?
+	data->cmds = NULL;
 	data->err_msg = NULL;
 	data->std_in = 0;
 	data->std_out = 0;
 	data->nb_cmds = 0;
 	data->prev_fd = -2;
 }
-

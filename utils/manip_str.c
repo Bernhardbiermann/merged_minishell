@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 10:54:57 by aroux             #+#    #+#             */
-/*   Updated: 2024/11/28 14:25:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 12:04:30 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ char	*multi_strjoin(char *str1, char *str2, char *str3)
 	char	*tmp;
 	char	*multijoin;
 
-    if (!str1) 
+	if (!str1)
 		str1 = "";
-    if (!str2)
+	if (!str2)
 		str2 = "";
-    if (!str3)
+	if (!str3)
 		str3 = "";
 	tmp = ft_strjoin(str1, str2);
 	if (!tmp)
@@ -41,4 +41,3 @@ int	is_empty_str(char *str)
 	else
 		return (0);
 }
-

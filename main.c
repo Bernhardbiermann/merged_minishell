@@ -3,16 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 14:03:41 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:02:07 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
 volatile sig_atomic_t	g_signal_received = 0;
+
+void	check_signal_received(t_shell *data)
+{
+	if (g_signal_received == 1)
+		data->last_exit_status = 130;
+	g_signal_received = 0;
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -23,17 +30,12 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv[0] == NULL)
 		printf("Wrong nb of arguments\n");
 	my_envp = create_myenvp(envp);
-	data = init_shell_struct(*my_envp);	
+	data = init_shell_struct(*my_envp);
 	if (!data)
-	{
-		printf("Failed to initialize shell struct.\n");
 		return (1);
-	}
 	while (1)
-	{	
-		if (g_signal_received == 1)
-			data->last_exit_status = 130;
-		g_signal_received = 0;
+	{
+		check_signal_received(data);
 		input = readline("minishell> ");
 		if (!input)
 			break ;
@@ -41,8 +43,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 		if (parser(data, input, my_envp) == 0)
 			execute(data, my_envp);
-		free(input);
-		clean_shell_struct(data);
+		clean_shell_struct(data, input);
 	}
 	if (data)
 		free_shell_struct(data, my_envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 16:17:07 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:39:20 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,8 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	data->prev_fd = -1;
 	fd[0] = -1;
 	fd[1] = -1;
-	//printf("nb of cmd strcuts %i\n", data->nb_cmds);
 	while (i < data->nb_cmds)
 	{
-
 		if (i != data->nb_cmds - 1 && pipe(fd) == -1)
 			error_handle(data, "pipe failed", EXIT_FAILURE, my_env);
 		pid = fork();
@@ -131,5 +129,3 @@ void	parent_process(t_shell *data, int i, int *pipe, pid_t pid)
 	else
 		close_fd(pipe[0]);
 }
-
-

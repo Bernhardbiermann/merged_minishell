@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parse_to_shell.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:58:28 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 14:05:14 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:16:23 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	fill_redir(t_shell *data, int redir_c, int cmd_c, t_Token *current)
+void	fill_redir(t_shell *data, int redir_c, int cmd_c, t_Token *cur)
 {
-	if (current->type == T_HEREDOC)
+	if (cur->type == T_HEREDOC)
 	{
-		data->cmds[cmd_c].redir[redir_c].filename = ft_strdup(current->hdoc_name);
-		data->cmds[cmd_c].redir[redir_c].type = current->type;
+		data->cmds[cmd_c].redir[redir_c].filename = ft_strdup(cur->hdoc_name);
+		data->cmds[cmd_c].redir[redir_c].type = cur->type;
 	}
 	else
 	{
-		data->cmds[cmd_c].redir[redir_c].filename = ft_strdup(current->next->value);
-		data->cmds[cmd_c].redir[redir_c].type = current->type;
+		data->cmds[cmd_c].redir[redir_c].filename = ft_strdup(cur->next->value);
+		data->cmds[cmd_c].redir[redir_c].type = cur->type;
 	}
 }
 

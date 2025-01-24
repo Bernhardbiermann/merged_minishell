@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fill_env.c                                         :+:      :+:    :+:   */
+/*   env_fill.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:24:34 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/07 10:59:37 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:25:00 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,17 @@ t_env	*fill_env_node(char *env_var, t_env **my_envp)
 	int		length;
 
 	length = ft_strlen(env_var) - ft_strlen(ft_strchr(env_var, '='));
-	if (!(key = ft_substr(env_var, 0, length)) 
-	|| !(value = ft_strdup(ft_strchr(env_var, '=') + 1)))
+	key = ft_substr(env_var, 0, length);
+	if (!key)
 		return (NULL);
-	if (!(new = create_env_node(key, value)))
+	value = ft_strdup(ft_strchr(env_var, '=') + 1);
+	if (!value)
+	{
+		free(key);
+		return (NULL);
+	}
+	new = create_env_node(key, value);
+	if (!new)
 	{
 		free(key);
 		free(value);

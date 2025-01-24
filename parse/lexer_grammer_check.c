@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_grammer_check.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/22 13:05:53 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:27:36 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	set_err_in_tokenlist(t_shell *data, t_Token **token_list, char *value, int err)
+void	set_err_in_toklst(t_shell *data, t_Token **toklst, char *val, int err)
 {
 	t_Token	*current;
 	char	*new_value;
 	char	*err_msg;
 
-	current = *token_list;
+	current = *toklst;
 	new_value = NULL;
-	new_value = ft_strdup(value);
+	new_value = ft_strdup(val);
 	err_msg = ft_strdup("minishell: syntax error near unexpected token `?'");
 	data->err_msg = replace_substring(err_msg, "?", new_value);
 	data->last_exit_status = err;
@@ -29,7 +29,8 @@ void	set_err_in_tokenlist(t_shell *data, t_Token **token_list, char *value, int 
 	free(err_msg);
 }
 
-void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, t_Token **token_list)
+void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
+t_Token **token_list)
 {
 	t_Token	*current;
 	t_Token	*next;
@@ -44,7 +45,7 @@ void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, t_Token **
 		(next->type == T_INPUT || next->type == T_OUTPUT || \
 		next->type == T_APPEND || next->type == T_HEREDOC))
 		{
-			set_err_in_tokenlist(data, &current, "newline", 2);
+			set_err_in_toklst(data, &current, "newline", 2);
 			return ;
 		}
 		current = current->next;
@@ -60,7 +61,7 @@ void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list)
 	current = *token_list;
 	if (current->type == T_PIPE)
 	{
-		set_err_in_tokenlist(data, &current, current->value, 258);
+		set_err_in_toklst(data, &current, current->value, 258);
 		return ;
 	}
 }
@@ -96,7 +97,7 @@ void	gc_check_for_openquots(t_shell *data, t_Token **token_list)
 	{
 		if (current->type == T_ERROR)
 		{
-			set_err_in_tokenlist(data, &current, "unclosed quotation mark", 2);
+			set_err_in_toklst(data, &current, "unclosed quotation mark", 2);
 			return ;
 		}
 		current = current->next;

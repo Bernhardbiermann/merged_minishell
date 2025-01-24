@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 18:30:02 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:56:56 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,12 @@ typedef struct s_token
 	struct s_token	*prev;
 }			t_Token;
 
-typedef struct s_hdoc
-{
-	char			*delim; // 1701A: suggest change from value to "delim" to make clearer that it's the delimiter
-	struct s_hdoc	*next;
-}			t_hdoc;
-
 typedef struct s_env
 {
 	char				*key;
 	char				*value;
 	struct s_env		*next;
-	int					size; // relevant??
+	int					size;
 }			t_env;
 
 typedef struct s_pids
@@ -89,24 +83,21 @@ typedef struct s_pids
 /* 2.12: newly added struct */
 typedef struct s_redir
 {
-	t_TokenType		type; // 1912A: added that so we can build conditions on the type of redir + have the actual file it points to
+	t_TokenType		type;
 	char			*filename;
-	//char			*hdoc_delim;
-	int				last_redir_in; // 2001A: flag to add from parsing
-	//int				fd_heredoc; // maybe put that in the dat0a so it's easier to clean up
+	int				last_redir_in;
 }			t_redir;
 
 //5.12. New struct t_cmd;
 typedef struct s_cmd
 {
-	char	*path; // 30.11. B: think it's not necessary, can store them in the **arg
+	char	*path;
 	char	**cmd;
 	int		arg_count;
 	int		redirect_count;
 	t_redir	*redir;
 	int		input_fd;
 	int		output_fd;
-	//t_cmd	*next;
 }			t_cmd;
 
 typedef struct s_shell
@@ -115,8 +106,8 @@ typedef struct s_shell
 	int		nb_cmds;
 	t_env	*env;
 	t_Token	*token_list;
-	t_pids	*pids;	//1401A: added to handle child processes in the right order
-	int		fd_heredoc; //1701A propose to move that here so easier to clean up
+	t_pids	*pids;
+	int		fd_heredoc;
 	int		last_exit_status;
 	char	*err_msg;
 	int		std_in;
@@ -142,7 +133,7 @@ int		check_for_option_n(char *arg);
 int		ft_echo(char **args);
 
 /* __env.c */
-void	list_envp_vars(char **envp); // 18.12 A: are we using it in the end?
+void	list_envp_vars(char **envp);
 
 /* __exit.c */
 int		is_a_number(char *str);
@@ -163,7 +154,6 @@ int		ft_pwd(t_shell *data);
 t_env	*search_target_and_delete(t_env *current_input, char *key);
 void	ft_unset(t_shell *data, char **args);
 
-
 /***********/
 /* PARSING */
 /***********/
@@ -180,7 +170,8 @@ int		env_token(char *input, t_Token **token);
 int		value_token(char *input, t_Token **token);
 
 //LEXER_CHECK_ENV
-void	find_key_and_exchange_value_in_env(t_shell *data, t_env *my_envp, t_Token *current);
+void	find_key_and_exchange_value_in_env(t_shell *data, t_env *my_envp, \
+t_Token *current);
 void	find_key_and_exchange_value_in_dquot(t_env *my_envp, t_Token *current, \
 char *start, t_shell *data);
 void	three_frees(char *s1, char *s2, char *s3);
@@ -189,20 +180,17 @@ void	do_env_in_dquot_and_env(t_Token *token_list, t_env *my_envp, \
 t_shell *data);
 void	check_last_error_status(t_shell *data, t_Token *current);
 
-//LEXER_CREATE_HEREDOC_LIST
-int		grammer_check(t_Token *current);
-t_hdoc	*new_hdoc_token(char *delimiter);
-t_hdoc	*concatenate_hdoc_token(t_hdoc *new_token, t_hdoc **token_list);
+//LEXER_HDOC_SETUP
+void	do_heredoc_token(t_shell *data, t_Token **token_list, t_env **env);
 
 //LEXER_ERROR_AND_FREE
 void	free_token_list(t_Token *token_list);
-void	free_hdoc_token_list(t_hdoc *token_list);
 void	three_frees(char *s1, char *s2, char *s3);
 
 //LEXER_HELPER_FUNCTIONS 1-2
 char	*ft_strncpy(char *src, char *start, char *end);
 char	*ft_strndup(const char *s, size_t len);
-char	*find_end(char* start);
+char	*find_end(char *start);
 char	*ft_strstr(char *big, char *little);
 char	*replace_substring(char *original, char *to_replace, char *replacement);
 void	replace_value(t_Token *current, char *old_key, char *value);
@@ -223,17 +211,18 @@ void	make_text_out_of_quot_and_env(t_Token **token_list);
 void	replace_special_value(t_shell *data, t_Token *current, char *start);
 
 //LEXER_GRAMMER_CHECK 1-2 
-void	gc_check_for_double_in_out_app_here(t_shell *data, t_Token **token_list);
+void	gc_check_for_double_in_out_app_here(t_shell *data, t_Token **tok_list);
 void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list);
-void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, t_Token **token_list);
+void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
+t_Token **token_list);
 void	check_empty_env_first(t_Token **token_list);
 void	gc_check_for_openquots(t_shell *data, t_Token **token_list);
 void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list);
-void	set_err_in_tokenlist(t_shell *data, t_Token **token_list, char *value, int err);
+void	set_err_in_toklst(t_shell *data, t_Token **toklst, char *val, int err);
 void	gc_check_for_redir_last(t_shell *data, t_Token **token_list);
 
 //PARSER
-int	parser(t_shell *data, char *input, t_env **my_envp);
+int		parser(t_shell *data, char *input, t_env **my_envp);
 
 //PARSER_ERROR_AND_FREE
 void	free_shell(t_shell *data);
@@ -249,7 +238,8 @@ void	initialize_redir(t_redir *current, int redirect_count);
 void	initialize_cmds(int cmd_c, t_shell *data);
 
 //PARSER_PARSE_TO_SHELL
-int		process_redir(t_shell *data, t_Token **current_token, int redir_c, int cmd_c);
+int		process_redir(t_shell *data, t_Token **current_token, int redir_c, \
+int cmd_c);
 t_Token	*setup_cmds_in_shell(t_shell *data, t_Token *current, int cmd_c);
 void	fill_shell(t_shell *data, t_Token **token_list);
 void	parse_to_shell(t_shell *data, t_Token **token_list, t_env *my_envp);
@@ -276,9 +266,12 @@ void	wait_for_pids(t_shell *data);
 
 /* __child_process.c */
 void	child_process(t_shell *data, int i, int *fd, t_env **env);
+void	child_redir_stdout(t_shell *data, int *fd, int i, t_env **env);
+void	last_child_redir_stdout(t_shell *data, int i, t_env **env);
+
+/* __handle_redirections.c */
 void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
 void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env);
-void	redir_heredoc(t_shell *data, t_redir *redir, t_env **env);
 void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env);
 
 /* __find_cmd_path.c */
@@ -286,27 +279,17 @@ int		find_cmd_path(t_shell *data, int i, t_env **my_env);
 char	*get_path(char **env);
 char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **env);
 
-/* __handle_heredoc.c */
-void	do_heredoc_token(t_shell *data, t_Token **token_list, t_env **env);
-int		exec_heredoc(t_shell *data, t_Token *current, char *delimiter, t_env **env);
-int		create_hdoc_tmp(char **filename);
-void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env);
-int		create_hdocname(char *hdoc_name);
-
-/*__do_expansion_in_hdoc.c */
-char	*do_expansion_in_heredocs(t_shell *data, char **line);
-
 /*********/
 /* UTILS */
 /*********/
-/* __fill_env.c */
+/* __env_fill.c */
 t_env	*create_env_node(char *key, char *value);
 void	append_to_lst(t_env **lst, t_env *new);
 t_env	*fill_env_node(char *env_var, t_env **my_envp);
 t_env	**create_myenvp(char **envp);
 void	free_env_list(t_env **my_envp, char *key, char *value);
 
-/* __print_env.c */
+/* __env_print.c */
 int		env_size(t_env *lst);
 char	**env_to_tab(t_env *env);
 void	print_env(t_env *env);
@@ -316,6 +299,19 @@ void	print_env_tab(char **tab);
 /* __manip_str.c */
 char	*multi_strjoin(char *str1, char *str2, char *str3);
 int		is_empty_str(char *str);
+
+/* __hdoc_exec.c */
+int		exec_heredoc(t_shell *data, t_Token *current, char *delim, t_env **env);
+pid_t	fork_child_hdoc(t_shell *data, t_env **env);
+int		hdoc_parent_process(int heredoc, pid_t pid, int status);
+
+/* __hdoc_create.c */
+int		create_hdoc_tmp(char **filename);
+void	write_hdoc_in_file(t_shell *data, int hdoc, char *delim, t_env **env);
+int		create_hdocname(char *hdoc_name);
+
+/*__hdoc_expand.c */
+char	*do_expansion_in_heredocs(t_shell *data, char **line);
 
 /*__setup_signals.c */
 void	setup_signal(int type);
@@ -352,6 +348,6 @@ void	free_shell_struct_cmds(t_shell *data, int i);
 void	free_shell_struct_redir(t_shell *data, int i);
 void	free_pids_struct(t_pids **pids);
 void	free_shell_struct(t_shell *data, t_env **my_env);
-void	clean_shell_struct(t_shell *data);
+void	clean_shell_struct(t_shell *data, char *input);
 
 #endif

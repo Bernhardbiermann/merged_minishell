@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:28 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 15:31:23 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/24 12:05:35 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,3 @@ void	free_cmds_close_files(int i, char ***cmds, int infile, int outfile)
 	close_fd(outfile);
 	exit(-1);
 }
-
-
