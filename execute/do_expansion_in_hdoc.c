@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:19:02 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 18:42:04 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:34:15 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,29 @@ static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s,\
 char	*do_expansion_in_heredocs(t_shell *data, char **line)
 {
 	char	*s;
-	char	*new_line;
 
-	new_line = *line;
-	s = ft_strchr(new_line, '$');
-	if (ft_strchr(new_line, '$') != NULL)
+	s = ft_strchr(*line, '$');
+	if (ft_strchr(*line, '$') != NULL)
 	{
 		while (s != NULL)
 		{
 			if (s[1] == '?' || s[1] == '$' || s[1] == ' ' || s[1] == '\0')
-				new_line = replace_special_value_hdoc(data, &new_line, s);
+				*line = replace_special_value_hdoc(data, line, s);
 			else
-				new_line = find_key_and_exchange_value_hdoc(data, new_line, &s);
-			s = ft_strchr(new_line, '$');
+				*line = find_key_and_exchange_value_hdoc(data, s, line);
+			s = ft_strchr(*line, '$');
 		}
-		s = ft_strchr(new_line, '\r');
-		if (ft_strchr(new_line, '\r') != NULL)
+		s = ft_strchr(*line, '\r');
+		if (ft_strchr(*line, '\r') != NULL)
 		{
 			while (s != NULL)
 			{
-				replace_value_hdoc(&new_line, "\r", "$");
-				s = ft_strchr(new_line, '\r');
+				*line = replace_value_hdoc(line, "\r", "$");
+				s = ft_strchr(*line, '\r');
 			}
 		}
 	}
-	return (new_line);
+	return (*line);
 }
 
 static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start)
@@ -121,7 +119,7 @@ static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacem
 	ft_memcpy(new_str + prefix_len + ft_strlen(replacement), position + \
 	to_replace_len, ft_strlen(*ori) - prefix_len - to_replace_len);
 	new_str[new_range] = '\0';
-	free(*ori);
-	*ori = NULL;
+	//free(*ori);
+	//*ori = NULL;
 	return (new_str);
 }
