@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:35:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 15:24:38 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:32:44 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ int	create_hdoc_tmp(char **filename)
 void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **env)
 {
 	char	*line;
+	char	*env_line;
 	
 	setup_signal(HEREDOC);
 	if (!env && !data)
@@ -130,11 +131,10 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 			free(line);
 			break ;
 		}
-		do_expansion_in_heredocs(data, &line);
-		write(heredoc, line, ft_strlen(line));
+		env_line = do_expansion_in_heredocs(data, &line);
+		write(heredoc, env_line, ft_strlen(env_line));
 		write(heredoc, "\n", 1);
-		// if i received a SIGINT, free and exit
-		free(line);
+		free(env_line);
 	}
 	setup_signal(WAIT);
 }

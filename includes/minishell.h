@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/23 15:21:17 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:30:02 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,7 @@ void	write_heredoc_in_file(t_shell *data, int heredoc, char *delimiter, t_env **
 int		create_hdocname(char *hdoc_name);
 
 /*__do_expansion_in_hdoc.c */
-void	do_expansion_in_heredocs(t_shell *data, char **line);
+char	*do_expansion_in_heredocs(t_shell *data, char **line);
 
 /*********/
 /* UTILS */

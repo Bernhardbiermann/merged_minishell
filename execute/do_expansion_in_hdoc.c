@@ -6,86 +6,122 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:19:02 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 16:17:33 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:42:04 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	replace_special_value_hdoc(t_shell *data, char **line, char *start);
-static void	replace_value_hdoc(char **line, char *old_key, char *value);
-static void	find_key_and_exchange_value_hdoc(t_shell *data, char *s,\
+static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start);
+static char	*replace_value_hdoc(char **line, char *old_key, char *value);
+static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s,\
  char **line);
-static void	find_mask_and_exchange_hdoc(char **line);
+ static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacement);
 
-void	do_expansion_in_heredocs(t_shell *data, char **line)
+char	*do_expansion_in_heredocs(t_shell *data, char **line)
 {
 	char	*s;
+	char	*new_line;
 
-	while (ft_strchr(*line, '$') != NULL)
+	new_line = *line;
+	s = ft_strchr(new_line, '$');
+	if (ft_strchr(new_line, '$') != NULL)
 	{
-		s = ft_strchr(*line, '$');
-		while (s)
+		while (s != NULL)
 		{
 			if (s[1] == '?' || s[1] == '$' || s[1] == ' ' || s[1] == '\0')
-				replace_special_value_hdoc(data, line, s);
+				new_line = replace_special_value_hdoc(data, &new_line, s);
 			else
-				find_key_and_exchange_value_hdoc(data, *line, &s);
-			s = ft_strchr(*line, '$');
-		}		
-		if (ft_strchr(*line, '\r') != NULL)
-			find_mask_and_exchange_hdoc(line);
+				new_line = find_key_and_exchange_value_hdoc(data, new_line, &s);
+			s = ft_strchr(new_line, '$');
+		}
+		s = ft_strchr(new_line, '\r');
+		if (ft_strchr(new_line, '\r') != NULL)
+		{
+			while (s != NULL)
+			{
+				replace_value_hdoc(&new_line, "\r", "$");
+				s = ft_strchr(new_line, '\r');
+			}
+		}
 	}
+	return (new_line);
 }
 
-static void	replace_special_value_hdoc(t_shell *data, char **line, char *start)
+static char	*replace_special_value_hdoc(t_shell *data, char **line, char *start)
 {
 	char	*last_exit_status;
+	char	*new_value;
 
 	last_exit_status = ft_itoa(data->last_exit_status);
 	if (start[1] == '?')
-		replace_value_hdoc(line, "$?", last_exit_status);
+		new_value = replace_value_hdoc(line, "$?", last_exit_status);
 	else if (start[1] == '$')
-		replace_value_hdoc(line, "$$", "YOU'RE NOT ALLOWED TO DO THIS!");
+		new_value = replace_value_hdoc(line, "$$", "YOU'RE NOT ALLOWED TO DO THIS!");
 	else if (start[1] == ' ')
-		replace_value_hdoc(line, "$ ", "\r ");
+		new_value = replace_value_hdoc(line, "$ ", "\r ");
 	else
-		replace_value_hdoc(line, "$", "\r");
+		new_value = replace_value_hdoc(line, "$", "\r");
 	free(last_exit_status);
+	return (new_value);
 }
 
-static void	replace_value_hdoc(char **line, char *old_key, char *value)
+static char	*replace_value_hdoc(char **line, char *old_key, char *value)
 {
 	char *new_value;
 
-	new_value = replace_substring(*line, old_key, value);
+	if (!line || !*line || !*old_key || !*value)
+		return (NULL);
+	new_value = replace_substring_hdoc(line, old_key, value);
+	if (!new_value)
+		return (NULL);
 	free(*line);
-	*line = new_value;
+	line = &new_value;
+	return (new_value);
 }
 
-static void	find_key_and_exchange_value_hdoc(t_shell *data, char *s, char **line)
+static char	*find_key_and_exchange_value_hdoc(t_shell *data, char *s, char **line)
 {
 	char	*key;
 	char	*old_key;
 	char	*value;
 	char	*end;
+	char	*new_line;
 
 	end = find_end(s + 1);
 	key = ft_strncpy(*line, s + 1, end);
 	old_key = ft_strncpy(*line, s, end);
 	value = compare_key_and_get_value(data->env, key);
-	replace_value_hdoc(line, old_key, value);
+	new_line = replace_value_hdoc(line, old_key, value);
 	three_frees(key, old_key, value);
+	return(new_line);
 }
 
-static void	find_mask_and_exchange_hdoc(char **line)
+static char	*replace_substring_hdoc(char **ori, char *to_replace, char *replacement)
 {
-	char	*start;
+	char	*position;
+	char	*new_str;
+	size_t	to_replace_len;
+	size_t	new_range;
+	size_t	prefix_len;
 
-	start = ft_strchr(*line, '\r');
-	while (start)
-	{
-		replace_value_hdoc(line, "\r", "$");
-		start = ft_strchr(*line, '\r');
-	}
+	if (!ori || !*ori || !to_replace || !replacement)
+		return (NULL);
+	to_replace_len = ft_strlen(to_replace);
+	position = ft_strstr(*ori, to_replace);
+	if (!position)
+		return (*ori);
+	new_range = ft_strlen(*ori) - to_replace_len + ft_strlen(replacement);
+	new_str = malloc(sizeof(char) * (new_range + 1));
+	if (!new_str)
+		return (NULL);
+	prefix_len = position - *ori;
+	ft_memcpy(new_str, *ori, prefix_len);
+	ft_memcpy(new_str + prefix_len, replacement, ft_strlen(replacement));
+	ft_memcpy(new_str + prefix_len + ft_strlen(replacement), position + \
+	to_replace_len, ft_strlen(*ori) - prefix_len - to_replace_len);
+	new_str[new_range] = '\0';
+	free(*ori);
+	*ori = NULL;
+	return (new_str);
 }
