@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/17 13:47:20 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/25 11:32:25 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,16 @@ void	expand_env(t_shell *data, char *input)
 	if (!key)
 		return ;
 	ft_strlcpy(key, input, key_len + 1);
+	key[key_len + 1] = '\0';
 	current = data->env;
 	while (current)
 	{
 		if (ft_strcmp(current->key, key) == 0)
 		{
 			free(current->value);
-			current->value = safe_malloc(data, ft_strlen(equal_ptr) + 1);
-			if (!current->value)
-				break ;
+			current->value = ft_strdup(equal_ptr + 1);
+			free(key);
+			break ;
 		}
 		current = current->next;
 	}

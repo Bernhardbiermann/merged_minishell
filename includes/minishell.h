@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 17:03:15 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/25 11:56:34 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,7 @@ void	gc_check_for_openquots(t_shell *data, t_Token **token_list);
 void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list);
 void	set_err_in_toklst(t_shell *data, t_Token **toklst, char *val, int err);
 void	gc_check_for_redir_last(t_shell *data, t_Token **token_list);
+void	gc_check_for_only_empty_quotes(t_Token **token_list);
 
 //PARSER
 int		parser(t_shell *data, char *input, t_env **my_envp);

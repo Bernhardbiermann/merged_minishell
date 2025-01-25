@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_grammer_check_2.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:55:58 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 12:28:51 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/25 11:58:21 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,24 @@ void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list)
 			return ;
 		}
 		current = current->next;
+	}
+}
+
+void	gc_check_for_only_empty_quotes(t_Token **token_list)
+{
+	t_Token	*current;
+	t_Token	*next;
+
+	if (!token_list || !*token_list)
+		return ;
+	current = *token_list;
+	next = current->next;
+	if ((current->type == T_S_QUOT || current->type == T_D_QUOT) && \
+	next == NULL && current->value[0] == '\0')
+ 	{
+		free(current->value);
+		current->value = ft_strdup("");
+		current->type = T_TEXT;
+		return ;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hdoc_create.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:39:02 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 11:40:13 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/25 12:04:20 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	write_hdoc_in_file(t_shell *data, int hdoc, char *delim, t_env **env)
 		line = readline("hdoc> ");
 		if (!line)
 		{
-			write(2, "warning: here-document delimited by end-of-file\n", 50);
+			ft_printf("warning: here-document delimited by end-of-file (wanted\
+ `%s')\n", delim);
 			break ;
 		}
 		if (ft_strcmp(line, delim) == 0)

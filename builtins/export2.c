@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:13:34 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/17 13:47:05 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/25 11:11:07 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	check_name_and_empty_value(char *input)
 		i++;
 	if (input[i] != '=')
 		return (1);
-	i++;
-	if (input[i] == '\0')
-		return (1);
+	//i++;
+	//if (input[i] == '\0')
+	//	return (1);
 	else
 		return (0);
 }
