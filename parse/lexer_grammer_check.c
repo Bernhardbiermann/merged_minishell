@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 14:23:43 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 14:43:12 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,13 @@ void	gc_check_for_openquots(t_shell *data, t_Token **token_list)
 	{
 		if (current->type == T_ERROR)
 		{
-			set_err_in_toklst(data, &current, "unclosed quotation mark", 2);
+			current->err_type == QUOTESERR
+			//set_err_in_toklst(data, &current, "unclosed quotation mark", 2);
 			return ;
 		}
 		current = current->next;
 	}
 }
+
+
+
