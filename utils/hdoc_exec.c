@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:39:17 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 11:39:52 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 12:15:58 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,10 @@ int	hdoc_parent_process(int heredoc, pid_t pid, int status)
 		perror("waitpid failed");
 		exit_status = 1;
 	}
-	if (WIFEXITED(status))
-		exit_status = 0;
-	else
+	if (WIFSIGNALED(status))
 		exit_status = WTERMSIG(status) + 128;
+	else 
+		exit_status = WEXITSTATUS(status);
+	//printf("child exited with status: %d\n", exit_status);
 	return (exit_status);
 }

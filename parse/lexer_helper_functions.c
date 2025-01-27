@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper_functions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:46:03 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 14:25:32 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:31:51 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ char	*replace_substring(char *original, char *to_replace, char *replacement)
 	size_t	new_range;
 	size_t	prefix_len;
 
+	new_str = NULL;
 	if (!original || !to_replace || !replacement)
 		return (0);
 	to_replace_len = ft_strlen(to_replace);
@@ -108,5 +109,7 @@ char	*replace_substring(char *original, char *to_replace, char *replacement)
 	ft_memcpy(new_str + prefix_len + ft_strlen(replacement), position \
 	+ to_replace_len, ft_strlen(original) - prefix_len - to_replace_len);
 	new_str[new_range] = '\0';
-	return (new_str);
+	to_replace = new_str;
+	free(new_str);
+	return (to_replace);
 }

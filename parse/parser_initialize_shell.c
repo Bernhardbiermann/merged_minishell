@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_initialize_shell.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 15:03:01 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/23 11:23:33 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:23:24 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static int	setup_core_shell(t_shell *data, t_Token *token_list, t_env *myenvp)
 	data->nb_cmds = count_cmds(&token_list);
 	data->cmds = safe_malloc_shell((sizeof(t_cmd) * data->nb_cmds), data);
 	data->env = myenvp;
-	data->last_exit_status = 0;
+	//data->last_exit_status = 0;
 	data->token_list = token_list;
 	data->err_msg = NULL;
 	return (cmd_count);

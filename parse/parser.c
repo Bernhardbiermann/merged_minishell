@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 11:27:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/25 12:10:11 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:09:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ int	parser(t_shell *data, char *input, t_env **my_envp)
 	//print_token_list(token_list, "Everything!");
 	data->token_list = token_list;
 	do_heredoc_token(data, &token_list, my_envp);
-	if (check_t_error(data) != 0 || !token_list)
+	if (check_t_error(&token_list) != 0 || !token_list)
+		return (1);
+	if (data->sigint_hdoc == 1)
 		return (1);
 	parse_to_shell(data, &token_list, *my_envp);
 	//print_shell_commands(data);

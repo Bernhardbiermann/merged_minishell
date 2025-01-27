@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_grammer_check_2.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:55:58 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/25 11:58:21 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:30:08 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	gc_check_for_redir_last(t_shell *data, t_Token **token_list)
 	current = *token_list;
 	while (current->next)
 		current = current->next;
-	if (current->type == T_APPEND || current->type == T_INPUT || \
+	if ((current->type == T_APPEND || current->type == T_INPUT || \
 	current->type == T_OUTPUT || current->type == T_HEREDOC || \
-	current->type == T_PIPE)
+	current->type == T_PIPE) && check_t_error(token_list) == 0)
 	{
 		set_err_in_toklst(data, token_list, current->value, 2);
 		return ;
@@ -45,7 +45,7 @@ void	gc_check_for_double_in_out_app_here(t_shell *data, t_Token **tok_list)
 		current->type == T_APPEND || current->type == T_HEREDOC) && \
 		(next->type == T_INPUT || next->type == T_OUTPUT || \
 		next->type == T_APPEND || next->type == T_HEREDOC || \
-		next->type == T_PIPE))
+		next->type == T_PIPE) && check_t_error(tok_list) != 1)
 		{
 			set_err_in_toklst(data, &current, next->value, 2);
 			return ;
@@ -62,7 +62,7 @@ void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list)
 	if (!token_list || !*token_list)
 		return ;
 	current = *token_list;
-	while (current && current->next)
+	while (current && current->next && check_t_error(token_list) != 1)
 	{
 		next = current->next;
 		if (current->type == T_PIPE && next->type == T_PIPE)
@@ -84,7 +84,7 @@ void	gc_check_for_only_empty_quotes(t_Token **token_list)
 	current = *token_list;
 	next = current->next;
 	if ((current->type == T_S_QUOT || current->type == T_D_QUOT) && \
-	next == NULL && current->value[0] == '\0')
+	next == NULL && current->value[0] == '\0' && check_t_error(token_list) != 1)
  	{
 		free(current->value);
 		current->value = ft_strdup("");

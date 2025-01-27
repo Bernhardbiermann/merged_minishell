@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/25 11:56:34 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:08:43 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ typedef struct s_shell
 	t_pids	*pids;
 	int		fd_heredoc;
 	int		last_exit_status;
+	int		hdoc_exitstat;
 	char	*err_msg;
+	int		sigint_hdoc;
 	int		std_in;
 	int		std_out;
 	int		prev_fd;
@@ -341,7 +343,7 @@ void	multi_close(int fds[], int size, int infile, int outfile);
 void	collect_status_free_exit(t_shell *data, t_env **env);
 
 //CHECK_T_ERROR
-int		check_t_error(t_shell *data);
+int		check_t_error(t_Token **token_list);
 
 /* __shell_struct_init.c */ 
 t_shell	*init_shell_struct(t_env *env);

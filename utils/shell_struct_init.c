@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:25:11 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 12:53:26 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 12:19:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ t_shell	*init_shell_struct(t_env *env)
 	data->err_msg = NULL;
 	data->env = env;
 	data->prev_fd = -2;
+	data->sigint_hdoc = 0;
 	return (data);
 }

@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 12:56:21 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 12:51:33 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,14 +111,17 @@ void	clean_shell_struct(t_shell *data, char *input)
 		i++;
 	}
 	if (data->err_msg)
+	{
 		free(data->err_msg);
+		data->err_msg = NULL;
+	}
 	if (data->token_list)
 		free_token_list(data->token_list);
 	data->token_list = NULL;
 	free_pids_struct(&data->pids);
 	free(data->cmds);
+	data->sigint_hdoc = 0;
 	data->cmds = NULL;
-	data->err_msg = NULL;
 	data->std_in = 0;
 	data->std_out = 0;
 	data->nb_cmds = 0;

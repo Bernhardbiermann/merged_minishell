@@ -6,20 +6,22 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 16:31:07 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 11:56:30 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 14:09:32 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	check_t_error(t_shell *data)
+int	check_t_error(t_Token **token_list)
 {
-	if (!data->err_msg)
-		return (0);
-	else
+	t_Token	*current;
+
+	current = *token_list;
+	while (current)
 	{
-		ft_printf(data->err_msg);
-		ft_printf("\n");
-		return (1);
+		if (current->grammer_err != 0)
+			return (1);
+		current = current->next;
 	}
+	return (0);
 }
