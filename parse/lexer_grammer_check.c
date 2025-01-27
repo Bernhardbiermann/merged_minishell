@@ -3,26 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_grammer_check.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 15:00:24 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 16:40:18 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	set_err_in_toklst(t_shell *data, t_Token **toklst, char *val, int err)
+/*void	set_err_in_data(t_shell *data, char *val, int err)
 {
-	t_Token	*current;
-
-	current = *toklst;
 	ft_printf("minishell: syntax error near unexpected token `%s'\n", val);
 	data->last_exit_status = err;
-	current->grammer_err = 1;
-}
+}*/
 
-void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
+/*void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
 t_Token **token_list)
 {
 	t_Token	*current;
@@ -38,23 +34,24 @@ t_Token **token_list)
 		(next->type == T_INPUT || next->type == T_OUTPUT || \
 		next->type == T_APPEND || next->type == T_HEREDOC))
 		{
-			set_err_in_toklst(data, &current, "newline", 2);
+			set_err_in_data(data, &current, "newline", 2);
 			return ;
 		}
 		current = current->next;
 	}
-}
+}*/
 
-void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list)
+void	gc_check_for_first_pipe(t_Token **token_list)
 {
 	t_Token	*current;
 
 	if (!token_list || !*token_list)
 		return ;
 	current = *token_list;
-	if (current->type == T_PIPE && check_t_error(token_list) != 1)
+	if (current->type == T_PIPE)
 	{
-		set_err_in_toklst(data, &current, current->value, 258);
+		current->grammer_err = 2;
+		//set_err_in_data(data, &current, current->value, 258);
 		return ;
 	}
 }
@@ -79,20 +76,24 @@ void	check_empty_env_first(t_Token **token_list)
 	}
 }
 
-void	gc_check_for_openquots(t_shell *data, t_Token **token_list)
+void	gc_check_for_openquots(t_Token **token_list)
 {
 	t_Token	*current;
 
 	if (!token_list || !*token_list)
 		return ;
 	current = *token_list;
-	while (current && check_t_error(token_list) != 1)
+	while (current)
 	{
 		if (current->type == T_ERROR)
 		{
-			set_err_in_toklst(data, &current, "unclosed quotation mark", 2);
+			current->grammer_err = 1;
+			//set_err_in_data(data, &current, "unclosed quotation mark", 2);
 			return ;
 		}
 		current = current->next;
 	}
 }
+
+
+

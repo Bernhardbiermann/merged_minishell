@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 13:02:07 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 16:54:27 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (1)
 	{
-		check_signal_received(data);
 		input = readline("minishell> ");
+		check_signal_received(data);
 		if (!input)
 			break ;
 		if (*input)

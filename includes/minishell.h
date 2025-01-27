@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/27 14:08:43 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 16:41:24 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,9 @@ int		operator_token(char *input, t_Token **token);
 int		env_token(char *input, t_Token **token);
 int		value_token(char *input, t_Token **token);
 
+//LEXER_CHECK_AND_PRINT_GC
+void	check_and_print_gc(t_shell *data, t_Token **tokenlist);
+
 //LEXER_CHECK_ENV
 void	find_key_and_exchange_value_in_env(t_shell *data, t_env *my_envp, \
 t_Token *current);
@@ -213,16 +216,16 @@ void	make_text_out_of_quot_and_env(t_Token **token_list);
 void	replace_special_value(t_shell *data, t_Token *current, char *start);
 
 //LEXER_GRAMMER_CHECK 1-2 
-void	gc_check_for_double_in_out_app_here(t_shell *data, t_Token **tok_list);
-void	gc_check_for_first_pipe(t_shell *data, t_Token **token_list);
+void	gc_check_for_double_in_out_app_here(t_Token **tok_list);
+void	gc_check_for_first_pipe(t_Token **token_list);
 void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
 t_Token **token_list);
 void	check_empty_env_first(t_Token **token_list);
-void	gc_check_for_openquots(t_shell *data, t_Token **token_list);
-void	gc_check_for_double_pipe(t_shell *data, t_Token **token_list);
+void	gc_check_for_openquots(t_Token **token_list);
+void	gc_check_for_double_pipe(t_Token **token_list);
 void	set_err_in_toklst(t_shell *data, t_Token **toklst, char *val, int err);
-void	gc_check_for_redir_last(t_shell *data, t_Token **token_list);
-void	gc_check_for_only_empty_quotes(t_Token **token_list);
+void	gc_check_for_redir_last(t_Token **token_list);
+void	check_for_only_empty_quotes(t_Token **token_list);
 
 //PARSER
 int		parser(t_shell *data, char *input, t_env **my_envp);
