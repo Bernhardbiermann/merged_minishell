@@ -1,0 +1,11 @@
+[?2004hminishell> exi^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004h^C[?2004l
+minishell> [?2004hexit
+[?2004l
