@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_grammer_check.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:46:14 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 16:40:18 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:18:49 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-/*void	set_err_in_data(t_shell *data, char *val, int err)
-{
-	ft_printf("minishell: syntax error near unexpected token `%s'\n", val);
-	data->last_exit_status = err;
-}*/
 
 /*void	gc_check_for_combination_pipe_and_in_out_app_here(t_shell *data, \
 t_Token **token_list)
@@ -51,7 +45,6 @@ void	gc_check_for_first_pipe(t_Token **token_list)
 	if (current->type == T_PIPE)
 	{
 		current->grammer_err = 2;
-		//set_err_in_data(data, &current, current->value, 258);
 		return ;
 	}
 }
@@ -88,12 +81,8 @@ void	gc_check_for_openquots(t_Token **token_list)
 		if (current->type == T_ERROR)
 		{
 			current->grammer_err = 1;
-			//set_err_in_data(data, &current, "unclosed quotation mark", 2);
 			return ;
 		}
 		current = current->next;
 	}
 }
-
-
-

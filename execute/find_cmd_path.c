@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 14:32:11 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 12:05:58 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ char	*find_valid_path(char *cmd, char **paths, t_shell *data, t_env **my_env)
 	int		i;
 
 	i = 0;
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
 	while (paths[i])
 	{
 		cmd_path = multi_strjoin(paths[i], "/", cmd);

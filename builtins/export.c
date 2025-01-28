@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:51:55 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/25 11:32:25 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:21:49 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	expand_env(t_shell *data, char *input)
 	if (!key)
 		return ;
 	ft_strlcpy(key, input, key_len + 1);
-	key[key_len + 1] = '\0';
 	current = data->env;
 	while (current)
 	{

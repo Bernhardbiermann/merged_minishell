@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:45:41 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 15:55:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 10:50:13 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	exec_builtin(t_shell *data, int i, t_env **my_env)
 	else if (ft_strcmp(data->cmds[i].cmd[0], "echo") == 0)
 		ft_echo(data->cmds[i].cmd);
 	else if (ft_strcmp(data->cmds[i].cmd[0], "env") == 0)
-		print_env(data->env);
+		ft_env(data, &data->cmds[i], my_env);
 	else if (ft_strcmp(data->cmds[i].cmd[0], "exit") == 0)
 		ft_exit(data->cmds[i].cmd, data, my_env);
 	else if (ft_strcmp(data->cmds[i].cmd[0], "export") == 0)

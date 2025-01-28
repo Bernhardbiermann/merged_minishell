@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:09:44 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 18:27:36 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 12:17:35 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	do_heredoc_token(t_shell *data, t_Token **token_list, t_env **env)
 			}
 			if (check_t_error(token_list) != 0)
 				unlink(current->hdoc_name);
-
 		}
 		current = current->next;
 	}

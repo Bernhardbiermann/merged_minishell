@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/27 19:36:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 12:20:04 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	execute(t_shell *data, t_env **my_env)
 				exec_echo(data, my_env);
 			else
 			{
+				data->last_exit_status = 0;
 				handle_redirections(&data->cmds[0], NULL, data, my_env); 
 				exec_builtin(data, 0, my_env);
 			}
@@ -95,31 +96,31 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 /* executes each command
 	if it's a builtin, executes it and then cleans and exits
 	if it's not, check for a valid path, and execve() exits and cleans */
-void	exec_cmd(t_shell *data, int i, t_env **my_env)
+void	exec_cmd(t_shell *data, int i, t_env **env)
 {
 	char	**env_tab;
 
 	if (!data->cmds[i].cmd[0])
 	{
-		free_shell_struct(data, my_env);
+		free_shell_struct(data, env);
 		exit(EXIT_SUCCESS);
 	}
 	if (is_builtin(data, i) == 1)
 	{
-		exec_builtin(data, i, my_env);
-		free_shell_struct(data, my_env);
+		exec_builtin(data, i, env);
+		free_shell_struct(data, env);
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		find_cmd_path(data, i, my_env);
-		if (find_cmd_path(data, i, my_env) == 0) // add here && execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) >= 0 ? / access(data->cmds[i].cmd), X_Ok == -1
-			error_cmd_file_dir(data, i, my_env);
+		find_cmd_path(data, i, env);
+		if (find_cmd_path(data, i, env) == 0 || data->cmds[i].cmd[0][0] == '\0')
+			error_cmd_file_dir(data, i, env);
 		env_tab = env_to_tab(data->env);
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1)
 		{
 			free_tab(env_tab);
-			error_handle(data, "execve failed", EXIT_FAILURE, my_env);
+			error_handle(data, "execve failed", EXIT_FAILURE, env);
 		}
 	}
 }

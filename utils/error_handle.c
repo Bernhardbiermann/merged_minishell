@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 10:21:37 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 12:14:24 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,9 @@ void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env)
 void	error_cmd_file_dir(t_shell *data, int i, t_env **env)
 {
 	char	*cmd_name;
-	//char	*cwd;
 
 	cmd_name = data->cmds[i].cmd[0];
-/* 	if ((cmd_name[0] == '.' && cmd_name[1] == '/') || cmd_name[0] == '/')
-	{
-		if ((cmd_name[0] == '.' && cmd_name[1] == '/'))
-		{
-			cwd = get_pwd_value("PWD", env);
-			if (execve(cwd, cmd_name, env_to_tab(data->env)) == -1)
-				continue ;
-		}
-		error_directory(data, cmd_name, env);
-	} */
- 	if ((cmd_name[0] == '.' && cmd_name[1] == '/') || cmd_name[0] == '/')
+	if ((cmd_name[0] == '.' && cmd_name[1] == '/') || cmd_name[0] == '/')
 		error_directory(data, cmd_name, env);
 	else
 	{

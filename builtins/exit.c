@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:21 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/08 18:01:30 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:35:47 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ void	ft_exit(char **args, t_shell *data, t_env **my_env)
 	else
 		exit_status = 0;
 	free_shell_struct(data, my_env);
+	ft_printf("exit\n");
 	exit(exit_status);
 }

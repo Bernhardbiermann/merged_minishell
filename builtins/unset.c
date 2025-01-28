@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:35 by aroux             #+#    #+#             */
-/*   Updated: 2024/12/18 14:03:49 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 11:25:19 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,6 @@ void	ft_unset(t_shell *data, char **args)
 		return ;
 	while (args[i])
 	{
-		if (is_valid_var_name(args[i]) != 0)
-		{
-			ft_printf("minishell: export: `%s': not a valid identifier", \
-			args[i]);
-			data->last_exit_status = 1;
-			i++;
-			continue ;
-		}
 		current = data->env;
 		while (current && current->next)
 			current = search_target_and_delete(current, args[i]);

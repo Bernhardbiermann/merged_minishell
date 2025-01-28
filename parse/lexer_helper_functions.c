@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper_functions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:46:03 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 16:53:31 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:27:08 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,28 +88,25 @@ char	*find_end(char *start)
 
 char	*replace_substring(char *original, char *to_replace, char *replacement)
 {
-		char	*position;
+	char	*position;
 	char	*new_str;
-	size_t	original_len;
-	size_t	to_replace_len;
-	size_t	replacement_len;
 	size_t	new_range;
 	size_t	prefix_len;
 
 	if (!original || !to_replace || !replacement)
 		return (0);
-	original_len = ft_strlen(original);
-	to_replace_len = ft_strlen(to_replace);
-	replacement_len = ft_strlen(replacement);
-	new_range = original_len - to_replace_len + replacement_len;
-	if (!(new_str = malloc(sizeof(char) * (new_range + 1))))
+	new_range = ft_strlen(original) - ft_strlen(to_replace) + \
+	ft_strlen(replacement);
+	new_str = malloc(sizeof(char) * (new_range + 1));
+	if (!new_str)
 		return (NULL);
 	position = ft_strstr(original, to_replace);
 	prefix_len = position - original;
 	ft_memcpy(new_str, original, prefix_len);
-	ft_memcpy(new_str + prefix_len, replacement, replacement_len);
-	ft_memcpy(new_str + prefix_len + replacement_len, \
-	position + to_replace_len, original_len - prefix_len - to_replace_len);
+	ft_memcpy(new_str + prefix_len, replacement, ft_strlen(replacement));
+	ft_memcpy(new_str + prefix_len + ft_strlen(replacement), \
+	position + ft_strlen(to_replace), \
+	ft_strlen(original) - prefix_len - ft_strlen(to_replace));
 	new_str[new_range] = '\0';
 	return (new_str);
 }

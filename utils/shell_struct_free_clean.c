@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 09:50:26 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/27 15:25:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 12:12:16 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	free_shell_struct_redir(t_shell *data, int i)
 		{
 			if (data->cmds[i].redir[j].filename)
 			{
-				if (data->cmds[i].redir[j].type == T_HEREDOC && access(data->cmds[i].redir[j].filename, F_OK) == 0)
+				if (data->cmds[i].redir[j].type == T_HEREDOC && \
+				access(data->cmds[i].redir[j].filename, F_OK) == 0)
 					unlink(data->cmds[i].redir[j].filename);
 				free_nullify(data->cmds[i].redir[j].filename);
 			}
@@ -111,10 +112,7 @@ void	clean_shell_struct(t_shell *data, char *input)
 		i++;
 	}
 	if (data->err_msg)
-	{
-		free(data->err_msg);
-		data->err_msg = NULL;
-	}
+		free_nullify(data->err_msg);
 	if (data->token_list)
 		free_token_list(data->token_list);
 	data->token_list = NULL;

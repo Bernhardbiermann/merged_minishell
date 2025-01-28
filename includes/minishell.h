@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/27 19:16:29 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 10:51:12 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int		check_for_option_n(char *arg);
 int		ft_echo(char **args);
 
 /* __env.c */
-void	list_envp_vars(char **envp);
+void	ft_env(t_shell *data, t_cmd *cmd, t_env **env);
 
 /* __exit.c */
 int		is_a_number(char *str);
