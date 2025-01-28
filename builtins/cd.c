@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 17:17:20 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 10:23:06 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,6 @@ void	update_pwd(char *envp_key, char *envp_new_value, t_env **env)
 		}
 		current = current->next;
 	}
-}
-
-static char	*get_pwd_value(char *envp_key, t_env **env)
-{
-	t_env	*current;
-
-	current = *env;
-	while (current)
-	{
-		if (ft_strcmp(current->key, envp_key) == 0)
-			return (current->value);
-		current = current->next;
-	}
-	return (NULL);
 }
 
 static int	is_dir_check(t_shell *data, int i)

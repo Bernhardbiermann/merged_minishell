@@ -6,13 +6,13 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 16:29:51 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 15:55:46 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/27 19:16:09 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static char	*get_pwd_value(char *envp_key, t_env **env)
+char	*get_pwd_value(char *envp_key, t_env **env)
 {
 	t_env	*current;
 

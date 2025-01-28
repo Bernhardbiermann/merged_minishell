@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/27 16:41:24 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/27 19:16:29 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ void	ft_export(char **args, t_shell *data);
 int		check_name_and_empty_value(char *input);
 
 /* __pwd.c */
+char	*get_pwd_value(char *envp_key, t_env **env);
 int		ft_pwd(t_shell *data, t_env **env);
 
 /* __unset.c */
