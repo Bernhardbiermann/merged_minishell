@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hdoc_expand.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:19:02 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 12:21:23 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 10:41:43 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*replace_value_hdoc(char **line, char *old_key, char *value)
 {
 	char	*new_value;
 
-	if (!line || !*line || !*old_key || !*value)
+	if (!line || !*line || !*old_key)
 		return (NULL);
 	new_value = replace_substring_hdoc(line, old_key, value);
 	if (!new_value)
