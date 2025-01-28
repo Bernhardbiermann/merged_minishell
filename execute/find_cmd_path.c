@@ -6,11 +6,13 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:42:52 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 12:05:58 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 17:30:48 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static void	dirty_little_secret(t_shell *data, char **env_tab, t_env **env);
 
 /* parsing:
 	we want to retrieve the envp[i]th element that starts with "PATH="
@@ -30,10 +32,7 @@ int	find_cmd_path(t_shell *data, int i, t_env **env)
 	env_tab = env_to_tab(data->env);
 	paths = ft_split(get_path(env_tab), ':');
 	if (!paths)
-	{
-		free_tab(env_tab);
-		error_handle(data, "PATH not found", 0, env);
-	}
+		dirty_little_secret(data, env_tab, env);
 	cmd_and_args = data->cmds[i].cmd;
 	cmd_path = find_valid_path(data->cmds[i].cmd[0], paths, data, env);
 	if (!cmd_path)
@@ -46,7 +45,15 @@ int	find_cmd_path(t_shell *data, int i, t_env **env)
 	data->cmds[i].path = cmd_path;
 	data->cmds[i].cmd = cmd_and_args;
 	free_many_splits(paths, env_tab);
+	if (ft_strcmp(cmd_path, get_pwd_value("PWD", env)) == 0)
+		return (0);
 	return (1);
+}
+
+static void	dirty_little_secret(t_shell *data, char **env_tab, t_env **env)
+{
+	free_tab(env_tab);
+	error_handle(data, "PATH not found", 0, env);
 }
 
 char	*get_path(char **env)

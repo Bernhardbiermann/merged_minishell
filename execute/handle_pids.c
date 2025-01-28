@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:03:46 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/14 14:06:27 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 16:49:53 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	wait_for_pids(t_shell *data)
 	while (current)
 	{
 		if (waitpid(current->pid, &status, 0) == -1)
-			perror("waitpid failed");
+			continue ;
 		else if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
 		current = current->next;

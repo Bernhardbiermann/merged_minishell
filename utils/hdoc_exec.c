@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:39:17 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 12:12:41 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 16:49:15 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,7 @@ int	hdoc_parent_process(int heredoc, pid_t pid, int status)
 	setup_signal(WAIT);
 	close(heredoc);
 	if (waitpid(pid, &status, 0) == -1)
-	{
-		perror("waitpid failed");
 		exit_status = 1;
-	}
 	if (WIFSIGNALED(status))
 		exit_status = WTERMSIG(status) + 128;
 	else 

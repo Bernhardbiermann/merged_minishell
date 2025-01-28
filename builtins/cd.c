@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 13:43:25 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:26:26 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 	is  set, the OLDPWD environment variable shall also be set to the value 
 	of the old working directory (that is the current working  directory 
 	immediately prior to the call to cd)." */
-static void	set_errorstatus_and_print_msg(t_shell *data, char *input)
+static int	set_errstat_print_msg(t_shell *data, char *input)
 {
 	data->last_exit_status = 1;
 	ft_printf(input);
+	return (1);
 }
 
 void	update_pwd(char *envp_key, char *envp_new_value, t_env **env)
@@ -63,32 +64,28 @@ static int	is_dir_check(t_shell *data, int i)
 	return (1);
 }
 
-void	ft_cd(t_shell *data, char *path, int i, t_env **env)
+int	ft_cd(t_shell *data, char *path, int i, t_env **env)
 {
 	char	*new_value;
 
 	if (data->cmds[i].cmd[1] && is_dir_check(data, i) == 0)
-		return ;
+		return (1);
 	if (data->cmds[i].arg_count > 2)
-	{
-		set_errorstatus_and_print_msg(data, "cd: too many arguments\n");
-		return ;
-	}
+		return (set_errstat_print_msg(data, "cd: too many arguments\n"));
 	update_pwd("OLDPWD", get_pwd_value("PWD", env), env);
 	if (!path)
 	{
 		path = get_pwd_value("HOME", env);
 		if (!path)
-			return (perror("No home directory set"));
+			return (set_errstat_print_msg(data, "No home directory set\n"));
 	}
 	if (chdir(path) == -1)
-	{
-		set_errorstatus_and_print_msg(data, "cd: No such file or directory\n");
-		return ;
-	}
+		return (set_errstat_print_msg(data, "cd: No such file or directory\n"));
 	new_value = getcwd(NULL, 0);
+	if (!new_value)
+		return (set_errstat_print_msg(data, "getcwd failed\n"));
 	update_pwd("PWD", new_value, env);
 	free(new_value);
 	data->last_exit_status = 0;
-	return ;
+	return (0);
 }

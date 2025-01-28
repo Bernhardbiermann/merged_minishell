@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 13:57:20 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:22:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	exec_builtin(t_shell *data, int i, t_env **my_env);
 
 /* __cd.c */
 void	update_pwd(char *envp_key, char *envp_new_value, t_env **env);
-void	ft_cd(t_shell *data, char *path, int i, t_env **env);
+int		ft_cd(t_shell *data, char *path, int i, t_env **env);
 
 /* __echo.c */
 int		check_for_option_n(char *arg);

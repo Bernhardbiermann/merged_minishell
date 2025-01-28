@@ -6,7 +6,7 @@
 /*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:24:01 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 12:14:24 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 16:18:02 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,28 +47,30 @@ void	error_cmd_file_dir(t_shell *data, int i, t_env **env)
 void	error_directory(t_shell *data, char *cmd_name, t_env **env)
 {
 	DIR		*dir;
+	char	*trim;
+	int		exit_status;
 
-	if (access(cmd_name, F_OK) >= 0 && access(cmd_name, X_OK) == -1)
-	{
-		write(2, cmd_name, ft_strlen(cmd_name));
-		write(2, ": Permission denied\n", ft_strlen(": Permission denied\n"));
-		free_shell_exit(data, env, 126);
-	}
-	dir = opendir(ft_strtrim(cmd_name, "./"));
+	trim = ft_strtrim(cmd_name, ".");
+	dir = opendir(trim);
+	write(2, cmd_name, ft_strlen(cmd_name));
 	if (dir)
 	{
-		write(2, cmd_name, ft_strlen(cmd_name));
 		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
+		exit_status = 126;
 		closedir(dir);
-		free_shell_exit(data, env, 126);
+	}
+	else if (access(cmd_name, F_OK) >= 0 && access(cmd_name, X_OK) == -1)
+	{
+		write(2, ": Permission denied\n", ft_strlen(": Permission denied\n"));
+		exit_status = 126;
 	}
 	else
 	{
-		write(2, cmd_name, ft_strlen(cmd_name));
 		write(2, ": No such file or directory\n", 28);
-		closedir(dir);
-		free_shell_exit(data, env, 127);
+		exit_status = 127;
 	}
+	free(trim);
+	free_shell_exit(data, env, exit_status);
 }
 
 void	free_shell_exit(t_shell *data, t_env **env, int errno)

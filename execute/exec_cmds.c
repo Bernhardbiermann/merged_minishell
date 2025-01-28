@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 13:51:45 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:12:22 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	execute(t_shell *data, t_env **my_env)
 			{
 				data->last_exit_status = 0;
 				handle_redirections_builtin(&data->cmds[0], data, my_env);
-				exec_builtin(data, 0, my_env);	
+				exec_builtin(data, 0, my_env);
 			}
 		}
 		else
@@ -120,7 +120,7 @@ void	exec_cmd(t_shell *data, int i, t_env **env)
 		if (execve(data->cmds[i].path, data->cmds[i].cmd, env_tab) == -1)
 		{
 			free_tab(env_tab);
-			error_handle(data, "execve failed", EXIT_FAILURE, env);
+			error_cmd_file_dir(data, i, env);
 		}
 	}
 }

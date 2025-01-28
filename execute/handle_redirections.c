@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 11:01:29 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 13:57:07 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:27:45 by aroux            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,6 @@ void	open_dup_close_builtin(t_redir redir, t_shell *data, t_env **env)
 			fd = open(redir.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
 			error_handle(data, "Failed to open output file", 1, env);
-/* 		if (dup2(fd, STDOUT_FILENO) == -1)
-			error_handle(data, "dup2 failed for output redirection", 1, env); */
 		close(fd);
 	}
 	else if (redir.type == T_INPUT || redir.type == T_HEREDOC)
@@ -130,8 +128,6 @@ void	open_dup_close_builtin(t_redir redir, t_shell *data, t_env **env)
 		fd = open(redir.filename, O_RDONLY);
 		if (fd < 0)
 			error_handle(data, "file failed to open", 1, env);
-/* 		if (dup2(fd, STDIN_FILENO) == -1)
-			error_handle(data, "dup2 failed for input redirection", 1, env); */
 		close(fd);
 	}
 }
