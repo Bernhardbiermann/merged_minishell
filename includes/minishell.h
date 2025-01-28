@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 10:51:12 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 13:57:20 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,8 @@ void	last_child_redir_stdout(t_shell *data, int i, t_env **env);
 void	handle_redirections(t_cmd *cmd, int *pipe, t_shell *data, t_env **env);
 void	open_dup_close(t_redir redir, int *pipe, t_shell *data, t_env **env);
 void	check_redir(t_shell *data, t_redir *redir, int *pipe, t_env **env);
+void	open_dup_close_builtin(t_redir redir, t_shell *data, t_env **env);
+void	handle_redirections_builtin(t_cmd *cmd, t_shell *data, t_env **env);
 
 /* __find_cmd_path.c */
 int		find_cmd_path(t_shell *data, int i, t_env **my_env);

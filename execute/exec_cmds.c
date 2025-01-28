@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 12:20:04 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 13:51:45 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	execute(t_shell *data, t_env **my_env)
 			else
 			{
 				data->last_exit_status = 0;
-				handle_redirections(&data->cmds[0], NULL, data, my_env); 
-				exec_builtin(data, 0, my_env);
+				handle_redirections_builtin(&data->cmds[0], data, my_env);
+				exec_builtin(data, 0, my_env);	
 			}
 		}
 		else

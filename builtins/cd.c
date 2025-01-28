@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:52:08 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 10:23:06 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/28 13:43:25 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ static int	is_dir_check(t_shell *data, int i)
 
 void	ft_cd(t_shell *data, char *path, int i, t_env **env)
 {
+	char	*new_value;
+
 	if (data->cmds[i].cmd[1] && is_dir_check(data, i) == 0)
 		return ;
 	if (data->cmds[i].arg_count > 2)
@@ -79,5 +81,14 @@ void	ft_cd(t_shell *data, char *path, int i, t_env **env)
 		if (!path)
 			return (perror("No home directory set"));
 	}
-	update_pwd("PWD", path, env);
+	if (chdir(path) == -1)
+	{
+		set_errorstatus_and_print_msg(data, "cd: No such file or directory\n");
+		return ;
+	}
+	new_value = getcwd(NULL, 0);
+	update_pwd("PWD", new_value, env);
+	free(new_value);
+	data->last_exit_status = 0;
+	return ;
 }
