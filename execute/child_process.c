@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 17:45:33 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/24 11:01:54 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:04:14 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 	- executes the command */
 void	child_process(t_shell *data, int i, int *fd, t_env **env)
 {
+	//setup_signal(CHILD);
 	data->cmds[i].output_fd = -1;
 	if (data->prev_fd != -1)
 	{

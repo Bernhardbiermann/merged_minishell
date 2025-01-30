@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_pids.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:03:46 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 16:49:53 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:03:58 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ void	wait_for_pids(t_shell *data)
 			data->last_exit_status = WEXITSTATUS(status);
 		current = current->next;
 	}
+	setup_signal(INTERACTIVE);
 	return ;
 }

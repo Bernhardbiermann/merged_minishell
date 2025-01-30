@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 15:20:27 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 16:12:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:36:04 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	exec_echo(t_shell *data, t_env **env)
 
 	fd[0] = -1;
 	fd[1] = -1;
+	data->last_exit_status = 0;
 	pid = fork();
 	if (pid < 0)
 		error_handle(data, "fork failed", EXIT_FAILURE, env);
@@ -81,11 +82,14 @@ void	exec_more_cmds(t_shell *data, t_env **my_env)
 	{
 		if (i != data->nb_cmds - 1 && pipe(fd) == -1)
 			error_handle(data, "pipe failed", EXIT_FAILURE, my_env);
+		setup_signal(CHILD);
 		pid = fork();
 		if (pid < 0)
 			error_handle(data, "fork failed", EXIT_FAILURE, my_env);
 		else if (pid == 0)
+		{
 			child_process(data, i, fd, my_env);
+		}
 		else
 			parent_process(data, i, fd, pid);
 		i++;

@@ -6,7 +6,7 @@
 #    By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/07 16:33:12 by aroux             #+#    #+#              #
-#    Updated: 2025/01/27 16:37:01 by bbierman         ###   ########.fr        #
+#    Updated: 2025/01/29 12:14:04 by bbierman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ SRC = main.c \
 	utils/hdoc_exec.c \
 	utils/hdoc_create.c \
 	utils/setup_signals.c \
+	utils/setup_signals_utils.c \
 	utils/manip_str.c \
 	utils/frees.c\
 	utils/frees2.c\

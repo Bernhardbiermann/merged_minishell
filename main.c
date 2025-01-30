@@ -6,7 +6,7 @@
 /*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 12:25:00 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/27 16:54:27 by bbierman         ###   ########.fr       */
+/*   Updated: 2025/01/29 12:29:50 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	check_signal_received(t_shell *data)
 {
 	if (g_signal_received == 1)
 		data->last_exit_status = 130;
+	if (g_signal_received == 2)
+		data->last_exit_status = 131;
 	g_signal_received = 0;
 }
 
@@ -34,7 +36,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!data)
 		return (1);
 	while (1)
-	{
+	{	
 		input = readline("minishell> ");
 		check_signal_received(data);
 		if (!input)

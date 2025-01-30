@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 15:43:45 by bbierman          #+#    #+#             */
-/*   Updated: 2025/01/24 12:04:45 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:11:57 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	setup_signal(int type)
 		set_sigaction(&sa_quit, SIG_IGN, SIGQUIT);
 		set_sigaction(&sa_int, handle_sigint_interactive, SIGINT);
 	}
-	else if (type == RESET)
+	else if (type == CHILD)
 	{
-		set_sigaction(&sa_quit, SIG_DFL, SIGQUIT);
-		set_sigaction(&sa_int, SIG_DFL, SIGINT);
+		set_sigaction(&sa_quit, handle_sigquit_child, SIGQUIT);
+		set_sigaction(&sa_int, handle_sigint_child, SIGINT);
 	}
 	else if (type == WAIT)
 	{
@@ -57,19 +57,3 @@ void	set_sigaction(struct sigaction *sa, void (*f_handler)(int), int signum)
 		exit_signal(1);
 }
 
-void	handle_sigint_interactive(int signum)
-{
-	(void)signum;
-	g_signal_received = 1;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void	handle_sigint_heredoc(int signum)
-{
-	(void)signum;
-	write(STDOUT_FILENO, "\n", 1);
-	exit(130);
-}

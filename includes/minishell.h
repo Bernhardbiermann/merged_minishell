@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroux <aroux@student.42berlin.de>          +#+  +:+       +#+        */
+/*   By: bbierman <bbierman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 13:53:04 by aroux             #+#    #+#             */
-/*   Updated: 2025/01/28 17:22:22 by aroux            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:13:26 by bbierman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 /* MACROS */
 # define INTERACTIVE 1
-# define RESET 2
+# define CHILD 2
 # define WAIT 3
 # define HEREDOC 4
 
@@ -326,10 +326,14 @@ char	*do_expansion_in_heredocs(t_shell *data, char **line);
 
 /*__setup_signals.c */
 void	setup_signal(int type);
-void	exit_signal(int exit_status);
 void	set_sigaction(struct sigaction *sa, void (*f_handler)(int), int signum);
+void	exit_signal(int exit_status);
+
+/*__setup_signals_utils.c */
 void	handle_sigint_interactive(int signum);
 void	handle_sigint_heredoc(int signum);
+void	handle_sigquit_child(int signum);
+void	handle_sigint_child(int signum);
 
 /* __error_handle.c */
 void	error_handle(t_shell *data, char *err_msg, int err_no, t_env **my_env);
